@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:lolisnatcher/src/boorus/booru_type.dart';
 import 'package:lolisnatcher/src/boorus/gelbooru_alikes_handler.dart';
@@ -16,6 +15,7 @@ import 'package:lolisnatcher/src/handlers/booru_handler_factory.dart';
 import 'package:lolisnatcher/src/handlers/search_handler.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
 import 'package:lolisnatcher/src/services/get_perms.dart';
+import 'package:lolisnatcher/src/utils/clipboard.dart';
 import 'package:lolisnatcher/src/utils/extensions.dart';
 import 'package:lolisnatcher/src/utils/logger.dart';
 import 'package:lolisnatcher/src/utils/tools.dart';
@@ -435,20 +435,7 @@ class _BooruEditState extends State<BooruEdit> {
           return [
             if (errorString.trim().isNotEmpty)
               ElevatedButton.icon(
-                onPressed: () {
-                  Clipboard.setData(ClipboardData(text: errorString));
-                  FlashElements.showSnackbar(
-                    context: context,
-                    title: Text(
-                      context.loc.copied,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    sideColor: Colors.green,
-                    leadingIcon: Icons.check,
-                    leadingIconColor: Colors.green,
-                    duration: const Duration(seconds: 2),
-                  );
-                },
+                onPressed: () => ClipboardUtils.copyTextToClipboard(errorString),
                 icon: const Icon(Icons.copy),
                 label: Text(context.loc.copyErrorText),
               ),

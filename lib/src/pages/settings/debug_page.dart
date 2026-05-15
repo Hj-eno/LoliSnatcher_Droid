@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
-import 'package:flutter/services.dart';
 
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,6 +14,7 @@ import 'package:lolisnatcher/src/handlers/settings_handler.dart';
 import 'package:lolisnatcher/src/handlers/viewer_handler.dart';
 import 'package:lolisnatcher/src/pages/settings/logger_page.dart';
 import 'package:lolisnatcher/src/pages/settings/text_parser_test_page.dart';
+import 'package:lolisnatcher/src/utils/clipboard.dart';
 import 'package:lolisnatcher/src/utils/extensions.dart';
 import 'package:lolisnatcher/src/utils/logger.dart';
 import 'package:lolisnatcher/src/widgets/common/cancel_button.dart';
@@ -206,18 +206,7 @@ class _DebugPageState extends State<DebugPage> {
                 icon: const Icon(Icons.copy),
                 action: () async {
                   final str = SearchHandler.instance.generateBackupJson() ?? '';
-                  await Clipboard.setData(ClipboardData(text: str));
-                  FlashElements.showSnackbar(
-                    context: context,
-                    duration: const Duration(seconds: 2),
-                    title: Text(context.loc.copiedToClipboard, style: const TextStyle(fontSize: 20)),
-                    content: Text(
-                      str,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    leadingIcon: Icons.copy,
-                    sideColor: Colors.green,
-                  );
+                  await ClipboardUtils.copyTextToClipboard(str);
                 },
               ),
               SettingsButton(
