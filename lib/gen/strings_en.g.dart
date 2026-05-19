@@ -947,6 +947,7 @@ class TranslationsTabsEn {
 
   late final TranslationsTabsFiltersEn filters = TranslationsTabsFiltersEn.internal(_root);
   late final TranslationsTabsMoveEn move = TranslationsTabsMoveEn.internal(_root);
+  late final TranslationsTabsGroupsEn groups = TranslationsTabsGroupsEn.internal(_root);
 }
 
 // Path: history
@@ -2048,6 +2049,159 @@ class TranslationsTabsMoveEn {
 
   /// en: 'Preview:'
   String get preview => TranslationOverrides.string(_root.$meta, 'tabs.move.preview', {}) ?? 'Preview:';
+}
+
+// Path: tabs.groups
+class TranslationsTabsGroupsEn {
+  TranslationsTabsGroupsEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Groups'
+  String get title => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? 'Groups';
+
+  /// en: 'New group'
+  String get newGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? 'New group';
+
+  /// en: 'Rename group'
+  String get renameGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? 'Rename group';
+
+  /// en: 'Rename / recolor'
+  String get renameRecolor => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? 'Rename / recolor';
+
+  /// en: 'Edit group'
+  String get editGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? 'Edit group';
+
+  /// en: 'Delete group'
+  String get deleteGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? 'Delete group';
+
+  /// en: 'Also delete tabs in group'
+  String get deleteWithTabs => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? 'Also delete tabs in group';
+
+  /// en: 'Ungrouped'
+  String get ungrouped => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? 'Ungrouped';
+
+  /// en: 'Move to group'
+  String get moveToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? 'Move to group';
+
+  /// en: 'Move to group…'
+  String get moveToGroupAction => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? 'Move to group…';
+
+  /// en: 'Remove from group'
+  String get removeFromGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? 'Remove from group';
+
+  /// en: 'Add to group…'
+  String get addToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? 'Add to group…';
+
+  /// en: 'New group from this tab'
+  String get newGroupFromTab => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? 'New group from this tab';
+
+  /// en: 'Color'
+  String get groupColor => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? 'Color';
+
+  /// en: 'Group name'
+  String get groupName => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? 'Group name';
+
+  /// en: 'Collapse group'
+  String get collapse => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? 'Collapse group';
+
+  /// en: 'Expand group'
+  String get expand => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? 'Expand group';
+
+  /// en: 'Group'
+  String get filterByGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? 'Group';
+
+  /// en: 'Drop to ungroup'
+  String get dropToUngroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? 'Drop to ungroup';
+
+  /// en: 'Drag to a group'
+  String get dragToAGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? 'Drag to a group';
+
+  /// en: 'Group actions'
+  String get groupActions => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? 'Group actions';
+
+  /// en: 'This backup is from a newer version of LoliSnatcher and could not be loaded.'
+  String get newerVersionBackup =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ??
+      'This backup is from a newer version of LoliSnatcher and could not be loaded.';
+
+  /// en: 'Tab backup is malformed and could not be loaded.'
+  String get malformedBackup =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? 'Tab backup is malformed and could not be loaded.';
+
+  /// en: 'New group'
+  String get newGroupTitle => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? 'New group';
+
+  /// en: 'Create'
+  String get create => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? 'Create';
+
+  /// en: 'Save'
+  String get save => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? 'Save';
+
+  /// en: 'Delete group "${name: String}"?'
+  String deleteGroupNamed({required String name}) =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? 'Delete group "${name}"?';
+
+  /// en: '(one) {${count} tab in this group.} (other) {${count} tabs in this group.}'
+  String tabsInGroup({required num count}) =>
+      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(
+        count,
+        one: '${count} tab in this group.',
+        other: '${count} tabs in this group.',
+      );
+
+  /// en: 'Otherwise, tabs become ungrouped.'
+  String get otherwiseBecomeUngrouped =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? 'Otherwise, tabs become ungrouped.';
+
+  /// en: '(one) {${count} tab moved to ungrouped} (other) {${count} tabs moved to ungrouped}'
+  String tabsMovedToUngrouped({required num count}) =>
+      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(
+        count,
+        one: '${count} tab moved to ungrouped',
+        other: '${count} tabs moved to ungrouped',
+      );
+
+  /// en: 'Choose group'
+  String get chooseGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? 'Choose group';
+
+  /// en: 'Unknown group'
+  String get unknownGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? 'Unknown group';
+
+  /// en: 'Ungroup'
+  String get ungroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? 'Ungroup';
+
+  /// en: 'Tap "New group" at the bottom of the list to create a group.'
+  String get helpTapNewGroup =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ?? 'Tap "New group" at the bottom of the list to create a group.';
+
+  /// en: 'Drag the handle on the right of a tab to move it between groups.'
+  String get helpDragTabHandle =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ??
+      'Drag the handle on the right of a tab to move it between groups.';
+
+  /// en: 'Drag the handle on the left of a group header to reorder groups.'
+  String get helpDragGroupHandle =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ??
+      'Drag the handle on the left of a group header to reorder groups.';
+
+  /// en: 'Tap a group header to collapse / expand it.'
+  String get helpTapHeaderCollapse =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ?? 'Tap a group header to collapse / expand it.';
+
+  /// en: 'Tap ⋯ on a group header to rename, recolor, or delete the group.'
+  String get helpTapMoreVert =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ??
+      'Tap ⋯ on a group header to rename, recolor, or delete the group.';
+
+  /// en: 'New tabs added "Prev"/"Next" inherit the current tab's group. Tabs added at the end are ungrouped.'
+  String get helpPrevNextInherits =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ??
+      'New tabs added "Prev"/"Next" inherit the current tab\'s group. Tabs added at the end are ungrouped.';
 }
 
 // Path: webview.navigation
@@ -5258,6 +5412,76 @@ extension on Translations {
             ({required String formattedNumber}) =>
                 TranslationOverrides.string(_root.$meta, 'tabs.move.moveTo', {'formattedNumber': formattedNumber}) ?? 'Move to #${formattedNumber}',
           'tabs.move.preview' => TranslationOverrides.string(_root.$meta, 'tabs.move.preview', {}) ?? 'Preview:',
+          'tabs.groups.title' => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? 'Groups',
+          'tabs.groups.newGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? 'New group',
+          'tabs.groups.renameGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? 'Rename group',
+          'tabs.groups.renameRecolor' => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? 'Rename / recolor',
+          'tabs.groups.editGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? 'Edit group',
+          'tabs.groups.deleteGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? 'Delete group',
+          'tabs.groups.deleteWithTabs' => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? 'Also delete tabs in group',
+          'tabs.groups.ungrouped' => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? 'Ungrouped',
+          'tabs.groups.moveToGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? 'Move to group',
+          'tabs.groups.moveToGroupAction' => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? 'Move to group…',
+          'tabs.groups.removeFromGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? 'Remove from group',
+          'tabs.groups.addToGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? 'Add to group…',
+          'tabs.groups.newGroupFromTab' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? 'New group from this tab',
+          'tabs.groups.groupColor' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? 'Color',
+          'tabs.groups.groupName' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? 'Group name',
+          'tabs.groups.collapse' => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? 'Collapse group',
+          'tabs.groups.expand' => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? 'Expand group',
+          'tabs.groups.filterByGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? 'Group',
+          'tabs.groups.dropToUngroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? 'Drop to ungroup',
+          'tabs.groups.dragToAGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? 'Drag to a group',
+          'tabs.groups.groupActions' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? 'Group actions',
+          'tabs.groups.newerVersionBackup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ??
+                'This backup is from a newer version of LoliSnatcher and could not be loaded.',
+          'tabs.groups.malformedBackup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? 'Tab backup is malformed and could not be loaded.',
+          'tabs.groups.newGroupTitle' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? 'New group',
+          'tabs.groups.create' => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? 'Create',
+          'tabs.groups.save' => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? 'Save',
+          'tabs.groups.deleteGroupNamed' =>
+            ({required String name}) =>
+                TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? 'Delete group "${name}"?',
+          'tabs.groups.tabsInGroup' =>
+            ({required num count}) =>
+                TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
+                (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(
+                  count,
+                  one: '${count} tab in this group.',
+                  other: '${count} tabs in this group.',
+                ),
+          'tabs.groups.otherwiseBecomeUngrouped' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? 'Otherwise, tabs become ungrouped.',
+          'tabs.groups.tabsMovedToUngrouped' =>
+            ({required num count}) =>
+                TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
+                (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(
+                  count,
+                  one: '${count} tab moved to ungrouped',
+                  other: '${count} tabs moved to ungrouped',
+                ),
+          'tabs.groups.chooseGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? 'Choose group',
+          'tabs.groups.unknownGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? 'Unknown group',
+          'tabs.groups.ungroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? 'Ungroup',
+          'tabs.groups.helpTapNewGroup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ??
+                'Tap "New group" at the bottom of the list to create a group.',
+          'tabs.groups.helpDragTabHandle' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ??
+                'Drag the handle on the right of a tab to move it between groups.',
+          'tabs.groups.helpDragGroupHandle' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ??
+                'Drag the handle on the left of a group header to reorder groups.',
+          'tabs.groups.helpTapHeaderCollapse' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ?? 'Tap a group header to collapse / expand it.',
+          'tabs.groups.helpTapMoreVert' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ??
+                'Tap ⋯ on a group header to rename, recolor, or delete the group.',
+          'tabs.groups.helpPrevNextInherits' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ??
+                'New tabs added "Prev"/"Next" inherit the current tab\'s group. Tabs added at the end are ungrouped.',
           'history.searchHistory' => TranslationOverrides.string(_root.$meta, 'history.searchHistory', {}) ?? 'Search history',
           'history.searchHistoryIsEmpty' => TranslationOverrides.string(_root.$meta, 'history.searchHistoryIsEmpty', {}) ?? 'Search history is empty',
           'history.searchHistoryIsDisabled' =>
@@ -5686,6 +5910,9 @@ extension on Translations {
           'settings.viewer.slideshow' => TranslationOverrides.string(_root.$meta, 'settings.viewer.slideshow', {}) ?? 'Slideshow',
           'settings.viewer.slideshowWIPNote' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.slideshowWIPNote', {}) ?? '[WIP] Videos/GIFs: manual scroll only',
+          _ => null,
+        } ??
+        switch (path) {
           'settings.viewer.preventDeviceFromSleeping' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.preventDeviceFromSleeping', {}) ?? 'Prevent device from sleeping',
           'settings.viewer.viewerOpenCloseAnimation' =>
@@ -5759,9 +5986,6 @@ extension on Translations {
           'settings.video.mpvUseHardwareAcceleration' =>
             TranslationOverrides.string(_root.$meta, 'settings.video.mpvUseHardwareAcceleration', {}) ?? 'MPV: use hardware acceleration',
           'settings.video.mpvVO' => TranslationOverrides.string(_root.$meta, 'settings.video.mpvVO', {}) ?? 'MPV: VO',
-          _ => null,
-        } ??
-        switch (path) {
           'settings.video.mpvHWDEC' => TranslationOverrides.string(_root.$meta, 'settings.video.mpvHWDEC', {}) ?? 'MPV: HWDEC',
           'settings.video.videoCacheMode' => TranslationOverrides.string(_root.$meta, 'settings.video.videoCacheMode', {}) ?? 'Video cache mode',
           'settings.video.cacheModes.title' => TranslationOverrides.string(_root.$meta, 'settings.video.cacheModes.title', {}) ?? 'Video cache modes',
@@ -6630,6 +6854,9 @@ extension on Translations {
             ({required String msg}) =>
                 TranslationOverrides.string(_root.$meta, 'searchBar.failedToLoadSuggestions', {'msg': msg}) ??
                 'Couldn\'t load suggestions. Tap to retry${msg}',
+          _ => null,
+        } ??
+        switch (path) {
           'searchBar.noSuggestionsFound' => TranslationOverrides.string(_root.$meta, 'searchBar.noSuggestionsFound', {}) ?? 'No suggestions found',
           'searchBar.tagSuggestionsNotAvailable' =>
             TranslationOverrides.string(_root.$meta, 'searchBar.tagSuggestionsNotAvailable', {}) ?? 'Tag suggestions unavailable for this booru',
@@ -6680,9 +6907,6 @@ extension on Translations {
           'mediaPreviews.addNewBooru' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.addNewBooru', {}) ?? 'Add new Booru',
           'mediaPreviews.help' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.help', {}) ?? 'Help',
           'mediaPreviews.settings' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.settings', {}) ?? 'Settings',
-          _ => null,
-        } ??
-        switch (path) {
           'mediaPreviews.restoringPreviousSession' =>
             TranslationOverrides.string(_root.$meta, 'mediaPreviews.restoringPreviousSession', {}) ?? 'Restoring previous session…',
           'mediaPreviews.copiedFileURL' =>

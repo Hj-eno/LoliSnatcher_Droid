@@ -309,6 +309,53 @@
             "pleaseEnterValidTabNumber": "Please enter a valid tab number",
             "moveTo(param=formattedNumber)": "Move to #${formattedNumber: String}",
             "preview": "Preview:"
+        },
+        "groups": {
+            "title": "Groups",
+            "newGroup": "New group",
+            "renameGroup": "Rename group",
+            "renameRecolor": "Rename / recolor",
+            "editGroup": "Edit group",
+            "deleteGroup": "Delete group",
+            "deleteWithTabs": "Also delete tabs in group",
+            "ungrouped": "Ungrouped",
+            "moveToGroup": "Move to group",
+            "moveToGroupAction": "Move to group…",
+            "removeFromGroup": "Remove from group",
+            "addToGroup": "Add to group…",
+            "newGroupFromTab": "New group from this tab",
+            "groupColor": "Color",
+            "groupName": "Group name",
+            "collapse": "Collapse group",
+            "expand": "Expand group",
+            "filterByGroup": "Group",
+            "dropToUngroup": "Drop to ungroup",
+            "dragToAGroup": "Drag to a group",
+            "groupActions": "Group actions",
+            "newerVersionBackup": "This backup is from a newer version of LoliSnatcher and could not be loaded.",
+            "malformedBackup": "Tab backup is malformed and could not be loaded.",
+            "newGroupTitle": "New group",
+            "create": "Create",
+            "save": "Save",
+            "deleteGroupNamed(param=name)": "Delete group \"${name: String}\"?",
+            "tabsInGroup(param=count)": {
+                "one": "${count} tab in this group.",
+                "other": "${count} tabs in this group."
+            },
+            "otherwiseBecomeUngrouped": "Otherwise, tabs become ungrouped.",
+            "tabsMovedToUngrouped(param=count)": {
+                "one": "${count} tab moved to ungrouped",
+                "other": "${count} tabs moved to ungrouped"
+            },
+            "chooseGroup": "Choose group",
+            "unknownGroup": "Unknown group",
+            "ungroup": "Ungroup",
+            "helpTapNewGroup": "Tap \"New group\" at the bottom of the list to create a group.",
+            "helpDragTabHandle": "Drag the handle on the left of a tab to move it between groups.",
+            "helpDragGroupHandle": "Drag the handle on the left of a group header to reorder groups.",
+            "helpTapHeaderCollapse": "Tap a group header to collapse / expand it.",
+            "helpTapMoreVert": "Tap ⋯ on a group header to rename, recolor, or delete the group.",
+            "helpPrevNextInherits": "New tabs added \"Prev\"/\"Next\" inherit the current tab's group. Tabs added at the end are ungrouped."
         }
     },
     "history": {

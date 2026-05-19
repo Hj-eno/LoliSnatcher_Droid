@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 
 import 'package:lolisnatcher/src/boorus/mergebooru_handler.dart';
 import 'package:lolisnatcher/src/data/booru.dart';
+import 'package:lolisnatcher/src/data/tab_group.dart';
 import 'package:lolisnatcher/src/data/tag_type.dart';
 import 'package:lolisnatcher/src/handlers/search_handler.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
@@ -26,6 +27,7 @@ import 'package:lolisnatcher/src/widgets/image/booru_favicon.dart';
 import 'package:lolisnatcher/src/widgets/root/main_appbar.dart';
 import 'package:lolisnatcher/src/widgets/tabs/tab_booru_selector.dart';
 import 'package:lolisnatcher/src/widgets/tabs/tab_filters_dialog.dart';
+import 'package:lolisnatcher/src/widgets/tabs/tab_group_header.dart';
 import 'package:lolisnatcher/src/widgets/tabs/tab_move_dialog.dart';
 import 'package:lolisnatcher/src/widgets/tabs/tab_row.dart';
 
@@ -46,6 +48,48 @@ enum TabSortingMode {
   bool get isAnyAlphabet => isAlphabet || isAlphabetReverse;
   bool get isAnyBooru => isBooru || isBooruReverse;
   bool get isAnyReverse => isAlphabetReverse || isBooruReverse;
+}
+
+/// Group filter for the tab manager. Sentinel-free: each variant is a distinct
+/// type so filters never collide with a real group id.
+@immutable
+sealed class TabGroupFilter {
+  const TabGroupFilter();
+}
+
+@immutable
+class TabGroupFilterAll extends TabGroupFilter {
+  const TabGroupFilterAll();
+
+  @override
+  bool operator ==(Object other) => other is TabGroupFilterAll;
+
+  @override
+  int get hashCode => 0;
+}
+
+@immutable
+class TabGroupFilterUngrouped extends TabGroupFilter {
+  const TabGroupFilterUngrouped();
+
+  @override
+  bool operator ==(Object other) => other is TabGroupFilterUngrouped;
+
+  @override
+  int get hashCode => 1;
+}
+
+@immutable
+class TabGroupFilterSpecific extends TabGroupFilter {
+  const TabGroupFilterSpecific(this.groupId);
+  final String groupId;
+
+  @override
+  bool operator ==(Object other) =>
+      other is TabGroupFilterSpecific && other.groupId == groupId;
+
+  @override
+  int get hashCode => Object.hash('TabGroupFilterSpecific', groupId);
 }
 
 class TabSelector extends StatelessWidget {
@@ -140,12 +184,35 @@ class TabSelector extends StatelessWidget {
 
       return Padding(
         padding: margin,
-        child: Material(
-          color: Colors.transparent,
-          child: SizedBox(
-            height: MainAppBar.height,
-            child: Stack(
-              clipBehavior: Clip.none,
+        child: Obx(() {
+          // §5.1: a thin colored bar at the top of the selector when the
+          // current tab belongs to a group.
+          final group = currentTab.group;
+          final groupColor = group?.color.value;
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              if (groupColor != null)
+                Positioned(
+                  bottom: 0,
+                  left: 8,
+                  right: 8,
+                  child: IgnorePointer(
+                    child: Container(
+                      height: 2,
+                      decoration: BoxDecoration(
+                        color: groupColor,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                ),
+              Material(
+                color: Colors.transparent,
+                child: SizedBox(
+                  height: MainAppBar.height,
+                  child: Stack(
+                    clipBehavior: Clip.none,
               alignment: Alignment.centerLeft,
               children: [
                 Positioned.fill(
@@ -376,8 +443,11 @@ class TabSelector extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ),
+                ),
+              ),
+            ],
+          );
+        }),
       );
     });
   }
@@ -405,6 +475,7 @@ class _TabManagerPageState extends State<TabManagerPage> {
   TagType? tagTypeFilter;
   bool duplicateFilter = false, duplicateBooruFilter = true, emptyFilter = false;
   bool? isMultiBooruMode;
+  TabGroupFilter groupFilter = const TabGroupFilterAll();
   bool selectMode = false;
 
   static const double tabHeight = 72 + 8;
@@ -413,6 +484,31 @@ class _TabManagerPageState extends State<TabManagerPage> {
   int get totalFilteredTabs => filteredTabs.length;
   bool get isFilterActive => totalFilteredTabs != totalTabs || filterTextController.text.isNotEmpty || filtersCount > 0;
   int get currentTabIndex => filteredTabs.indexOf(searchHandler.currentTab);
+
+  /// Returns the visible tab manager sections in order:
+  /// - First: ungrouped tabs (only when there are any in the filtered set).
+  /// - Then: each group, in `tabGroups` order, that has at least one tab in
+  ///   the filtered set (or always render headers — see code).
+  ///
+  /// Each entry is `(group?, tabs)` — `group == null` means ungrouped.
+  List<({TabGroup? group, List<SearchTab> tabs})> get visibleSections {
+    final ungrouped = filteredTabs.where((t) => t.groupId.value == null).toList();
+    final byId = <String, List<SearchTab>>{
+      for (final g in searchHandler.tabGroups) g.id: <SearchTab>[],
+    };
+    for (final t in filteredTabs) {
+      final gid = t.groupId.value;
+      if (gid != null && byId.containsKey(gid)) {
+        byId[gid]!.add(t);
+      }
+    }
+    return [
+      (group: null, tabs: ungrouped),
+      for (final g in searchHandler.tabGroups)
+        if (byId[g.id]!.isNotEmpty || !isFilterActive)
+          (group: g, tabs: byId[g.id]!),
+    ];
+  }
 
   int get filtersCount {
     int count = 0;
@@ -434,6 +530,9 @@ class _TabManagerPageState extends State<TabManagerPage> {
     if (emptyFilter) {
       count++;
     }
+    if (groupFilter is! TabGroupFilterAll) {
+      count++;
+    }
     return count;
   }
 
@@ -442,8 +541,17 @@ class _TabManagerPageState extends State<TabManagerPage> {
     super.initState();
     getTabs();
 
+    // §4.5: Auto-expand the group containing the current tab so the user can
+    // see their active tab when entering the manager.
+    final currentTab = searchHandler.currentTab;
+    final currentGroup = searchHandler.groupOf(currentTab);
+    if (currentGroup != null && currentGroup.collapsed.value) {
+      currentGroup.collapsed.value = false;
+      // no backupTabs() — auto-expand is a UI preference, not user intent.
+    }
+
     scrollController = ScrollController(
-      initialScrollOffset: currentTabIndex * tabHeight,
+      initialScrollOffset: _computeJumpOffset(),
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -466,20 +574,55 @@ class _TabManagerPageState extends State<TabManagerPage> {
     setState(() {});
   }
 
+  /// Computes the scroll offset of the current tab in the sliver layout
+  /// (§4.1). Walks each section in order, accumulating header heights and
+  /// section heights, returning the offset to the current tab. Skips collapsed
+  /// sections entirely. If the current tab is in a collapsed group, returns
+  /// 0 (caller should auto-expand first).
+  double _computeJumpOffset() {
+    if (currentTabIndex == -1) return 0;
+
+    final SearchTab currentTab = searchHandler.currentTab;
+    double offset = 0;
+
+    final sections = visibleSections;
+    for (final section in sections) {
+      // ungrouped section uses a small header label (only if non-empty)
+      if (section.group == null && section.tabs.isNotEmpty) {
+        offset += _ungroupedHeaderHeight;
+      } else if (section.group != null) {
+        offset += tabGroupHeaderHeight;
+      }
+
+      final isCollapsed = section.group?.collapsed.value ?? false;
+      if (isCollapsed) {
+        continue;
+      }
+
+      final localIndex = section.tabs.indexOf(currentTab);
+      if (localIndex >= 0) {
+        return offset + localIndex * tabHeight;
+      }
+      offset += section.tabs.length * tabHeight;
+    }
+    return offset;
+  }
+
+  static const double _ungroupedHeaderHeight = 28;
+
   Future<void> jumpToCurrent({bool animated = false}) async {
     if (scrollController.hasClients) {
       if (currentTabIndex == -1) {
         return;
       }
 
-      // final double viewport = scrollController.position.viewportDimension;
       final double maxScroll = scrollController.position.maxScrollExtent;
-      final double itemOffset = currentTabIndex * tabHeight;
-      double scrollOffset = 0;
-      if (itemOffset > maxScroll) {
+      double scrollOffset = _computeJumpOffset();
+      if (scrollOffset > maxScroll) {
         scrollOffset = maxScroll;
-      } else {
-        scrollOffset = itemOffset;
+      }
+      if (scrollOffset < 0) {
+        scrollOffset = 0;
       }
 
       if (animated) {
@@ -528,6 +671,16 @@ class _TabManagerPageState extends State<TabManagerPage> {
 
   void filterTabs() {
     filteredTabs = [...tabs];
+
+    // §4.6: filter by group
+    switch (groupFilter) {
+      case TabGroupFilterAll():
+        break;
+      case TabGroupFilterUngrouped():
+        filteredTabs = filteredTabs.where((t) => t.groupId.value == null).toList();
+      case TabGroupFilterSpecific(:final groupId):
+        filteredTabs = filteredTabs.where((t) => t.groupId.value == groupId).toList();
+    }
 
     if (booruFilter != null) {
       filteredTabs = filteredTabs.where((t) => t.selectedBooru.value == booruFilter).toList();
@@ -599,33 +752,55 @@ class _TabManagerPageState extends State<TabManagerPage> {
     }
 
     if (!sortingMode.isNone) {
-      filteredTabs.sort(
-        (a, b) {
-          final cleanAtags = a.tags.toLowerCase().trim();
-          final cleanBtags = b.tags.toLowerCase().trim();
+      // §4.7: Sort within each group bucket (and within the ungrouped bucket)
+      // — never across — to preserve the contiguous-block invariant.
+      int compare(SearchTab a, SearchTab b) {
+        final cleanAtags = a.tags.toLowerCase().trim();
+        final cleanBtags = b.tags.toLowerCase().trim();
 
-          final aBooru = a.selectedBooru.value;
-          final bBooru = b.selectedBooru.value;
+        final aBooru = a.selectedBooru.value;
+        final bBooru = b.selectedBooru.value;
 
-          if (sortingMode.isAnyBooru && aBooru.name != bBooru.name) {
-            if (sortingMode.isAnyReverse) {
-              return bBooru.name!.compareTo(aBooru.name!);
-            } else {
-              return aBooru.name!.compareTo(bBooru.name!);
-            }
+        if (sortingMode.isAnyBooru && aBooru.name != bBooru.name) {
+          if (sortingMode.isAnyReverse) {
+            return bBooru.name!.compareTo(aBooru.name!);
+          } else {
+            return aBooru.name!.compareTo(bBooru.name!);
           }
+        }
 
-          if (cleanAtags != cleanBtags) {
-            if (sortingMode.isAnyReverse && !sortingMode.isAnyBooru) {
-              return cleanBtags.compareTo(cleanAtags);
-            } else {
-              return cleanAtags.compareTo(cleanBtags);
-            }
+        if (cleanAtags != cleanBtags) {
+          if (sortingMode.isAnyReverse && !sortingMode.isAnyBooru) {
+            return cleanBtags.compareTo(cleanAtags);
+          } else {
+            return cleanAtags.compareTo(cleanBtags);
           }
+        }
 
-          return searchHandler.tabs.indexOf(a).compareTo(searchHandler.tabs.indexOf(b));
-        },
-      );
+        return searchHandler.tabs.indexOf(a).compareTo(searchHandler.tabs.indexOf(b));
+      }
+
+      // Bucket by group, sort each, concatenate in invariant order.
+      final ungroupedBucket = <SearchTab>[];
+      final byGroup = <String, List<SearchTab>>{
+        for (final g in searchHandler.tabGroups) g.id: <SearchTab>[],
+      };
+      for (final t in filteredTabs) {
+        final gid = t.groupId.value;
+        if (gid != null && byGroup.containsKey(gid)) {
+          byGroup[gid]!.add(t);
+        } else {
+          ungroupedBucket.add(t);
+        }
+      }
+      ungroupedBucket.sort(compare);
+      for (final list in byGroup.values) {
+        list.sort(compare);
+      }
+      filteredTabs = [
+        ...ungroupedBucket,
+        for (final g in searchHandler.tabGroups) ...byGroup[g.id]!,
+      ];
     }
   }
 
@@ -665,6 +840,10 @@ class _TabManagerPageState extends State<TabManagerPage> {
         emptyFilterChanged: (bool newValue) {
           emptyFilter = newValue;
         },
+        groupFilter: groupFilter,
+        groupFilterChanged: (TabGroupFilter newValue) {
+          groupFilter = newValue;
+        },
       ),
     ).open();
 
@@ -679,7 +858,8 @@ class _TabManagerPageState extends State<TabManagerPage> {
             tagTypeFilter == null &&
             duplicateFilter == false &&
             isMultiBooruMode == null &&
-            emptyFilter == false)) {
+            emptyFilter == false &&
+            groupFilter is TabGroupFilterAll)) {
       loadedFilter = null;
       booruFilter = null;
       tagTypeFilter = null;
@@ -687,6 +867,7 @@ class _TabManagerPageState extends State<TabManagerPage> {
       duplicateBooruFilter = true;
       isMultiBooruMode = null;
       emptyFilter = false;
+      groupFilter = const TabGroupFilterAll();
 
       if (!sortingMode.isNone) {
         sortingMode = TabSortingMode.none;
@@ -703,6 +884,190 @@ class _TabManagerPageState extends State<TabManagerPage> {
         }
       });
     }
+  }
+
+  Future<void> _onAddGroupTapped() async {
+    final newId = await showCreateTabGroupDialog(context);
+    if (newId != null) {
+      getTabs();
+    }
+  }
+
+  Widget _buildSectionedManagerBody() {
+    final sections = visibleSections;
+    final widgets = <Widget>[];
+
+    int globalOffset = 0;
+    for (final section in sections) {
+      final group = section.group;
+      final sectionTabs = section.tabs;
+      final sectionStart = globalOffset;
+
+      // Section header (DragTarget for cross-group tab drag, §4.3, AND for
+      // group reorder via TabGroup-typed Draggable on the header handle).
+      if (group != null) {
+        widgets.add(
+          SliverToBoxAdapter(
+            child: DragTarget<SearchTab>(
+              onWillAcceptWithDetails: (details) =>
+                  details.data.groupId.value != group.id,
+              onAcceptWithDetails: (details) {
+                searchHandler.assignTabToGroup(details.data, group.id);
+                getTabs();
+              },
+              builder: (context, tabCandidates, tabRejects) {
+                final hoveringTab = tabCandidates.isNotEmpty;
+                return DragTarget<TabGroup>(
+                  onWillAcceptWithDetails: (details) =>
+                      details.data.id != group.id,
+                  onAcceptWithDetails: (details) {
+                    final fromIndex = searchHandler.tabGroups
+                        .indexWhere((g) => g.id == details.data.id);
+                    final toIndex = searchHandler.tabGroups
+                        .indexWhere((g) => g.id == group.id);
+                    if (fromIndex < 0 || toIndex < 0) return;
+                    searchHandler.moveGroup(fromIndex, toIndex);
+                    getTabs();
+                  },
+                  builder: (context, groupCandidates, groupRejects) {
+                    final hoveringGroup = groupCandidates.isNotEmpty;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      decoration: BoxDecoration(
+                        color: hoveringTab
+                            ? group.color.value.withValues(alpha: 0.18)
+                            : hoveringGroup
+                                ? group.color.value.withValues(alpha: 0.10)
+                                : Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        border: hoveringGroup
+                            ? Border.all(color: group.color.value, width: 2)
+                            : null,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: TabGroupHeader(
+                        key: ValueKey('header-${group.id}'),
+                        group: group,
+                        tabsInGroupCount: sectionTabs.length,
+                        onToggleCollapse: () {
+                          searchHandler.toggleGroupCollapsed(group.id);
+                          setState(() {});
+                        },
+                        onMenuTap: () async {
+                          await showTabGroupActionsSheet(context, group.id);
+                          if (mounted) getTabs();
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      } else {
+        // Ungrouped section: drop target for "remove from group" / "ungroup".
+        // Only render the visible header when groups exist (otherwise the
+        // ungrouped state is implicit). Always provide an invisible DragTarget
+        // strip so dragging onto the ungrouped section's top works.
+        final showUngroupedHeader =
+            sectionTabs.isNotEmpty && searchHandler.tabGroups.isNotEmpty;
+        widgets.add(
+          SliverToBoxAdapter(
+            child: DragTarget<SearchTab>(
+              onWillAcceptWithDetails: (details) =>
+                  details.data.groupId.value != null,
+              onAcceptWithDetails: (details) {
+                searchHandler.assignTabToGroup(details.data, null);
+                getTabs();
+              },
+              builder: (context, candidates, rejects) {
+                final hovering = candidates.isNotEmpty;
+                final scheme = Theme.of(context).colorScheme;
+                final overlay = hovering ? scheme.primary.withValues(alpha: 0.12) : Colors.transparent;
+                if (showUngroupedHeader || hovering) {
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    color: overlay,
+                    child: showUngroupedHeader
+                        ? TabGroupUngroupedHeader(tabsInUngroupedCount: sectionTabs.length)
+                        : SizedBox(
+                            height: 24,
+                            child: Center(
+                              child: Text(
+                                hovering ? context.loc.tabs.groups.dropToUngroup : '',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: scheme.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
+        );
+      }
+
+      // Tabs sliver (skipped if collapsed)
+      final isCollapsed = group?.collapsed.value ?? false;
+      if (!isCollapsed && sectionTabs.isNotEmpty) {
+        widgets.add(
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            sliver: SliverReorderableList(
+              key: ValueKey('sliver-${group?.id ?? '__ungrouped__'}'),
+              itemCount: sectionTabs.length,
+              itemBuilder: (context, localIndex) {
+                final tab = sectionTabs[localIndex];
+                return _buildTabRowWidget(context, localIndex, tab);
+              },
+              onReorderItem: (oldLocal, newLocal) {
+                if (oldLocal == newLocal) return;
+                // onReorderItem provides the post-removal newIndex directly;
+                // translate to global by adding this section's start offset.
+                final fromGlobal = searchHandler.tabs.indexOf(sectionTabs[oldLocal]);
+                final toGlobal = sectionStart + newLocal;
+                searchHandler.moveTab(fromGlobal, toGlobal);
+                getTabs();
+              },
+            ),
+          ),
+        );
+      }
+
+      globalOffset += sectionTabs.length;
+    }
+
+    // Trailing "+ New group" button
+    widgets.add(
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(12, 16, 12, 24 + MediaQuery.paddingOf(context).bottom),
+          child: OutlinedButton.icon(
+            onPressed: _onAddGroupTapped,
+            icon: const Icon(Icons.create_new_folder_outlined),
+            label: Text(context.loc.tabs.groups.newGroup),
+          ),
+        ),
+      ),
+    );
+
+    return Scrollbar(
+      controller: scrollController,
+      thickness: 8,
+      interactive: true,
+      scrollbarOrientation: settingsHandler.handSide.value.isLeft
+          ? ScrollbarOrientation.left
+          : ScrollbarOrientation.right,
+      child: CustomScrollView(
+        controller: scrollController,
+        slivers: widgets,
+      ),
+    );
   }
 
   Widget filterBuild() {
@@ -770,33 +1135,61 @@ class _TabManagerPageState extends State<TabManagerPage> {
     );
   }
 
-  Widget proxyDecorator(Widget child, int index, Animation<double> animation) {
-    return child;
-  }
-
-  Widget itemBuilder(BuildContext context, int index) {
-    final SearchTab tab = filteredTabs[index];
-
-    // if (mode.isViewer && firstRender) {
-    //   return const SizedBox(height: tabHeight);
-    // }
-
-    // print('itemBuilder $index');
-
+  Widget _buildTabRowWidget(BuildContext context, int localIndex, SearchTab tab) {
     final bool isCurrent = tab == searchHandler.currentTab;
     final bool isSelected = selectedTabs.contains(tab);
+    final bool dragHandleEnabled = !selectMode && !isFilterActive && sortingMode.isNone;
 
     return ReorderableDelayedDragStartListener(
       key: ValueKey('item-${tab.id}'),
-      index: index,
-      enabled: !selectMode && !isFilterActive && sortingMode.isNone,
+      index: localIndex,
+      enabled: dragHandleEnabled,
       child: TabManagerItem(
         tab: tab,
-        index: index,
+        index: localIndex,
         isFiltered: isFilterActive || !sortingMode.isNone,
         originalIndex: (isFilterActive || !sortingMode.isNone) ? searchHandler.tabs.indexOf(tab) : null,
         isCurrent: isCurrent,
         filterText: filterTextController.text,
+        leadingDragHandle: dragHandleEnabled
+            ? Draggable<SearchTab>(
+                data: tab,
+                feedback: Material(
+                  elevation: 4,
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox(
+                    width: 280,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      child: TabRow(tab: tab, withFavicon: true),
+                    ),
+                  ),
+                ),
+                childWhenDragging: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Icon(
+                    Icons.drag_indicator,
+                    size: 22,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
+                  ),
+                ),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {},
+                  child: Tooltip(
+                    message: context.loc.tabs.groups.dragToAGroup,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Icon(
+                        Icons.drag_indicator,
+                        size: 22,
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : null,
         onTap: selectMode
             ? () {
                 if (isSelected || isCurrent) {
@@ -836,7 +1229,7 @@ class _TabManagerPageState extends State<TabManagerPage> {
             : null,
         onOptionsTap: () {
           if (!selectMode) {
-            showOptionsDialog(index);
+            showOptionsDialog(filteredTabs.indexOf(tab));
           }
         },
         onCloseTap: selectMode
@@ -847,6 +1240,151 @@ class _TabManagerPageState extends State<TabManagerPage> {
                 getTabs();
               },
       ),
+    );
+  }
+
+  /// Picks a group (or "Ungroup", or "New group") and assigns [tab] to it.
+  Future<void> _showMoveTabToGroupChooser(SearchTab tab) async {
+    final groups = searchHandler.tabGroups;
+    final currentGroupId = tab.groupId.value;
+
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(context.loc.tabs.groups.chooseGroup),
+          children: [
+            for (final g in groups)
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  searchHandler.assignTabToGroup(tab, g.id);
+                },
+                child: Row(
+                  children: [
+                    Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(color: g.color.value, shape: BoxShape.circle),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(g.name.value)),
+                    if (currentGroupId == g.id) const Icon(Icons.check, size: 16),
+                  ],
+                ),
+              ),
+            const Divider(),
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final newId = await showCreateTabGroupDialog(context);
+                if (newId != null) searchHandler.assignTabToGroup(tab, newId);
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.create_new_folder_outlined),
+                  const SizedBox(width: 12),
+                  Text('${context.loc.tabs.groups.newGroup}…'),
+                ],
+              ),
+            ),
+            if (currentGroupId != null)
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  searchHandler.assignTabToGroup(tab, null);
+                },
+                child: Row(
+                  children: [
+                    const Icon(Icons.folder_off),
+                    const SizedBox(width: 12),
+                    Text(context.loc.tabs.groups.removeFromGroup),
+                  ],
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Like [_showMoveTabToGroupChooser] but for a batch of tabs (select-mode).
+  Future<void> _showMoveTabsToGroupChooser(List<SearchTab> selectedTabsBatch) async {
+    if (selectedTabsBatch.isEmpty) return;
+    final groups = searchHandler.tabGroups;
+
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(context.loc.tabs.groups.chooseGroup),
+          children: [
+            for (final g in groups)
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  searchHandler.assignTabsToGroup(selectedTabsBatch, g.id);
+                  setState(() {
+                    selectedTabs.clear();
+                    selectMode = false;
+                  });
+                  getTabs();
+                },
+                child: Row(
+                  children: [
+                    Container(
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(color: g.color.value, shape: BoxShape.circle),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(g.name.value)),
+                  ],
+                ),
+              ),
+            const Divider(),
+            SimpleDialogOption(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final newId = await showCreateTabGroupDialog(context);
+                if (newId != null) {
+                  searchHandler.assignTabsToGroup(selectedTabsBatch, newId);
+                  setState(() {
+                    selectedTabs.clear();
+                    selectMode = false;
+                  });
+                  getTabs();
+                }
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.create_new_folder_outlined),
+                  const SizedBox(width: 12),
+                  Text('${context.loc.tabs.groups.newGroup}…'),
+                ],
+              ),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.of(context).pop();
+                searchHandler.assignTabsToGroup(selectedTabsBatch, null);
+                setState(() {
+                  selectedTabs.clear();
+                  selectMode = false;
+                });
+                getTabs();
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.folder_off),
+                  const SizedBox(width: 12),
+                  Text(context.loc.tabs.groups.ungroup),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -914,6 +1452,40 @@ class _TabManagerPageState extends State<TabManagerPage> {
             borderRadius: BorderRadius.circular(5),
             side: BorderSide(color: Theme.of(context).colorScheme.secondary),
           ),
+          onTap: () async {
+            // Pop the options dialog first; group chooser is a separate dialog.
+            Navigator.of(context).pop();
+            await _showMoveTabToGroupChooser(tab);
+            if (mounted) getTabs();
+          },
+          leading: Icon(
+            tab.groupId.value == null ? Icons.create_new_folder_outlined : Icons.drive_file_move_outlined,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          title: Text(tab.groupId.value == null ? context.loc.tabs.groups.addToGroup : context.loc.tabs.groups.moveToGroupAction),
+        ),
+        if (tab.groupId.value != null) ...[
+          const SizedBox(height: 10),
+          ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+              side: BorderSide(color: Theme.of(context).colorScheme.secondary),
+            ),
+            onTap: () {
+              searchHandler.assignTabToGroup(tab, null);
+              Navigator.of(context).pop();
+              getTabs();
+            },
+            leading: const Icon(Icons.folder_off),
+            title: Text(context.loc.tabs.groups.removeFromGroup),
+          ),
+        ],
+        const SizedBox(height: 10),
+        ListTile(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+            side: BorderSide(color: Theme.of(context).colorScheme.secondary),
+          ),
           onTap: () {
             selectedTabs.remove(tab);
             searchHandler.removeTabAt(tabIndex: searchHandler.tabs.indexOf(tab));
@@ -935,7 +1507,6 @@ class _TabManagerPageState extends State<TabManagerPage> {
           title: Text(context.loc.close),
         ),
         const SizedBox(height: 10),
-        // TODO more stuff?
       ],
     );
 
@@ -1134,6 +1705,50 @@ class _TabManagerPageState extends State<TabManagerPage> {
               ],
             ),
             const Divider(),
+            Text(context.loc.tabs.groups.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                const Icon(Icons.create_new_folder_outlined),
+                const SizedBox(width: 10),
+                Expanded(child: Text(context.loc.tabs.groups.helpTapNewGroup)),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                const Icon(Icons.drag_indicator),
+                const SizedBox(width: 10),
+                Expanded(child: Text(context.loc.tabs.groups.helpDragTabHandle)),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                const Icon(Icons.reorder),
+                const SizedBox(width: 10),
+                Expanded(child: Text(context.loc.tabs.groups.helpDragGroupHandle)),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                const Icon(Icons.expand_more),
+                const SizedBox(width: 10),
+                Expanded(child: Text(context.loc.tabs.groups.helpTapHeaderCollapse)),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                const Icon(Icons.more_vert),
+                const SizedBox(width: 10),
+                Expanded(child: Text(context.loc.tabs.groups.helpTapMoreVert)),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(context.loc.tabs.groups.helpPrevNextInherits),
+            const Divider(),
             Text(context.loc.tabs.numbersInBottomRight),
             // TODO
             Text(context.loc.tabs.firstNumberTabIndex),
@@ -1248,8 +1863,23 @@ class _TabManagerPageState extends State<TabManagerPage> {
                     }
 
                     if (sortingMode.isNone) {
-                      // randomly shuffle all filtered tabs
-                      filteredTabs.shuffle();
+                      // §0.7: shuffle within each group bucket, never across,
+                      // to preserve the contiguous-block invariant.
+                      final ungroupedBucket = filteredTabs.where((t) => t.groupId.value == null).toList()..shuffle();
+                      final byGroup = <String, List<SearchTab>>{
+                        for (final g in searchHandler.tabGroups) g.id: <SearchTab>[],
+                      };
+                      for (final t in filteredTabs) {
+                        final gid = t.groupId.value;
+                        if (gid != null && byGroup.containsKey(gid)) byGroup[gid]!.add(t);
+                      }
+                      for (final list in byGroup.values) {
+                        list.shuffle();
+                      }
+                      filteredTabs = [
+                        ...ungroupedBucket,
+                        for (final g in searchHandler.tabGroups) ...byGroup[g.id]!,
+                      ];
 
                       FlashElements.showSnackbar(
                         context: context,
@@ -1315,31 +1945,12 @@ class _TabManagerPageState extends State<TabManagerPage> {
           Expanded(
             child: Stack(
               children: [
-                Scrollbar(
-                  controller: scrollController,
-                  thickness: 8,
-                  interactive: true,
-                  scrollbarOrientation: settingsHandler.handSide.value.isLeft
-                      ? ScrollbarOrientation.left
-                      : ScrollbarOrientation.right,
-                  child: ReorderableListView.builder(
-                    scrollController: scrollController,
-                    itemExtent: tabHeight,
-                    onReorderItem: (oldIndex, newIndex) {
-                      if (oldIndex == newIndex) {
-                        return;
-                      }
-
-                      searchHandler.moveTab(oldIndex, newIndex);
-                      getTabs();
-                    },
-                    buildDefaultDragHandles: false,
-                    proxyDecorator: proxyDecorator,
-                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                    itemCount: totalFilteredTabs,
-                    itemBuilder: itemBuilder,
-                  ),
-                ),
+                Obx(() {
+                  // Touch tabGroups so external mutations (e.g. backup
+                  // restore) trigger a rebuild of the manager body.
+                  searchHandler.tabGroups.length;
+                  return _buildSectionedManagerBody();
+                }),
                 if (totalFilteredTabs == 0)
                   Center(
                     child: Column(
@@ -1450,6 +2061,34 @@ class _TabManagerPageState extends State<TabManagerPage> {
                 ),
               );
 
+              // §4.9: select-mode "Move to group" batch action.
+              final moveSelectedToGroupBtn = ElevatedButton(
+                onPressed: hasSelected
+                    ? () => _showMoveTabsToGroupChooser(List<SearchTab>.from(selectedTabs))
+                    : null,
+                child: Row(
+                  children: [
+                    const Icon(Icons.drive_file_move_outlined, size: iconSize),
+                    const SizedBox(width: 4),
+                    Stack(
+                      children: [
+                        Text(
+                          selectedTabs.length.toFormattedString(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Text(
+                          '00',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: Colors.transparent),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+
               return Container(
                 margin: EdgeInsets.fromLTRB(
                   10,
@@ -1463,6 +2102,8 @@ class _TabManagerPageState extends State<TabManagerPage> {
                     if (settingsHandler.handSide.value.isLeft) ...[
                       if (selectMode) ...[
                         selectAllBtn,
+                        const SizedBox(width: 6),
+                        moveSelectedToGroupBtn,
                         const SizedBox(width: 6),
                         deleteSelectedBtn,
                         const SizedBox(width: 6),
@@ -1495,6 +2136,8 @@ class _TabManagerPageState extends State<TabManagerPage> {
                       if (selectMode) ...[
                         const SizedBox(width: 6),
                         deleteSelectedBtn,
+                        const SizedBox(width: 6),
+                        moveSelectedToGroupBtn,
                         const SizedBox(width: 6),
                         selectAllBtn,
                       ] else ...[
@@ -1529,6 +2172,7 @@ class TabManagerItem extends StatelessWidget {
     this.onOptionsTap,
     this.onCloseTap,
     this.filterText,
+    this.leadingDragHandle,
     super.key,
   }) : assert(
          !isFiltered || (index != null && originalIndex != null),
@@ -1545,6 +2189,10 @@ class TabManagerItem extends StatelessWidget {
   final VoidCallback? onOptionsTap;
   final VoidCallback? onCloseTap;
   final String? filterText;
+  // Optional drag handle widget rendered on the leading (left) edge for
+  // cross-group drag (§4.3). Mirrors the placement of the group-reorder
+  // handle on `TabGroupHeader`.
+  final Widget? leadingDragHandle;
 
   @override
   Widget build(BuildContext context) {
@@ -1595,6 +2243,10 @@ class TabManagerItem extends StatelessWidget {
                     flex: 2,
                     child: Row(
                       children: [
+                        if (leadingDragHandle != null) ...[
+                          leadingDragHandle!,
+                          const SizedBox(width: 4),
+                        ],
                         Expanded(
                           child: TabRow(
                             tab: tab,
@@ -1610,7 +2262,10 @@ class TabManagerItem extends StatelessWidget {
                               ),
                         ],
                         if (onCloseTap != null) ...[
-                          if (onOptionsTap == null) const SizedBox(width: 4) else const SizedBox(width: 8),
+                          if (onOptionsTap == null)
+                            const SizedBox(width: 4)
+                          else
+                            const SizedBox(width: 8),
                           IconButton(
                             onPressed: onCloseTap,
                             icon: const Icon(
