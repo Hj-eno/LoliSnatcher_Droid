@@ -62,9 +62,9 @@ If you encounter any issues or have suggestions, please post them in GitHub issu
 Release - 2.5.1+5211:
 
 - Added Chinese (Simplified) and German localization
-- Fixed some layout issues
-- Fixed auto leave dialog on captcha completion appearing again after you decided to stay
 - Possible fix of broken screen orientation after leaving fullscreen video
+- Fixed some layout issues
+- Fixed auto leave dialog on captcha completion appearing again on new page load after you decided to stay
 - Fixed some jpeg images failing to load
 - Fixed duplicates and random sorting of tags on r34xxx
 
