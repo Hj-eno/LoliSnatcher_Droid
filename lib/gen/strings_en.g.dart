@@ -2179,10 +2179,10 @@ class TranslationsTabsGroupsEn {
   String get helpTapNewGroup =>
       TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ?? 'Tap "New group" at the bottom of the list to create a group.';
 
-  /// en: 'Drag the handle on the right of a tab to move it between groups.'
+  /// en: 'Drag the handle on the left of a tab to move it between groups.'
   String get helpDragTabHandle =>
       TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ??
-      'Drag the handle on the right of a tab to move it between groups.';
+      'Drag the handle on the left of a tab to move it between groups.';
 
   /// en: 'Drag the handle on the left of a group header to reorder groups.'
   String get helpDragGroupHandle =>
@@ -2581,6 +2581,45 @@ class TranslationsSettingsInterfaceEn {
   String get disableVibrationSubtitle =>
       TranslationOverrides.string(_root.$meta, 'settings.interface.disableVibrationSubtitle', {}) ??
       'May still happen on some actions even when disabled';
+
+  /// en: 'Tab manager bottom action bar'
+  String get tabManagerBottomBar =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? 'Tab manager bottom action bar';
+
+  /// en: 'Show scroll-to-top / current / bottom and close buttons at the bottom of the tabs manager. Floating buttons for new tab / new group are always shown.'
+  String get tabManagerBottomBarSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
+      'Show scroll-to-top / current / bottom and close buttons at the bottom of the tabs manager. Floating buttons for new tab / new group are always shown.';
+
+  /// en: 'Bottom-align main drawer'
+  String get drawerBottomAlign => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? 'Bottom-align main drawer';
+
+  /// en: 'Stack the side drawer's contents from the bottom up (search, then current tab, then tab actions, then everything else) for easier one-handed thumb reach.'
+  String get drawerBottomAlignSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ??
+      'Stack the side drawer\'s contents from the bottom up (search, then current tab, then tab actions, then everything else) for easier one-handed thumb reach.';
+
+  /// en: 'Drawer layout'
+  String get drawerLayoutTitle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? 'Drawer layout';
+
+  /// en: 'Choose which items appear in the side drawer and their order.'
+  String get drawerLayoutSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ??
+      'Choose which items appear in the side drawer and their order.';
+
+  /// en: 'Pinned — always shown'
+  String get drawerLayoutPinned => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? 'Pinned — always shown';
+
+  /// en: 'Restore defaults'
+  String get drawerLayoutRestoreDefaults =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? 'Restore defaults';
+
+  /// en: 'Bottom-align is on — the first item in this list shows at the bottom of the drawer.'
+  String get drawerLayoutBottomAlignHint =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ??
+      'Bottom-align is on — the first item in this list shows at the bottom of the drawer.';
+
+  late final TranslationsSettingsInterfaceDrawerItemsEn drawerItems = TranslationsSettingsInterfaceDrawerItemsEn.internal(_root);
 
   /// en: 'Predictive back gesture'
   String get usePredictiveBack => TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'Predictive back gesture';
@@ -4751,6 +4790,46 @@ class TranslationsPreviewErrorEn {
   String get tapToRetry => TranslationOverrides.string(_root.$meta, 'preview.error.tapToRetry', {}) ?? 'Tap here to retry';
 }
 
+// Path: settings.interface.drawerItems
+class TranslationsSettingsInterfaceDrawerItemsEn {
+  TranslationsSettingsInterfaceDrawerItemsEn.internal(this._root);
+
+  final Translations _root; // ignore: unused_field
+
+  // Translations
+
+  /// en: 'Search bar'
+  String get search => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? 'Search bar';
+
+  /// en: 'Current tab card'
+  String get tabSelector => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? 'Current tab card';
+
+  /// en: 'Tab buttons'
+  String get tabButtons => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? 'Tab buttons';
+
+  /// en: 'Multi-booru toggle'
+  String get multibooruToggle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? 'Multi-booru toggle';
+
+  /// en: 'Lock app'
+  String get lockApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? 'Lock app';
+
+  /// en: 'Settings'
+  String get settings => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? 'Settings';
+
+  /// en: 'Open webview'
+  String get webview => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? 'Open webview';
+
+  /// en: 'Update available'
+  String get updateAvailable => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? 'Update available';
+
+  /// en: 'Close app'
+  String get closeApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? 'Close app';
+
+  /// en: 'Mascot image'
+  String get mascot => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? 'Mascot image';
+}
+
 // Path: settings.interface.previewQualityValues
 class TranslationsSettingsInterfacePreviewQualityValuesEn {
   TranslationsSettingsInterfacePreviewQualityValuesEn.internal(this._root);
@@ -5470,7 +5549,7 @@ extension on Translations {
                 'Tap "New group" at the bottom of the list to create a group.',
           'tabs.groups.helpDragTabHandle' =>
             TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ??
-                'Drag the handle on the right of a tab to move it between groups.',
+                'Drag the handle on the left of a tab to move it between groups.',
           'tabs.groups.helpDragGroupHandle' =>
             TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ??
                 'Drag the handle on the left of a group header to reorder groups.',
@@ -5710,6 +5789,48 @@ extension on Translations {
           'settings.interface.disableVibrationSubtitle' =>
             TranslationOverrides.string(_root.$meta, 'settings.interface.disableVibrationSubtitle', {}) ??
                 'May still happen on some actions even when disabled',
+          'settings.interface.tabManagerBottomBar' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? 'Tab manager bottom action bar',
+          'settings.interface.tabManagerBottomBarSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
+                'Show scroll-to-top / current / bottom and close buttons at the bottom of the tabs manager. Floating buttons for new tab / new group are always shown.',
+          'settings.interface.drawerBottomAlign' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? 'Bottom-align main drawer',
+          'settings.interface.drawerBottomAlignSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ??
+                'Stack the side drawer\'s contents from the bottom up (search, then current tab, then tab actions, then everything else) for easier one-handed thumb reach.',
+          'settings.interface.drawerLayoutTitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? 'Drawer layout',
+          'settings.interface.drawerLayoutSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ??
+                'Choose which items appear in the side drawer and their order.',
+          'settings.interface.drawerLayoutPinned' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? 'Pinned — always shown',
+          'settings.interface.drawerLayoutRestoreDefaults' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? 'Restore defaults',
+          'settings.interface.drawerLayoutBottomAlignHint' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ??
+                'Bottom-align is on — the first item in this list shows at the bottom of the drawer.',
+          'settings.interface.drawerItems.search' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? 'Search bar',
+          'settings.interface.drawerItems.tabSelector' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? 'Current tab card',
+          'settings.interface.drawerItems.tabButtons' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? 'Tab buttons',
+          'settings.interface.drawerItems.multibooruToggle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? 'Multi-booru toggle',
+          'settings.interface.drawerItems.lockApp' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? 'Lock app',
+          'settings.interface.drawerItems.settings' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? 'Settings',
+          'settings.interface.drawerItems.webview' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? 'Open webview',
+          'settings.interface.drawerItems.updateAvailable' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? 'Update available',
+          'settings.interface.drawerItems.closeApp' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? 'Close app',
+          'settings.interface.drawerItems.mascot' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? 'Mascot image',
           'settings.interface.usePredictiveBack' =>
             TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'Predictive back gesture',
           'settings.interface.previewColumnsPortrait' =>
@@ -5866,6 +5987,9 @@ extension on Translations {
           'settings.viewer.shareActions' => TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActions', {}) ?? 'Share actions',
           'settings.viewer.shareActionsAsk' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsAsk', {}) ?? '- Ask - always ask what to share',
+          _ => null,
+        } ??
+        switch (path) {
           'settings.viewer.shareActionsPostURL' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsPostURL', {}) ?? '- Post URL',
           'settings.viewer.shareActionsFileURL' =>
@@ -5910,9 +6034,6 @@ extension on Translations {
           'settings.viewer.slideshow' => TranslationOverrides.string(_root.$meta, 'settings.viewer.slideshow', {}) ?? 'Slideshow',
           'settings.viewer.slideshowWIPNote' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.slideshowWIPNote', {}) ?? '[WIP] Videos/GIFs: manual scroll only',
-          _ => null,
-        } ??
-        switch (path) {
           'settings.viewer.preventDeviceFromSleeping' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.preventDeviceFromSleeping', {}) ?? 'Prevent device from sleeping',
           'settings.viewer.viewerOpenCloseAnimation' =>
@@ -6825,6 +6946,9 @@ extension on Translations {
             TranslationOverrides.string(_root.$meta, 'pinnedTags.typeAndPressAdd', {}) ?? 'Type and press Add button to include a label',
           'pinnedTags.selectExistingLabel' =>
             TranslationOverrides.string(_root.$meta, 'pinnedTags.selectExistingLabel', {}) ?? 'Select existing label',
+          _ => null,
+        } ??
+        switch (path) {
           'pinnedTags.tagPinned' => TranslationOverrides.string(_root.$meta, 'pinnedTags.tagPinned', {}) ?? 'Tag pinned',
           'pinnedTags.pinnedForBooru' =>
             ({required String name, required String labels}) =>
@@ -6854,9 +6978,6 @@ extension on Translations {
             ({required String msg}) =>
                 TranslationOverrides.string(_root.$meta, 'searchBar.failedToLoadSuggestions', {'msg': msg}) ??
                 'Couldn\'t load suggestions. Tap to retry${msg}',
-          _ => null,
-        } ??
-        switch (path) {
           'searchBar.noSuggestionsFound' => TranslationOverrides.string(_root.$meta, 'searchBar.noSuggestionsFound', {}) ?? 'No suggestions found',
           'searchBar.tagSuggestionsNotAvailable' =>
             TranslationOverrides.string(_root.$meta, 'searchBar.tagSuggestionsNotAvailable', {}) ?? 'Tag suggestions unavailable for this booru',

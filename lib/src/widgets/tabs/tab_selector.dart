@@ -1042,17 +1042,10 @@ class _TabManagerPageState extends State<TabManagerPage> {
       globalOffset += sectionTabs.length;
     }
 
-    // Trailing "+ New group" button
+    // Bottom spacer so the FAB doesn't clip the last row.
     widgets.add(
       SliverToBoxAdapter(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(12, 16, 12, 24 + MediaQuery.paddingOf(context).bottom),
-          child: OutlinedButton.icon(
-            onPressed: _onAddGroupTapped,
-            icon: const Icon(Icons.create_new_folder_outlined),
-            label: Text(context.loc.tabs.groups.newGroup),
-          ),
-        ),
+        child: SizedBox(height: 96 + MediaQuery.paddingOf(context).bottom),
       ),
     );
 
@@ -1968,10 +1961,46 @@ class _TabManagerPageState extends State<TabManagerPage> {
                       ],
                     ),
                   ),
+                Positioned(
+                  right: 16,
+                  bottom: 16,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      FloatingActionButton.small(
+                        heroTag: 'tab_manager_new_tab_fab',
+                        tooltip: context.loc.tabs.addNewTab,
+                        onPressed: () {
+                          // Use the current booru's defTags if set, otherwise the
+                          // global default from Boorus & Search settings.
+                          final booru = searchHandler.currentBooru;
+                          final query = (booru.defTags?.isNotEmpty == true)
+                              ? booru.defTags!
+                              : settingsHandler.defTags;
+                          searchHandler.addTabByString(query, switchToNew: true);
+                          getTabs();
+                        },
+                        child: const Icon(Icons.add),
+                      ),
+                      const SizedBox(height: 10),
+                      FloatingActionButton.small(
+                        heroTag: 'tab_manager_new_group_fab',
+                        tooltip: context.loc.tabs.groups.newGroup,
+                        onPressed: _onAddGroupTapped,
+                        child: const Icon(Icons.create_new_folder_outlined),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
-          Builder(
+          Obx(() {
+            if (!settingsHandler.tabManagerBottomBar.value) {
+              return const SizedBox.shrink();
+            }
+            return Builder(
             builder: (context) {
               const double iconSize = 28;
 
@@ -2153,7 +2182,8 @@ class _TabManagerPageState extends State<TabManagerPage> {
                 ),
               );
             },
-          ),
+          );
+          }),
         ],
       ),
     );

@@ -11,6 +11,7 @@ import 'package:lolisnatcher/src/data/settings/hand_side.dart';
 import 'package:lolisnatcher/src/data/settings/preview_display_mode.dart';
 import 'package:lolisnatcher/src/data/settings/preview_quality.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
+import 'package:lolisnatcher/src/pages/settings/drawer_layout_page.dart';
 import 'package:lolisnatcher/src/widgets/common/cancel_button.dart';
 import 'package:lolisnatcher/src/widgets/common/confirm_button.dart';
 import 'package:lolisnatcher/src/widgets/common/settings_widgets.dart';
@@ -37,7 +38,9 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
       showSearchbarQuickActions,
       autofocusSearchbar,
       disableVibration,
-      usePredictiveBack;
+      usePredictiveBack,
+      tabManagerBottomBar,
+      drawerBottomAlign;
   late AppMode appMode;
   late HandSide handSide;
 
@@ -54,6 +57,8 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
     autofocusSearchbar = settingsHandler.autofocusSearchbar;
     disableVibration = settingsHandler.disableVibration;
     usePredictiveBack = settingsHandler.usePredictiveBack;
+    tabManagerBottomBar = settingsHandler.tabManagerBottomBar.value;
+    drawerBottomAlign = settingsHandler.drawerBottomAlign.value;
     previewDisplay = settingsHandler.previewDisplay;
     previewDisplayFallback = settingsHandler.previewDisplayFallback;
     previewMode = settingsHandler.previewMode;
@@ -79,6 +84,8 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
     settingsHandler.disableVibration = disableVibration;
     final bool needThemeChange = usePredictiveBack != settingsHandler.usePredictiveBack;
     settingsHandler.usePredictiveBack = usePredictiveBack;
+    settingsHandler.tabManagerBottomBar.value = tabManagerBottomBar;
+    settingsHandler.drawerBottomAlign.value = drawerBottomAlign;
     settingsHandler.previewMode = previewMode;
     settingsHandler.previewDisplay = previewDisplay;
     settingsHandler.previewDisplayFallback = previewDisplayFallback;
@@ -253,6 +260,32 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
                 },
                 title: context.loc.settings.interface.disableVibration,
                 subtitle: Text(context.loc.settings.interface.disableVibrationSubtitle),
+              ),
+              SettingsToggle(
+                value: tabManagerBottomBar,
+                onChanged: (newValue) {
+                  setState(() {
+                    tabManagerBottomBar = newValue;
+                  });
+                },
+                title: context.loc.settings.interface.tabManagerBottomBar,
+                subtitle: Text(context.loc.settings.interface.tabManagerBottomBarSubtitle),
+              ),
+              SettingsToggle(
+                value: drawerBottomAlign,
+                onChanged: (newValue) {
+                  setState(() {
+                    drawerBottomAlign = newValue;
+                  });
+                },
+                title: context.loc.settings.interface.drawerBottomAlign,
+                subtitle: Text(context.loc.settings.interface.drawerBottomAlignSubtitle),
+              ),
+              SettingsButton(
+                name: context.loc.settings.interface.drawerLayoutTitle,
+                subtitle: Text(context.loc.settings.interface.drawerLayoutSubtitle),
+                icon: const Icon(Icons.view_list_outlined),
+                page: () => const DrawerLayoutPage(),
               ),
               SettingsTextInput(
                 controller: columnsPortraitController,

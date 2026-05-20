@@ -19,6 +19,7 @@ import 'package:lolisnatcher/gen/strings.g.dart';
 import 'package:lolisnatcher/src/boorus/booru_type.dart';
 import 'package:lolisnatcher/src/data/booru.dart';
 import 'package:lolisnatcher/src/data/constants.dart';
+import 'package:lolisnatcher/src/data/main_drawer_item.dart';
 import 'package:lolisnatcher/src/data/settings/app_alias.dart';
 import 'package:lolisnatcher/src/data/settings/app_mode.dart';
 import 'package:lolisnatcher/src/data/settings/button_position.dart';
@@ -176,7 +177,7 @@ class SettingsHandler {
   bool useVolumeButtonsForScroll = false;
   bool shitDevice = false;
   bool disableVideo = false;
-  bool enableDrawerMascot = false;
+  final RxBool enableDrawerMascot = false.obs;
   bool allowSelfSignedCerts = false;
   bool wakeLockEnabled = true;
   bool tagTypeFetchEnabled = true;
@@ -202,6 +203,9 @@ class SettingsHandler {
   bool usePredictiveBack = true;
   final RxBool useLockscreen = false.obs;
   final RxBool blurOnLeave = false.obs;
+  final RxBool tabManagerBottomBar = true.obs;
+  final RxBool drawerBottomAlign = false.obs;
+  final RxList<MainDrawerItem> mainDrawerItems = RxList<MainDrawerItem>.of(MainDrawerItem.defaultOrder);
   final RxList<Booru> booruList = RxList<Booru>([]);
   ////////////////////////////////////////////////////
 
@@ -285,6 +289,9 @@ class SettingsHandler {
     'usePredictiveBack',
     'useLockscreen',
     'blurOnLeave',
+    'tabManagerBottomBar',
+    'drawerBottomAlign',
+    'mainDrawerItems',
   ];
 
   // default values and possible options map for validation
@@ -703,6 +710,18 @@ class SettingsHandler {
       'type': 'bool',
       'default': false,
     },
+    'tabManagerBottomBar': {
+      'type': 'bool',
+      'default': true,
+    },
+    'drawerBottomAlign': {
+      'type': 'bool',
+      'default': false,
+    },
+    'mainDrawerItems': {
+      'type': 'mainDrawerItems',
+      'default': MainDrawerItem.defaultOrder,
+    },
 
     // other
     'buttonOrder': {
@@ -938,6 +957,22 @@ class SettingsHandler {
             }
           }
 
+        case 'mainDrawerItems':
+          if (toJSON) {
+            final list = value is RxList<MainDrawerItem>
+                ? value.toList()
+                : (value is List<MainDrawerItem> ? value : <MainDrawerItem>[]);
+            return MainDrawerItem.toCsv(list.isEmpty ? MainDrawerItem.defaultOrder : list);
+          } else {
+            if (value is String) {
+              return MainDrawerItem.parseCsv(value);
+            } else if (value is List<MainDrawerItem>) {
+              return value;
+            } else {
+              return settingParams['default'];
+            }
+          }
+
         // case 'stringList':
         default:
           return value;
@@ -1157,6 +1192,12 @@ class SettingsHandler {
         return useLockscreen;
       case 'blurOnLeave':
         return blurOnLeave;
+      case 'tabManagerBottomBar':
+        return tabManagerBottomBar;
+      case 'drawerBottomAlign':
+        return drawerBottomAlign;
+      case 'mainDrawerItems':
+        return mainDrawerItems;
 
       case 'prefBooru':
         return prefBooru;
@@ -1506,6 +1547,19 @@ class SettingsHandler {
       case 'blurOnLeave':
         blurOnLeave.value = validatedValue;
         break;
+      case 'tabManagerBottomBar':
+        tabManagerBottomBar.value = validatedValue;
+        break;
+      case 'drawerBottomAlign':
+        drawerBottomAlign.value = validatedValue;
+        break;
+      case 'mainDrawerItems':
+        if (validatedValue is List<MainDrawerItem>) {
+          mainDrawerItems.assignAll(validatedValue);
+        } else if (validatedValue is String) {
+          mainDrawerItems.assignAll(MainDrawerItem.parseCsv(validatedValue));
+        }
+        break;
 
       // theme stuff
       case 'appMode':
@@ -1539,7 +1593,7 @@ class SettingsHandler {
         drawerMascotPathOverride = validatedValue;
         break;
       case 'enableDrawerMascot':
-        enableDrawerMascot = validatedValue;
+        enableDrawerMascot.value = validatedValue;
         break;
       case 'locale':
         locale.value = validatedValue;

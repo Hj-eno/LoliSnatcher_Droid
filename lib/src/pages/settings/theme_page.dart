@@ -55,7 +55,7 @@ class _ThemePageState extends State<ThemePage> {
     useDynamicColor = settingsHandler.useDynamicColor.value;
     isAmoled = settingsHandler.isAmoled.value;
     fontFamily = settingsHandler.fontFamily.value;
-    enableMascot = settingsHandler.enableDrawerMascot;
+    enableMascot = settingsHandler.enableDrawerMascot.value;
     mascotPathOverride = settingsHandler.drawerMascotPathOverride;
     primaryPickerColor = settingsHandler.customPrimaryColor.value;
     accentPickerColor = settingsHandler.customAccentColor.value;
@@ -89,7 +89,7 @@ class _ThemePageState extends State<ThemePage> {
     settingsHandler.useDynamicColor.value = useDynamicColor;
     settingsHandler.isAmoled.value = isAmoled;
     settingsHandler.fontFamily.value = fontFamily;
-    settingsHandler.enableDrawerMascot = enableMascot;
+    settingsHandler.enableDrawerMascot.value = enableMascot;
 
     // print('onPrimary: ${ThemeData.estimateBrightnessForColor(primaryPickerColor!) == Brightness.dark}');
     // print('onAccent: ${ThemeData.estimateBrightnessForColor(accentPickerColor!) == Brightness.dark}');

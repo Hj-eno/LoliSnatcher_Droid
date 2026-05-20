@@ -431,7 +431,13 @@ class _DesktopTabsState extends State<DesktopTabs> {
             IconButton(
               tooltip: 'New tab',
               onPressed: () {
-                searchHandler.addTabByString('', switchToNew: true);
+                // Use the current booru's defTags if set, otherwise the global
+                // default from Boorus & Search settings.
+                final booru = searchHandler.currentBooru;
+                final query = (booru.defTags?.isNotEmpty == true)
+                    ? booru.defTags!
+                    : SettingsHandler.instance.defTags;
+                searchHandler.addTabByString(query, switchToNew: true);
               },
               icon: const Icon(Icons.add),
             ),
