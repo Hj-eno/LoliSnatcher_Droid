@@ -56,7 +56,13 @@ class _LoliControlsState extends State<LoliControls> {
 
   bool doubleTapped = false, holdingDown = false;
   Timer? _doubleTapHideTimer, longTapSpeedChangeDelayTimer, pointerCountCheckTimer;
-  double longTapFastForwardSpeed = 2;
+  static const double _longTapBasePlaybackSpeed = 2;
+  static const double _longTapMinPlaybackSpeed = 0.2;
+  static const double _longTapMaxPlaybackSpeed = 4;
+  static const double _longTapSlowdownDeadZone = 24;
+  static const double _longTapSpeedChangeTolerance = 0.05;
+  static const Duration _longTapSpeedChangeDebounce = Duration(milliseconds: 200);
+  double longTapPlaybackSpeed = _longTapBasePlaybackSpeed;
   int pointerCount = 0;
   bool speedSetManually = false;
   TapDownDetails? _doubleTapInfo;
@@ -146,7 +152,7 @@ class _LoliControlsState extends State<LoliControls> {
     holdingDown = false;
     speedSetManually = false;
     _doubleTapExtraMessage = '';
-    longTapFastForwardSpeed = 2;
+    longTapPlaybackSpeed = _longTapBasePlaybackSpeed;
 
     _doubleTapHideTimer?.cancel();
     longTapSpeedChangeDelayTimer?.cancel();
@@ -960,7 +966,6 @@ class _LoliControlsState extends State<LoliControls> {
   }
 
   void onHitAreaLongPress() {
-    // TODO seek backwards when going below 2x
     setState(() {
       if (!_latestValue.isPlaying) {
         // force play if video is paused
@@ -976,41 +981,39 @@ class _LoliControlsState extends State<LoliControls> {
       doubleTapped = false;
       holdingDown = true;
       speedSetManually = false;
-      _doubleTapExtraMessage = '${longTapFastForwardSpeed.toStringAsFixed(1)}x';
-      controller.setPlaybackSpeed(longTapFastForwardSpeed);
+      longTapPlaybackSpeed = _longTapBasePlaybackSpeed;
+      _doubleTapExtraMessage = '${longTapPlaybackSpeed.toStringAsFixed(1)}x';
+      controller.setPlaybackSpeed(longTapPlaybackSpeed);
       _lastDoubleTapSide = 1;
     });
   }
 
   void onHitAreaLongPressMove(LongPressMoveUpdateDetails details) {
     setState(() {
-      // swiping 1/8th of the screen from starting point will add +1 to the base speed of 2, up to a max of 4
-      longTapFastForwardSpeed =
-          2 +
-          (double.tryParse(
-                (details.offsetFromOrigin.dx / (MediaQuery.sizeOf(context).width / 8)).toStringAsFixed(1),
-              ) ??
-              0);
-      // limit between 2 and 4 (higher values are too unstable, even on high end devices)
-      longTapFastForwardSpeed = longTapFastForwardSpeed.clamp(2, 4);
+      final double newLongTapPlaybackSpeed = _getLongTapPlaybackSpeed(details.offsetFromOrigin.dx);
+      if ((newLongTapPlaybackSpeed - longTapPlaybackSpeed).abs() < _longTapSpeedChangeTolerance) {
+        return;
+      }
+
+      longTapPlaybackSpeed = newLongTapPlaybackSpeed;
       // update ui value immediately, real speed change will happen in a timer below
       doubleTapped = false;
       holdingDown = true;
       speedSetManually = false;
-      _doubleTapExtraMessage = '${longTapFastForwardSpeed.toStringAsFixed(1)}x';
+      _doubleTapExtraMessage = '${longTapPlaybackSpeed.toStringAsFixed(1)}x';
 
       longTapSpeedChangeDelayTimer?.cancel();
       longTapSpeedChangeDelayTimer = Timer(
         // delay to avoid changing speed too fast
-        const Duration(milliseconds: 300),
+        _longTapSpeedChangeDebounce,
         () {
           try {
-            controller.setPlaybackSpeed(longTapFastForwardSpeed);
+            controller.setPlaybackSpeed(longTapPlaybackSpeed);
           } catch (_) {
             // future proofing - setPlaybackSpeed may throw an exception on ios
             setState(() {
-              longTapFastForwardSpeed = 2;
-              controller.setPlaybackSpeed(2);
+              longTapPlaybackSpeed = _longTapBasePlaybackSpeed;
+              controller.setPlaybackSpeed(_longTapBasePlaybackSpeed);
             });
           }
         },
@@ -1018,12 +1021,34 @@ class _LoliControlsState extends State<LoliControls> {
     });
   }
 
+  double _getLongTapPlaybackSpeed(double dragOffset) {
+    final double speedStepDistance = MediaQuery.sizeOf(context).width / 8;
+
+    if (dragOffset >= 0) {
+      // Swiping 1/8th of the screen from the starting point adds +1 to the base speed, up to 4x.
+      return (_longTapBasePlaybackSpeed + dragOffset / speedStepDistance).clamp(
+        _longTapBasePlaybackSpeed,
+        _longTapMaxPlaybackSpeed,
+      );
+    }
+
+    final double slowdownOffset = (-dragOffset - _longTapSlowdownDeadZone).clamp(0, double.infinity);
+    if (slowdownOffset == 0) {
+      return _longTapBasePlaybackSpeed;
+    }
+
+    // Left drag has a short dead zone, then moves directly from 2x down to 0.25x.
+    final double slowdownProgress = slowdownOffset / speedStepDistance;
+    return (_longTapBasePlaybackSpeed - slowdownProgress * (_longTapBasePlaybackSpeed - _longTapMinPlaybackSpeed))
+        .clamp(_longTapMinPlaybackSpeed, _longTapBasePlaybackSpeed);
+  }
+
   void onHitAreaLongPressUp() {
     setState(() {
       // reset speed and start all hide timers
       longTapSpeedChangeDelayTimer?.cancel();
       holdingDown = false;
-      longTapFastForwardSpeed = 2;
+      longTapPlaybackSpeed = _longTapBasePlaybackSpeed;
       if (!speedSetManually) {
         controller.setPlaybackSpeed(1);
         _cancelAndRestartTimer();
