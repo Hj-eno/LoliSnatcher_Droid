@@ -799,7 +799,7 @@ class _HideableAppBarState extends State<HideableAppBar> {
 
   void shareTextAction(String text) {
     if (SettingsHandler.isDesktopPlatform) {
-      ClipboardUtils.copyTextToClipboard(Uri.encodeFull(text));
+      ClipboardUtils.copyTextToClipboard(text);
     } else if (Platform.isAndroid) {
       ServiceHandler.loadShareTextIntent(text);
     }
