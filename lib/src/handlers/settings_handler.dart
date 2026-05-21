@@ -706,17 +706,13 @@ class SettingsHandler {
 
     // other
     'buttonOrder': {
-      'type': 'stringList',
-      'default': <String>[
-        ...GalleryButton.values.map((b) => b.toJson()),
-      ],
+      'type': 'galleryButtonList',
+      'default': <GalleryButton>[...GalleryButton.values],
     },
     'disabledButtons': {
-      'type': 'stringList',
-      'default': <String>[],
-      'options': <String>[
-        ...GalleryButton.disableable.map((b) => b.toJson()),
-      ],
+      'type': 'galleryButtonList',
+      'default': <GalleryButton>[],
+      'options': [...GalleryButton.disableable],
     },
     'cacheDuration': {
       'type': 'duration',
