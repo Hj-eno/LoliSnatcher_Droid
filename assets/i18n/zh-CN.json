@@ -19,7 +19,6 @@
     "enable": "启用",
     "disable": "禁用",
     "add": "添加",
-    "exclude": "排除",
     "edit": "编辑",
     "remove": "移除",
     "save": "保存",
@@ -71,14 +70,6 @@
     "username": "用户名称",
     "favourites": "收藏夹",
     "downloads": "下载",
-    "secondsShort": "秒",
-    "minutesShort": "分",
-    "hoursShort": "时",
-    "daysShort": "天",
-    "leaveThisPageQuestion": "要离开此页面吗？",
-    "pageWillCloseAutomatically": "此页面即将自动关闭",
-    "stay": "留下",
-    "leaveNow": "立刻离开",
     "validationErrors": {
         "required": "请输入一个值",
         "invalid": "请输入有效值",
@@ -125,9 +116,6 @@
         "appFixedRatingAutomatically": "评级已自动修正。请在以后的搜索中使用正确的评级",
         "tabsRestored": "标签页已恢复",
         "restoredTabsCount(param=count)": {
-            "one": "从上次会话中恢复了 ${count} 个标签页",
-            "few": "从上次会话中恢复了 ${count} 个标签页",
-            "many": "从上次会话中恢复了 ${count} 个标签页",
             "other": "从上次会话中恢复了 ${count} 个标签页"
         },
         "someRestoredTabsHadIssues": "一些恢复的标签页中有未知的booru或损坏的字符。",
@@ -135,16 +123,11 @@
         "listOfBrokenTabs": "损坏的标签页列表：",
         "tabsMerged": "标签页已合并",
         "addedTabsCount(param=count)": {
-            "one": "已添加 ${count} 个新标签页",
-            "few": "添加了 ${count} 个新标签页",
-            "many": "添加了 ${count} 个新标签页",
-            "other": "添加了 ${count} 个新标签页"
+            "other": "添加了 ${count} 个新标签页",
+            "one": "已添加 ${count} 个新标签页"
         },
         "tabsReplaced": "标签页已替换",
         "receivedTabsCount(param=count)": {
-            "one": "接收了 ${count} 个标签页",
-            "few": "接收了 ${count} 个标签页",
-            "many": "接收了 ${count} 个标签页",
             "other": "接收了 ${count} 个标签页"
         }
     },
@@ -154,8 +137,8 @@
         "enterTags": "输入标签",
         "amount": "数量",
         "amountOfFilesToSnatch": "要下载的文件数量",
-        "delayInMs": "延迟（毫秒）",
-        "delayBetweenEachDownload": "每次下载之间的延迟",
+        "delayInMs": "间隔（毫秒）",
+        "delayBetweenEachDownload": "每次下载之间的间隔时间",
         "snatchFiles": "开始下载",
         "itemWasAlreadySnatched": "此项目之前已下载过",
         "failedToSnatchItem": "项目下载失败",
@@ -163,36 +146,21 @@
         "startingNextQueueItem": "开始下载下一项…",
         "itemsSnatched": "项目已下载",
         "snatchedCount(param=count)": {
-            "one": "已下载：${count} 个项目",
-            "few": "已下载：${count} 个项目",
-            "many": "已下载：${count} 个项目",
             "other": "已下载：${count} 个项目"
         },
         "filesAlreadySnatched(param=count)": {
-            "one": "${count} 个文件之前已下载过",
-            "few": "${count} 个文件之前已下载过",
-            "many": "${count} 个文件之前已下载过",
             "other": "${count} 个文件之前已下载过"
         },
         "failedToSnatchFiles(param=count)": {
-            "one": "${count} 个文件下载失败",
-            "few": "${count} 个文件下载失败",
-            "many": "${count} 个文件下载失败",
             "other": "${count} 个文件下载失败"
         },
         "cancelledFiles(param=count)": {
-            "one": "已取消 ${count} 个文件下载",
-            "few": "已取消 ${count} 个文件下载",
-            "many": "已取消 ${count} 个文件下载",
             "other": "已取消 ${count} 个文件下载"
         },
         "snatchingImages": "正在下载图片",
         "doNotCloseApp": "不要关闭应用！",
         "addedItemToQueue": "添加项目到下载队列",
         "addedItemsToQueue(param=count)": {
-            "one": "已添加 ${count} 个项目到下载队列",
-            "few": "已添加 ${count} 个项目到下载队列",
-            "many": "已添加 ${count} 个项目到下载队列",
             "other": "已添加 ${count} 个项目到下载队列"
         }
     },
@@ -277,9 +245,6 @@
         "alphabetically": "按名称排序",
         "reversed": "（反向）",
         "areYouSureDeleteTabs(param=count)": {
-            "one": "确认要删除 ${count} 个标签页吗？",
-            "few": "确认要删除 ${count} 个标签页吗？",
-            "many": "确认要删除 ${count} 个标签页吗？",
             "other": "确认要删除 ${count} 个标签页吗？"
         },
         "filters": {
@@ -328,25 +293,16 @@
         "delete": "删除",
         "deleteHistoryEntries": "删除历史记录",
         "deleteItemsConfirm(param=count)": {
-            "one": "确定要删除 ${count} 个项目吗？",
-            "few": "确定要删除 ${count} 个项目吗？",
-            "many": "确定要删除 ${count} 个项目吗？",
             "other": "确定要删除 ${count} 个项目吗？"
         },
         "clearSelection": "清除选择",
         "deleteItems(param=count)": {
-            "one": "删除 ${count} 个项目",
-            "few": "删除 ${count} 个项目",
-            "many": "删除 ${count} 个项目",
             "other": "删除 ${count} 个项目"
         }
     },
     "webview": {
         "title": "网页模式",
         "notSupportedOnDevice": "此设备上不支持",
-        "captcha": "验证码",
-        "captchaCheckDescription": "检测到可能有验证码，请通过验证码后返回",
-        "captchaCompleted": "已通过验证码",
         "navigation": {
             "enterUrlLabel": "输入链接",
             "enterCustomUrl": "输入自定义链接",
@@ -365,7 +321,10 @@
             "history": "历史记录",
             "noBackHistoryItem": "当前已是最后页",
             "noForwardHistoryItem": "当前已是最前页"
-        }
+        },
+        "captcha": "验证码",
+        "captchaCheckDescription": "检测到可能有验证码，请通过验证码后返回",
+        "captchaCompleted": "已通过验证码"
     },
     "settings": {
         "title": "设置",
@@ -549,10 +508,10 @@
             "buttonsOrder": "按钮顺序",
             "longPressToChangeItemOrder": "长按改变顺序。",
             "atLeast4ButtonsVisibleOnToolbar": "在工具栏中至少要有4个按钮保持可见。",
-            "otherButtonsWillGoIntoOverflow": "其他按钮会被收纳在更多(三点)菜单中。",
+            "otherButtonsWillGoIntoOverflow": "其他按钮会被收纳在展开(三点)菜单中。",
             "longPressToMoveItems": "长按移动项目",
             "onlyForVideos": "仅限视频",
-            "thisButtonCannotBeDisabled": "不可以禁用此按钮",
+            "thisButtonCannotBeDisabled": "不可以隐藏这个按钮",
             "defaultShareAction": "默认分享行为",
             "shareActions": "分享行为",
             "shareActionsAsk": "- 询问 - 始终询问分享什么",
@@ -594,7 +553,7 @@
                 "bottom": "底部"
             },
             "buttonPositionValues": {
-                "disabled": "禁用",
+                "disabled": "隐藏",
                 "left": "左",
                 "right": "右"
             },
@@ -766,7 +725,7 @@
         },
         "network": {
             "title": "网络",
-            "enableSelfSignedSSLCertificates": "启用自签名的SSL证书",
+            "enableSelfSignedSSLCertificates": "允许自签名的SSL证书",
             "proxy": "代理",
             "proxySubtitle": "流式传输的视频不会走代理，如有需要请切换到缓存模式",
             "customUserAgent": "自定义User-Agent",
@@ -790,7 +749,7 @@
             "appLock": "应用锁",
             "appLockMsg": "手动或一段时间后锁定应用。需要PIN/生物验证",
             "autoLockAfter": "自动锁定计时",
-            "autoLockAfterTip": "单位是秒，设成0以禁用",
+            "autoLockAfterTip": "单位是秒，设置成0不自动锁定",
             "bluronLeave": "离开应用时模糊界面",
             "bluronLeaveMsg": "由于系统限制，可能在某些设备上无效",
             "incognitoKeyboard": "无痕键盘",
@@ -823,7 +782,7 @@
             "showDownloadNotifications": "显示下载通知",
             "snatchItemsOnFavouriting": "收藏时下载该项目",
             "favouriteItemsOnSnatching": "下载时收藏该项目",
-            "writeImageDataOnSave": "保存时将图像数据写入JSON",
+            "writeImageDataOnSave": "下载时保存图像信息到同名JSON文件",
             "requiresCustomStorageDirectory": "需要自定义目录",
             "setStorageDirectory": "设置存储目录",
             "currentPath(param=path)": "当前：${path: String}",
@@ -1050,9 +1009,6 @@
         "resetStale": "重置过期时间",
         "makeUnstaleable": "设置为永不过期",
         "deleteTags(param=count)": {
-            "one": "删除 ${count} 个标签",
-            "few": "删除 ${count} 个标签",
-            "many": "删除 ${count} 个标签",
             "other": "删除 ${count} 个标签"
         },
         "deleteTagsTitle": "删除标签",
@@ -1091,7 +1047,6 @@
         "addedNewTab": "已添加至新标签页：",
         "id": "ID",
         "postURL": "帖子链接",
-        "uploader": "上传者",
         "posted": "发布时间",
         "details": "详细信息",
         "filename": "文件名",
@@ -1107,8 +1062,8 @@
         "removeFromSearch": "从搜索中移除",
         "addToSearch": "添加到搜索",
         "addedToSearchBar": "已添加到搜索框：",
-        "excludeFromSearch": "从搜索中排除",
-        "exclusionAddedToSearchBar": "已添加排除项至搜索框：",
+        "addToSearchExclude": "添加到搜索（排除）",
+        "addedToSearchBarExclude": "已添加到搜索框（排除）：",
         "addToMarked": "添加到已标记",
         "addToHidden": "添加到隐藏",
         "removeFromMarked": "从已标记中移除",
@@ -1130,7 +1085,10 @@
         "relatedTabs": "相关的标签页",
         "tabsWithOnlyTag": "只有此标签的标签页",
         "tabsWithOnlyTagDifferentBooru": "只有此标签的不同站点的标签页",
-        "tabsContainingTag": "包含此标签的标签页"
+        "tabsContainingTag": "包含此标签的标签页",
+        "excludeFromSearch": "从搜索中排除",
+        "exclusionAddedToSearchBar": "已添加排除项至搜索框：",
+        "uploader": "上传者"
     },
     "pinnedTags": {
         "pinnedTags": "固定的标签",
@@ -1273,9 +1231,6 @@
         "loadingFile": "正在加载文件",
         "loadingFileMessage": "可能需要一些时间，请稍等",
         "sources(param=count)": {
-            "one": "来源",
-            "few": "来源",
-            "many": "来源",
             "other": "来源"
         }
     },
@@ -1343,9 +1298,6 @@
             "reachedEndSubtitle(param=pageNum)": "已加载页数: ${pageNum: int}\n点此重新加载最后一页",
             "loadingPage(param=pageNum)": "正在加载第 ${pageNum: int} 页…",
             "startedAgo(param=seconds)": {
-                "one": "在 ${seconds} 秒前开始",
-                "few": "在 ${seconds} 秒前开始",
-                "many": "在 ${seconds} 秒前开始",
                 "other": "在 ${seconds} 秒前开始"
             },
             "tapToRetryIfStuck": "如果感觉卡住了或者太慢可以点击重试",
@@ -1362,5 +1314,14 @@
         "meta": "元数据",
         "species": "物种",
         "none": "无/通常的"
-    }
+    },
+    "exclude": "排除",
+    "secondsShort": "秒",
+    "minutesShort": "分",
+    "hoursShort": "时",
+    "daysShort": "天",
+    "leaveThisPageQuestion": "要离开此页面吗？",
+    "pageWillCloseAutomatically": "此页面即将自动关闭",
+    "stay": "留下",
+    "leaveNow": "立刻离开"
 }
