@@ -746,6 +746,8 @@ class _TranslationsTabsTrTr extends TranslationsTabsEn {
   late final _TranslationsTabsFiltersTrTr filters = _TranslationsTabsFiltersTrTr._(_root);
   @override
   late final _TranslationsTabsMoveTrTr move = _TranslationsTabsMoveTrTr._(_root);
+  @override
+  late final _TranslationsTabsGroupsTrTr groups = _TranslationsTabsGroupsTrTr._(_root);
 }
 
 // Path: history
@@ -1636,6 +1638,120 @@ class _TranslationsTabsMoveTrTr extends TranslationsTabsMoveEn {
   String get preview => TranslationOverrides.string(_root.$meta, 'tabs.move.preview', {}) ?? 'Önizleme:';
 }
 
+// Path: tabs.groups
+class _TranslationsTabsGroupsTrTr extends TranslationsTabsGroupsEn {
+  _TranslationsTabsGroupsTrTr._(TranslationsTrTr root) : this._root = root, super.internal(root);
+
+  final TranslationsTrTr _root; // ignore: unused_field
+
+  // Translations
+  @override
+  String get title => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? 'Gruplar';
+  @override
+  String get newGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? 'Yeni grup';
+  @override
+  String get renameGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? 'Grubu yeniden adlandır';
+  @override
+  String get renameRecolor => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? 'Yeniden adlandır / renk değiştir';
+  @override
+  String get editGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? 'Grubu düzenle';
+  @override
+  String get deleteGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? 'Grubu sil';
+  @override
+  String get deleteWithTabs => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? 'Gruptaki sekmeleri de sil';
+  @override
+  String get ungrouped => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? 'Gruplanmamış';
+  @override
+  String get moveToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? 'Gruba taşı';
+  @override
+  String get moveToGroupAction => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? 'Gruba taşı…';
+  @override
+  String get removeFromGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? 'Gruptan çıkar';
+  @override
+  String get addToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? 'Gruba ekle…';
+  @override
+  String get newGroupFromTab => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? 'Bu sekmeden yeni grup';
+  @override
+  String get groupColor => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? 'Renk';
+  @override
+  String get groupName => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? 'Grup adı';
+  @override
+  String get collapse => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? 'Grubu daralt';
+  @override
+  String get expand => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? 'Grubu genişlet';
+  @override
+  String get filterByGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? 'Grup';
+  @override
+  String get dropToUngroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? 'Gruptan çıkarmak için bırakın';
+  @override
+  String get dragToAGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? 'Bir gruba sürükleyin';
+  @override
+  String get groupActions => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? 'Grup eylemleri';
+  @override
+  String get newerVersionBackup =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ??
+      'Bu yedek LoliSnatcher\'ın daha yeni bir sürümünden ve yüklenemedi.';
+  @override
+  String get malformedBackup => TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? 'Sekme yedeği bozuk ve yüklenemedi.';
+  @override
+  String get newGroupTitle => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? 'Yeni grup';
+  @override
+  String get create => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? 'Oluştur';
+  @override
+  String get save => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? 'Kaydet';
+  @override
+  String deleteGroupNamed({required String name}) =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? '"${name}" grubunu silmek istiyor musun?';
+  @override
+  String tabsInGroup({required num count}) =>
+      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('tr'))(
+        count,
+        one: 'Bu grupta ${count} sekme var.',
+        other: 'Bu grupta ${count} sekme var.',
+      );
+  @override
+  String get otherwiseBecomeUngrouped =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? 'Aksi takdirde sekmeler gruplanmamış olur.';
+  @override
+  String tabsMovedToUngrouped({required num count}) =>
+      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('tr'))(
+        count,
+        one: '${count} sekme gruplanmamışa taşındı',
+        other: '${count} sekme gruplanmamışa taşındı',
+      );
+  @override
+  String get chooseGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? 'Grup seç';
+  @override
+  String get unknownGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? 'Bilinmeyen grup';
+  @override
+  String get ungroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? 'Gruptan çıkar';
+  @override
+  String get helpTapNewGroup =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ??
+      'Bir grup oluşturmak için listenin altındaki "Yeni grup"a dokun.';
+  @override
+  String get helpDragTabHandle =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ??
+      'Sekmeyi gruplar arasında taşımak için sekmenin solundaki tutamağı sürükle.';
+  @override
+  String get helpDragGroupHandle =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ??
+      'Grupların sırasını değiştirmek için grup başlığının solundaki tutamağı sürükle.';
+  @override
+  String get helpTapHeaderCollapse =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ?? 'Grubu daraltmak/genişletmek için grup başlığına dokun.';
+  @override
+  String get helpTapMoreVert =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ??
+      'Grubu yeniden adlandırmak, rengini değiştirmek veya silmek için grup başlığındaki ⋯\'a dokun.';
+  @override
+  String get helpPrevNextInherits =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ??
+      '"Önceki"/"Sonraki" ile eklenen yeni sekmeler mevcut sekmenin grubunu devralır. Sona eklenen sekmeler gruplanmamış olur.';
+}
+
 // Path: webview.navigation
 class _TranslationsWebviewNavigationTrTr extends TranslationsWebviewNavigationEn {
   _TranslationsWebviewNavigationTrTr._(TranslationsTrTr root) : this._root = root, super.internal(root);
@@ -1930,6 +2046,37 @@ class _TranslationsSettingsInterfaceTrTr extends TranslationsSettingsInterfaceEn
   String get disableVibrationSubtitle =>
       TranslationOverrides.string(_root.$meta, 'settings.interface.disableVibrationSubtitle', {}) ??
       'Devre dışı bırakılsa bile bazı işlemlerde hala titreşim olabilir';
+  @override
+  String get tabManagerBottomBar =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? 'Sekme yöneticisi alt eylem çubuğu';
+  @override
+  String get tabManagerBottomBarSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
+      'Sekme yöneticisinin altında üst/mevcut/alt kaydırma ve kapatma düğmelerini göster. Yeni sekme / yeni grup için yüzen düğmeler her zaman gösterilir.';
+  @override
+  String get drawerBottomAlign => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? 'Ana çekmeceyi alta hizala';
+  @override
+  String get drawerBottomAlignSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ??
+      'Yan çekmecenin içeriğini alttan yukarı (arama, mevcut sekme, sekme eylemleri, diğerleri) sırala. Tek elle başparmakla kullanım için daha kolay.';
+  @override
+  String get drawerLayoutTitle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? 'Çekmece düzeni';
+  @override
+  String get drawerLayoutSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ??
+      'Yan çekmecede hangi öğelerin görüneceğini ve sıralarını seç.';
+  @override
+  String get drawerLayoutPinned =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? 'Sabitlendi — her zaman gösterilir';
+  @override
+  String get drawerLayoutRestoreDefaults =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? 'Varsayılanları geri yükle';
+  @override
+  String get drawerLayoutBottomAlignHint =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ??
+      'Alta hizalama açık — bu listedeki ilk öğe çekmecenin altında gösterilir.';
+  @override
+  late final _TranslationsSettingsInterfaceDrawerItemsTrTr drawerItems = _TranslationsSettingsInterfaceDrawerItemsTrTr._(_root);
   @override
   String get usePredictiveBack => TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'Tahmini geri hareketi';
   @override
@@ -3623,6 +3770,36 @@ class _TranslationsPreviewErrorTrTr extends TranslationsPreviewErrorEn {
   String get tapToRetry => TranslationOverrides.string(_root.$meta, 'preview.error.tapToRetry', {}) ?? 'Tekrar denemek için buraya dokun';
 }
 
+// Path: settings.interface.drawerItems
+class _TranslationsSettingsInterfaceDrawerItemsTrTr extends TranslationsSettingsInterfaceDrawerItemsEn {
+  _TranslationsSettingsInterfaceDrawerItemsTrTr._(TranslationsTrTr root) : this._root = root, super.internal(root);
+
+  final TranslationsTrTr _root; // ignore: unused_field
+
+  // Translations
+  @override
+  String get search => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? 'Arama çubuğu';
+  @override
+  String get tabSelector => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? 'Mevcut sekme kartı';
+  @override
+  String get tabButtons => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? 'Sekme düğmeleri';
+  @override
+  String get multibooruToggle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? 'Çoklu booru anahtarı';
+  @override
+  String get lockApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? 'Uygulamayı kilitle';
+  @override
+  String get settings => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? 'Ayarlar';
+  @override
+  String get webview => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? 'Web görünümü aç';
+  @override
+  String get updateAvailable => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? 'Güncelleme mevcut';
+  @override
+  String get closeApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? 'Uygulamayı kapat';
+  @override
+  String get mascot => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? 'Maskot görseli';
+}
+
 // Path: settings.interface.previewQualityValues
 class _TranslationsSettingsInterfacePreviewQualityValuesTrTr extends TranslationsSettingsInterfacePreviewQualityValuesEn {
   _TranslationsSettingsInterfacePreviewQualityValuesTrTr._(TranslationsTrTr root) : this._root = root, super.internal(root);
@@ -4245,6 +4422,78 @@ extension on TranslationsTrTr {
                 TranslationOverrides.string(_root.$meta, 'tabs.move.moveTo', {'formattedNumber': formattedNumber}) ??
                 'Şuraya taşı: #${formattedNumber}',
           'tabs.move.preview' => TranslationOverrides.string(_root.$meta, 'tabs.move.preview', {}) ?? 'Önizleme:',
+          'tabs.groups.title' => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? 'Gruplar',
+          'tabs.groups.newGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? 'Yeni grup',
+          'tabs.groups.renameGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? 'Grubu yeniden adlandır',
+          'tabs.groups.renameRecolor' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? 'Yeniden adlandır / renk değiştir',
+          'tabs.groups.editGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? 'Grubu düzenle',
+          'tabs.groups.deleteGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? 'Grubu sil',
+          'tabs.groups.deleteWithTabs' => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? 'Gruptaki sekmeleri de sil',
+          'tabs.groups.ungrouped' => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? 'Gruplanmamış',
+          'tabs.groups.moveToGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? 'Gruba taşı',
+          'tabs.groups.moveToGroupAction' => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? 'Gruba taşı…',
+          'tabs.groups.removeFromGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? 'Gruptan çıkar',
+          'tabs.groups.addToGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? 'Gruba ekle…',
+          'tabs.groups.newGroupFromTab' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? 'Bu sekmeden yeni grup',
+          'tabs.groups.groupColor' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? 'Renk',
+          'tabs.groups.groupName' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? 'Grup adı',
+          'tabs.groups.collapse' => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? 'Grubu daralt',
+          'tabs.groups.expand' => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? 'Grubu genişlet',
+          'tabs.groups.filterByGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? 'Grup',
+          'tabs.groups.dropToUngroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? 'Gruptan çıkarmak için bırakın',
+          'tabs.groups.dragToAGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? 'Bir gruba sürükleyin',
+          'tabs.groups.groupActions' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? 'Grup eylemleri',
+          'tabs.groups.newerVersionBackup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ??
+                'Bu yedek LoliSnatcher\'ın daha yeni bir sürümünden ve yüklenemedi.',
+          'tabs.groups.malformedBackup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? 'Sekme yedeği bozuk ve yüklenemedi.',
+          'tabs.groups.newGroupTitle' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? 'Yeni grup',
+          'tabs.groups.create' => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? 'Oluştur',
+          'tabs.groups.save' => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? 'Kaydet',
+          'tabs.groups.deleteGroupNamed' =>
+            ({required String name}) =>
+                TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? '"${name}" grubunu silmek istiyor musun?',
+          'tabs.groups.tabsInGroup' =>
+            ({required num count}) =>
+                TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
+                (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('tr'))(
+                  count,
+                  one: 'Bu grupta ${count} sekme var.',
+                  other: 'Bu grupta ${count} sekme var.',
+                ),
+          'tabs.groups.otherwiseBecomeUngrouped' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? 'Aksi takdirde sekmeler gruplanmamış olur.',
+          'tabs.groups.tabsMovedToUngrouped' =>
+            ({required num count}) =>
+                TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
+                (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('tr'))(
+                  count,
+                  one: '${count} sekme gruplanmamışa taşındı',
+                  other: '${count} sekme gruplanmamışa taşındı',
+                ),
+          'tabs.groups.chooseGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? 'Grup seç',
+          'tabs.groups.unknownGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? 'Bilinmeyen grup',
+          'tabs.groups.ungroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? 'Gruptan çıkar',
+          'tabs.groups.helpTapNewGroup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ??
+                'Bir grup oluşturmak için listenin altındaki "Yeni grup"a dokun.',
+          'tabs.groups.helpDragTabHandle' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ??
+                'Sekmeyi gruplar arasında taşımak için sekmenin solundaki tutamağı sürükle.',
+          'tabs.groups.helpDragGroupHandle' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ??
+                'Grupların sırasını değiştirmek için grup başlığının solundaki tutamağı sürükle.',
+          'tabs.groups.helpTapHeaderCollapse' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ??
+                'Grubu daraltmak/genişletmek için grup başlığına dokun.',
+          'tabs.groups.helpTapMoreVert' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ??
+                'Grubu yeniden adlandırmak, rengini değiştirmek veya silmek için grup başlığındaki ⋯\'a dokun.',
+          'tabs.groups.helpPrevNextInherits' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ??
+                '"Önceki"/"Sonraki" ile eklenen yeni sekmeler mevcut sekmenin grubunu devralır. Sona eklenen sekmeler gruplanmamış olur.',
           'history.searchHistory' => TranslationOverrides.string(_root.$meta, 'history.searchHistory', {}) ?? 'Arama geçmişi',
           'history.searchHistoryIsEmpty' => TranslationOverrides.string(_root.$meta, 'history.searchHistoryIsEmpty', {}) ?? 'Arama geçmişi boş',
           'history.searchHistoryIsDisabled' =>
@@ -4481,6 +4730,48 @@ extension on TranslationsTrTr {
           'settings.interface.disableVibrationSubtitle' =>
             TranslationOverrides.string(_root.$meta, 'settings.interface.disableVibrationSubtitle', {}) ??
                 'Devre dışı bırakılsa bile bazı işlemlerde hala titreşim olabilir',
+          'settings.interface.tabManagerBottomBar' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? 'Sekme yöneticisi alt eylem çubuğu',
+          'settings.interface.tabManagerBottomBarSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
+                'Sekme yöneticisinin altında üst/mevcut/alt kaydırma ve kapatma düğmelerini göster. Yeni sekme / yeni grup için yüzen düğmeler her zaman gösterilir.',
+          'settings.interface.drawerBottomAlign' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? 'Ana çekmeceyi alta hizala',
+          'settings.interface.drawerBottomAlignSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ??
+                'Yan çekmecenin içeriğini alttan yukarı (arama, mevcut sekme, sekme eylemleri, diğerleri) sırala. Tek elle başparmakla kullanım için daha kolay.',
+          'settings.interface.drawerLayoutTitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? 'Çekmece düzeni',
+          'settings.interface.drawerLayoutSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ??
+                'Yan çekmecede hangi öğelerin görüneceğini ve sıralarını seç.',
+          'settings.interface.drawerLayoutPinned' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? 'Sabitlendi — her zaman gösterilir',
+          'settings.interface.drawerLayoutRestoreDefaults' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? 'Varsayılanları geri yükle',
+          'settings.interface.drawerLayoutBottomAlignHint' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ??
+                'Alta hizalama açık — bu listedeki ilk öğe çekmecenin altında gösterilir.',
+          'settings.interface.drawerItems.search' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? 'Arama çubuğu',
+          'settings.interface.drawerItems.tabSelector' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? 'Mevcut sekme kartı',
+          'settings.interface.drawerItems.tabButtons' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? 'Sekme düğmeleri',
+          'settings.interface.drawerItems.multibooruToggle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? 'Çoklu booru anahtarı',
+          'settings.interface.drawerItems.lockApp' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? 'Uygulamayı kilitle',
+          'settings.interface.drawerItems.settings' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? 'Ayarlar',
+          'settings.interface.drawerItems.webview' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? 'Web görünümü aç',
+          'settings.interface.drawerItems.updateAvailable' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? 'Güncelleme mevcut',
+          'settings.interface.drawerItems.closeApp' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? 'Uygulamayı kapat',
+          'settings.interface.drawerItems.mascot' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? 'Maskot görseli',
           'settings.interface.usePredictiveBack' =>
             TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'Tahmini geri hareketi',
           'settings.interface.previewColumnsPortrait' =>
@@ -4668,6 +4959,9 @@ extension on TranslationsTrTr {
             TranslationOverrides.string(_root.$meta, 'settings.viewer.useVolumeButtonsForScrolling', {}) ?? 'Kaydırmak için ses butonlarını kullan',
           'settings.viewer.volumeButtonsScrolling' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.volumeButtonsScrolling', {}) ?? 'Ses butonlarıyla kaydırma',
+          _ => null,
+        } ??
+        switch (path) {
           'settings.viewer.volumeButtonsScrollingHelp' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.volumeButtonsScrollingHelp', {}) ??
                 'Önizlemelerde ve görüntüleyicide kaydırmak için ses butonlarını kullan',
@@ -4787,9 +5081,6 @@ extension on TranslationsTrTr {
             TranslationOverrides.string(_root.$meta, 'settings.video.cacheModes.desktopWarning', {}) ??
                 '[Uyarı]: Masaüstünde Akış modu bazı Booru\'lar için hatalı çalışabilir.',
           'settings.video.cacheModeValues.stream' => TranslationOverrides.string(_root.$meta, 'settings.video.cacheModeValues.stream', {}) ?? 'Akış',
-          _ => null,
-        } ??
-        switch (path) {
           'settings.video.cacheModeValues.cache' =>
             TranslationOverrides.string(_root.$meta, 'settings.video.cacheModeValues.cache', {}) ?? 'Önbellek',
           'settings.video.cacheModeValues.streamCache' =>
@@ -5659,6 +5950,9 @@ extension on TranslationsTrTr {
           'pinnedTags.addTagManually' => TranslationOverrides.string(_root.$meta, 'pinnedTags.addTagManually', {}) ?? 'Etiketi manuel ekle',
           'pinnedTags.noTagsMatchSearch' =>
             TranslationOverrides.string(_root.$meta, 'pinnedTags.noTagsMatchSearch', {}) ?? 'Aramayla eşleşen etiket yok',
+          _ => null,
+        } ??
+        switch (path) {
           'pinnedTags.noPinnedTagsYet' =>
             TranslationOverrides.string(_root.$meta, 'pinnedTags.noPinnedTagsYet', {}) ?? 'Henüz sabitlenmiş etiket yok',
           'pinnedTags.editLabels' => TranslationOverrides.string(_root.$meta, 'pinnedTags.editLabels', {}) ?? 'Etiketleri düzenle',
@@ -5744,9 +6038,6 @@ extension on TranslationsTrTr {
           'viewer.appBar.pause' => TranslationOverrides.string(_root.$meta, 'viewer.appBar.pause', {}) ?? 'Duraklat',
           'viewer.appBar.start' => TranslationOverrides.string(_root.$meta, 'viewer.appBar.start', {}) ?? 'Başlat',
           'viewer.appBar.unfavourite' => TranslationOverrides.string(_root.$meta, 'viewer.appBar.unfavourite', {}) ?? 'Favorilerden çıkar',
-          _ => null,
-        } ??
-        switch (path) {
           'viewer.appBar.deselect' => TranslationOverrides.string(_root.$meta, 'viewer.appBar.deselect', {}) ?? 'Seçimi kaldır',
           'viewer.appBar.reloadWithScaling' =>
             TranslationOverrides.string(_root.$meta, 'viewer.appBar.reloadWithScaling', {}) ?? 'Ölçeklendirme ile yeniden yükle',

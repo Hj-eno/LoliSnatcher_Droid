@@ -739,6 +739,8 @@ class _TranslationsTabsJaJp extends TranslationsTabsEn {
   late final _TranslationsTabsFiltersJaJp filters = _TranslationsTabsFiltersJaJp._(_root);
   @override
   late final _TranslationsTabsMoveJaJp move = _TranslationsTabsMoveJaJp._(_root);
+  @override
+  late final _TranslationsTabsGroupsJaJp groups = _TranslationsTabsGroupsJaJp._(_root);
 }
 
 // Path: history
@@ -1604,6 +1606,110 @@ class _TranslationsTabsMoveJaJp extends TranslationsTabsMoveEn {
   String get preview => TranslationOverrides.string(_root.$meta, 'tabs.move.preview', {}) ?? 'プレビュー:';
 }
 
+// Path: tabs.groups
+class _TranslationsTabsGroupsJaJp extends TranslationsTabsGroupsEn {
+  _TranslationsTabsGroupsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+  final TranslationsJaJp _root; // ignore: unused_field
+
+  // Translations
+  @override
+  String get title => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? 'グループ';
+  @override
+  String get newGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? '新しいグループ';
+  @override
+  String get renameGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? 'グループ名を変更';
+  @override
+  String get renameRecolor => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? '名前変更 / 色変更';
+  @override
+  String get editGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? 'グループを編集';
+  @override
+  String get deleteGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? 'グループを削除';
+  @override
+  String get deleteWithTabs => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? 'グループ内のタブも削除';
+  @override
+  String get ungrouped => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? '未分類';
+  @override
+  String get moveToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? 'グループへ移動';
+  @override
+  String get moveToGroupAction => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? 'グループへ移動…';
+  @override
+  String get removeFromGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? 'グループから外す';
+  @override
+  String get addToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? 'グループに追加…';
+  @override
+  String get newGroupFromTab => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? 'このタブから新しいグループ';
+  @override
+  String get groupColor => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? '色';
+  @override
+  String get groupName => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? 'グループ名';
+  @override
+  String get collapse => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? 'グループを折りたたむ';
+  @override
+  String get expand => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? 'グループを展開';
+  @override
+  String get filterByGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? 'グループ';
+  @override
+  String get dropToUngroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? 'ここにドロップでグループから外す';
+  @override
+  String get dragToAGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? 'グループにドラッグ';
+  @override
+  String get groupActions => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? 'グループ操作';
+  @override
+  String get newerVersionBackup =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ?? 'このバックアップは新しいバージョンの LoliSnatcher のもので、読み込めません。';
+  @override
+  String get malformedBackup => TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? 'タブのバックアップが壊れているため読み込めません。';
+  @override
+  String get newGroupTitle => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? '新しいグループ';
+  @override
+  String get create => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? '作成';
+  @override
+  String get save => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? '保存';
+  @override
+  String deleteGroupNamed({required String name}) =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? 'グループ「${name}」を削除しますか？';
+  @override
+  String tabsInGroup({required num count}) =>
+      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ja'))(
+        count,
+        other: 'このグループに ${count} 個のタブがあります。',
+      );
+  @override
+  String get otherwiseBecomeUngrouped =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? 'そうしない場合、タブは未分類になります。';
+  @override
+  String tabsMovedToUngrouped({required num count}) =>
+      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ja'))(
+        count,
+        other: '${count} 個のタブを未分類に移動しました',
+      );
+  @override
+  String get chooseGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? 'グループを選択';
+  @override
+  String get unknownGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? '不明なグループ';
+  @override
+  String get ungroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? 'グループから外す';
+  @override
+  String get helpTapNewGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ?? 'リストの一番下にある「新しいグループ」をタップしてグループを作成します。';
+  @override
+  String get helpDragTabHandle => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ?? 'タブの左側のハンドルをドラッグすると、グループ間で移動できます。';
+  @override
+  String get helpDragGroupHandle =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ?? 'グループヘッダーの左側のハンドルをドラッグすると、グループの順序を変更できます。';
+  @override
+  String get helpTapHeaderCollapse =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ?? 'グループヘッダーをタップして折りたたみ/展開します。';
+  @override
+  String get helpTapMoreVert =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ?? 'グループヘッダーの ⋯ をタップすると、名前変更、色変更、削除ができます。';
+  @override
+  String get helpPrevNextInherits =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ?? '「前」「次」で追加した新しいタブは、現在のタブのグループを引き継ぎます。末尾に追加したタブは未分類になります。';
+}
+
 // Path: webview.navigation
 class _TranslationsWebviewNavigationJaJp extends TranslationsWebviewNavigationEn {
   _TranslationsWebviewNavigationJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -1872,6 +1978,33 @@ class _TranslationsSettingsInterfaceJaJp extends TranslationsSettingsInterfaceEn
   @override
   String get disableVibrationSubtitle =>
       TranslationOverrides.string(_root.$meta, 'settings.interface.disableVibrationSubtitle', {}) ?? '無効にしても一部のアクションで振動が発生する可能性があります';
+  @override
+  String get tabManagerBottomBar => TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? 'タブマネージャーの下部アクションバー';
+  @override
+  String get tabManagerBottomBarSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
+      'タブマネージャー下部に上端/現在/下端へのスクロールボタンと閉じるボタンを表示します。「新しいタブ」「新しいグループ」のフローティングボタンは常に表示されます。';
+  @override
+  String get drawerBottomAlign => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? 'メインドロワーを下揃え';
+  @override
+  String get drawerBottomAlignSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ??
+      'サイドドロワーの内容を下から上へ（検索、現在のタブ、タブ操作、その他）配置し、片手の親指で操作しやすくします。';
+  @override
+  String get drawerLayoutTitle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? 'ドロワーレイアウト';
+  @override
+  String get drawerLayoutSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ?? 'サイドドロワーに表示する項目と順序を選択します。';
+  @override
+  String get drawerLayoutPinned => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? 'ピン留め — 常に表示';
+  @override
+  String get drawerLayoutRestoreDefaults =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? 'デフォルトに戻す';
+  @override
+  String get drawerLayoutBottomAlignHint =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ?? '下揃えが有効です — このリストの最初の項目がドロワーの下部に表示されます。';
+  @override
+  late final _TranslationsSettingsInterfaceDrawerItemsJaJp drawerItems = _TranslationsSettingsInterfaceDrawerItemsJaJp._(_root);
   @override
   String get usePredictiveBack => TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'スワイプキャンセルアニメーション';
   @override
@@ -3417,6 +3550,35 @@ class _TranslationsPreviewErrorJaJp extends TranslationsPreviewErrorEn {
   String get tapToRetry => TranslationOverrides.string(_root.$meta, 'preview.error.tapToRetry', {}) ?? 'ここをタップして再試行';
 }
 
+// Path: settings.interface.drawerItems
+class _TranslationsSettingsInterfaceDrawerItemsJaJp extends TranslationsSettingsInterfaceDrawerItemsEn {
+  _TranslationsSettingsInterfaceDrawerItemsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+
+  final TranslationsJaJp _root; // ignore: unused_field
+
+  // Translations
+  @override
+  String get search => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? '検索バー';
+  @override
+  String get tabSelector => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? '現在のタブカード';
+  @override
+  String get tabButtons => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? 'タブボタン';
+  @override
+  String get multibooruToggle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? 'マルチ Booru トグル';
+  @override
+  String get lockApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? 'アプリをロック';
+  @override
+  String get settings => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? '設定';
+  @override
+  String get webview => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? 'Web ビューを開く';
+  @override
+  String get updateAvailable => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? '更新が利用可能';
+  @override
+  String get closeApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? 'アプリを閉じる';
+  @override
+  String get mascot => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? 'マスコット画像';
+}
+
 // Path: settings.interface.previewQualityValues
 class _TranslationsSettingsInterfacePreviewQualityValuesJaJp extends TranslationsSettingsInterfacePreviewQualityValuesEn {
   _TranslationsSettingsInterfacePreviewQualityValuesJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
@@ -3997,6 +4159,68 @@ extension on TranslationsJaJp {
             ({required String formattedNumber}) =>
                 TranslationOverrides.string(_root.$meta, 'tabs.move.moveTo', {'formattedNumber': formattedNumber}) ?? '#${formattedNumber} に移動',
           'tabs.move.preview' => TranslationOverrides.string(_root.$meta, 'tabs.move.preview', {}) ?? 'プレビュー:',
+          'tabs.groups.title' => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? 'グループ',
+          'tabs.groups.newGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? '新しいグループ',
+          'tabs.groups.renameGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? 'グループ名を変更',
+          'tabs.groups.renameRecolor' => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? '名前変更 / 色変更',
+          'tabs.groups.editGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? 'グループを編集',
+          'tabs.groups.deleteGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? 'グループを削除',
+          'tabs.groups.deleteWithTabs' => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? 'グループ内のタブも削除',
+          'tabs.groups.ungrouped' => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? '未分類',
+          'tabs.groups.moveToGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? 'グループへ移動',
+          'tabs.groups.moveToGroupAction' => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? 'グループへ移動…',
+          'tabs.groups.removeFromGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? 'グループから外す',
+          'tabs.groups.addToGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? 'グループに追加…',
+          'tabs.groups.newGroupFromTab' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? 'このタブから新しいグループ',
+          'tabs.groups.groupColor' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? '色',
+          'tabs.groups.groupName' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? 'グループ名',
+          'tabs.groups.collapse' => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? 'グループを折りたたむ',
+          'tabs.groups.expand' => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? 'グループを展開',
+          'tabs.groups.filterByGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? 'グループ',
+          'tabs.groups.dropToUngroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? 'ここにドロップでグループから外す',
+          'tabs.groups.dragToAGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? 'グループにドラッグ',
+          'tabs.groups.groupActions' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? 'グループ操作',
+          'tabs.groups.newerVersionBackup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ?? 'このバックアップは新しいバージョンの LoliSnatcher のもので、読み込めません。',
+          'tabs.groups.malformedBackup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? 'タブのバックアップが壊れているため読み込めません。',
+          'tabs.groups.newGroupTitle' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? '新しいグループ',
+          'tabs.groups.create' => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? '作成',
+          'tabs.groups.save' => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? '保存',
+          'tabs.groups.deleteGroupNamed' =>
+            ({required String name}) =>
+                TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? 'グループ「${name}」を削除しますか？',
+          'tabs.groups.tabsInGroup' =>
+            ({required num count}) =>
+                TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
+                (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ja'))(
+                  count,
+                  other: 'このグループに ${count} 個のタブがあります。',
+                ),
+          'tabs.groups.otherwiseBecomeUngrouped' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? 'そうしない場合、タブは未分類になります。',
+          'tabs.groups.tabsMovedToUngrouped' =>
+            ({required num count}) =>
+                TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
+                (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('ja'))(
+                  count,
+                  other: '${count} 個のタブを未分類に移動しました',
+                ),
+          'tabs.groups.chooseGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? 'グループを選択',
+          'tabs.groups.unknownGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? '不明なグループ',
+          'tabs.groups.ungroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? 'グループから外す',
+          'tabs.groups.helpTapNewGroup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ?? 'リストの一番下にある「新しいグループ」をタップしてグループを作成します。',
+          'tabs.groups.helpDragTabHandle' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ?? 'タブの左側のハンドルをドラッグすると、グループ間で移動できます。',
+          'tabs.groups.helpDragGroupHandle' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ?? 'グループヘッダーの左側のハンドルをドラッグすると、グループの順序を変更できます。',
+          'tabs.groups.helpTapHeaderCollapse' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ?? 'グループヘッダーをタップして折りたたみ/展開します。',
+          'tabs.groups.helpTapMoreVert' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ?? 'グループヘッダーの ⋯ をタップすると、名前変更、色変更、削除ができます。',
+          'tabs.groups.helpPrevNextInherits' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ??
+                '「前」「次」で追加した新しいタブは、現在のタブのグループを引き継ぎます。末尾に追加したタブは未分類になります。',
           'history.searchHistory' => TranslationOverrides.string(_root.$meta, 'history.searchHistory', {}) ?? '検索履歴',
           'history.searchHistoryIsEmpty' => TranslationOverrides.string(_root.$meta, 'history.searchHistoryIsEmpty', {}) ?? '検索履歴は空です',
           'history.searchHistoryIsDisabled' => TranslationOverrides.string(_root.$meta, 'history.searchHistoryIsDisabled', {}) ?? '検索履歴は無効です',
@@ -4204,6 +4428,46 @@ extension on TranslationsJaJp {
           'settings.interface.disableVibration' => TranslationOverrides.string(_root.$meta, 'settings.interface.disableVibration', {}) ?? '振動を無効化',
           'settings.interface.disableVibrationSubtitle' =>
             TranslationOverrides.string(_root.$meta, 'settings.interface.disableVibrationSubtitle', {}) ?? '無効にしても一部のアクションで振動が発生する可能性があります',
+          'settings.interface.tabManagerBottomBar' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? 'タブマネージャーの下部アクションバー',
+          'settings.interface.tabManagerBottomBarSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
+                'タブマネージャー下部に上端/現在/下端へのスクロールボタンと閉じるボタンを表示します。「新しいタブ」「新しいグループ」のフローティングボタンは常に表示されます。',
+          'settings.interface.drawerBottomAlign' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? 'メインドロワーを下揃え',
+          'settings.interface.drawerBottomAlignSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ??
+                'サイドドロワーの内容を下から上へ（検索、現在のタブ、タブ操作、その他）配置し、片手の親指で操作しやすくします。',
+          'settings.interface.drawerLayoutTitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? 'ドロワーレイアウト',
+          'settings.interface.drawerLayoutSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ?? 'サイドドロワーに表示する項目と順序を選択します。',
+          'settings.interface.drawerLayoutPinned' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? 'ピン留め — 常に表示',
+          'settings.interface.drawerLayoutRestoreDefaults' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? 'デフォルトに戻す',
+          'settings.interface.drawerLayoutBottomAlignHint' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ??
+                '下揃えが有効です — このリストの最初の項目がドロワーの下部に表示されます。',
+          'settings.interface.drawerItems.search' => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? '検索バー',
+          'settings.interface.drawerItems.tabSelector' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? '現在のタブカード',
+          'settings.interface.drawerItems.tabButtons' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? 'タブボタン',
+          'settings.interface.drawerItems.multibooruToggle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? 'マルチ Booru トグル',
+          'settings.interface.drawerItems.lockApp' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? 'アプリをロック',
+          'settings.interface.drawerItems.settings' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? '設定',
+          'settings.interface.drawerItems.webview' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? 'Web ビューを開く',
+          'settings.interface.drawerItems.updateAvailable' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? '更新が利用可能',
+          'settings.interface.drawerItems.closeApp' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? 'アプリを閉じる',
+          'settings.interface.drawerItems.mascot' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? 'マスコット画像',
           'settings.interface.usePredictiveBack' =>
             TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'スワイプキャンセルアニメーション',
           'settings.interface.previewColumnsPortrait' =>
@@ -4343,6 +4607,9 @@ extension on TranslationsJaJp {
           'settings.viewer.shareActions' => TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActions', {}) ?? '共有アクション',
           'settings.viewer.shareActionsAsk' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsAsk', {}) ?? '- 尋ねる - 常に何を共有するか質問します',
+          _ => null,
+        } ??
+        switch (path) {
           'settings.viewer.shareActionsPostURL' => TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsPostURL', {}) ?? '- 投稿のURL',
           'settings.viewer.shareActionsFileURL' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsFileURL', {}) ??
@@ -4454,9 +4721,6 @@ extension on TranslationsJaJp {
           'settings.video.mpvUseHardwareAcceleration' =>
             TranslationOverrides.string(_root.$meta, 'settings.video.mpvUseHardwareAcceleration', {}) ?? 'MPV: ハードウェアアクセラレーションを使用',
           'settings.video.mpvVO' => TranslationOverrides.string(_root.$meta, 'settings.video.mpvVO', {}) ?? 'MPV: VO',
-          _ => null,
-        } ??
-        switch (path) {
           'settings.video.mpvHWDEC' => TranslationOverrides.string(_root.$meta, 'settings.video.mpvHWDEC', {}) ?? 'MPV: HWDEC',
           'settings.video.videoCacheMode' => TranslationOverrides.string(_root.$meta, 'settings.video.videoCacheMode', {}) ?? 'ビデオキャッシュモード',
           'settings.video.cacheModes.title' => TranslationOverrides.string(_root.$meta, 'settings.video.cacheModes.title', {}) ?? 'ビデオキャッシュモード',
@@ -5217,6 +5481,9 @@ extension on TranslationsJaJp {
           'pinnedTags.labelsOptional' => TranslationOverrides.string(_root.$meta, 'pinnedTags.labelsOptional', {}) ?? 'ラベル (オプション)',
           'pinnedTags.typeAndPressAdd' => TranslationOverrides.string(_root.$meta, 'pinnedTags.typeAndPressAdd', {}) ?? '入力して追加ボタンを押してラベルを追加',
           'pinnedTags.selectExistingLabel' => TranslationOverrides.string(_root.$meta, 'pinnedTags.selectExistingLabel', {}) ?? '既存のラベルを選択',
+          _ => null,
+        } ??
+        switch (path) {
           'pinnedTags.tagPinned' => TranslationOverrides.string(_root.$meta, 'pinnedTags.tagPinned', {}) ?? 'ピン留め完了',
           'pinnedTags.pinnedForBooru' =>
             ({required String name, required String labels}) =>
@@ -5290,9 +5557,6 @@ extension on TranslationsJaJp {
           'mediaPreviews.addNewBooru' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.addNewBooru', {}) ?? 'Booruを新規追加',
           'mediaPreviews.help' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.help', {}) ?? 'ヘルプ (英語)',
           'mediaPreviews.settings' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.settings', {}) ?? '設定',
-          _ => null,
-        } ??
-        switch (path) {
           'mediaPreviews.restoringPreviousSession' =>
             TranslationOverrides.string(_root.$meta, 'mediaPreviews.restoringPreviousSession', {}) ?? '以前のセッションを復元中…',
           'mediaPreviews.copiedFileURL' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.copiedFileURL', {}) ?? 'ファイルURLをクリップボードにコピーしました！',
