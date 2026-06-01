@@ -61,6 +61,14 @@ A minor update aimed at adding new localization languages and fixing some issues
 
 -------------------
 
+Hotfix 1 - 2.5.1+5213 (xx.xx.2026):
+- Inkbunny parsing fix
+- Attempt to fix app name change failing on some devices
+- Translate values of cache duration limit setting
+- Increase cache size max limit to 50GB
+
+-------------------
+
 Release - 2.5.1+5212 (28.05.2026):
 
 - Added Chinese (Simplified) and German localizations
