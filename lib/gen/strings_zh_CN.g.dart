@@ -627,6 +627,8 @@ class _Translations$tabs$zh_CN extends Translations$tabs$en {
   @override
   String get switchToNewTab => TranslationOverrides.string(_root.$meta, 'tabs.switchToNewTab', {}) ?? '切换到新标签页';
   @override
+  late final _Translations$tabs$groups$zh_CN groups = _Translations$tabs$groups$zh_CN._(_root);
+  @override
   String get add => TranslationOverrides.string(_root.$meta, 'tabs.add', {}) ?? '添加';
   @override
   String get tabsManager => TranslationOverrides.string(_root.$meta, 'tabs.tabsManager', {}) ?? '标签页管理';
@@ -1519,6 +1521,105 @@ class _Translations$tagType$zh_CN extends Translations$tagType$en {
   String get none => TranslationOverrides.string(_root.$meta, 'tagType.none', {}) ?? '无/通常的';
 }
 
+// Path: tabs.groups
+class _Translations$tabs$groups$zh_CN extends Translations$tabs$groups$en {
+  _Translations$tabs$groups$zh_CN._(TranslationsZhCn root) : this._root = root, super.internal(root);
+
+  final TranslationsZhCn _root; // ignore: unused_field
+
+  // Translations
+  @override
+  String get title => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? '分组';
+  @override
+  String get newGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? '新建分组';
+  @override
+  String get renameGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? '重命名分组';
+  @override
+  String get renameRecolor => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? '重命名 / 更改颜色';
+  @override
+  String get editGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? '编辑分组';
+  @override
+  String get deleteGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? '删除分组';
+  @override
+  String get deleteWithTabs => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? '同时删除分组中的标签';
+  @override
+  String get ungrouped => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? '未分组';
+  @override
+  String get moveToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? '移动到分组';
+  @override
+  String get moveToGroupAction => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? '移动到分组…';
+  @override
+  String get removeFromGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? '从分组移除';
+  @override
+  String get addToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? '添加到分组…';
+  @override
+  String get newGroupFromTab => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? '从此标签创建新分组';
+  @override
+  String get groupColor => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? '颜色';
+  @override
+  String get groupName => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? '分组名称';
+  @override
+  String get collapse => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? '折叠分组';
+  @override
+  String get expand => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? '展开分组';
+  @override
+  String get filterByGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? '分组';
+  @override
+  String get dropToUngroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? '放在此处取消分组';
+  @override
+  String get dragToAGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? '拖动到分组';
+  @override
+  String get groupActions => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? '分组操作';
+  @override
+  String get newerVersionBackup => TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ?? '此备份来自较新版本的 LoliSnatcher，无法加载。';
+  @override
+  String get malformedBackup => TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? '标签备份已损坏，无法加载。';
+  @override
+  String get newGroupTitle => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? '新建分组';
+  @override
+  String get create => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? '创建';
+  @override
+  String get save => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? '保存';
+  @override
+  String deleteGroupNamed({required String name}) =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? '删除分组「${name}」？';
+  @override
+  String tabsInGroup({required num count}) =>
+      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('zh'))(
+        count,
+        other: '此分组中有 ${count} 个标签。',
+      );
+  @override
+  String get otherwiseBecomeUngrouped => TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? '否则标签将变为未分组。';
+  @override
+  String tabsMovedToUngrouped({required num count}) =>
+      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
+      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('zh'))(
+        count,
+        other: '${count} 个标签已移至未分组',
+      );
+  @override
+  String get chooseGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? '选择分组';
+  @override
+  String get unknownGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? '未知分组';
+  @override
+  String get ungroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? '取消分组';
+  @override
+  String get helpTapNewGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ?? '点击列表底部的「新建分组」来创建分组。';
+  @override
+  String get helpDragTabHandle => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ?? '拖动标签左侧的把手可在分组之间移动标签。';
+  @override
+  String get helpDragGroupHandle => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ?? '拖动分组标题左侧的把手可调整分组顺序。';
+  @override
+  String get helpTapHeaderCollapse => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ?? '点击分组标题以折叠/展开。';
+  @override
+  String get helpTapMoreVert => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ?? '点击分组标题上的 ⋯ 可重命名、更改颜色或删除分组。';
+  @override
+  String get helpPrevNextInherits =>
+      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ?? '通过「上一个」/「下一个」添加的新标签会继承当前标签的分组。添加到末尾的标签则不属于任何分组。';
+}
+
 // Path: tabs.filters
 class _Translations$tabs$filters$zh_CN extends Translations$tabs$filters$en {
   _Translations$tabs$filters$zh_CN._(TranslationsZhCn root) : this._root = root, super.internal(root);
@@ -1903,6 +2004,30 @@ class _Translations$settings$interface$zh_CN extends Translations$settings$inter
   late final _Translations$settings$interface$appModeValues$zh_CN appModeValues = _Translations$settings$interface$appModeValues$zh_CN._(_root);
   @override
   late final _Translations$settings$interface$handSideValues$zh_CN handSideValues = _Translations$settings$interface$handSideValues$zh_CN._(_root);
+  @override
+  String get tabManagerBottomBar => TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? '标签管理器底部操作栏';
+  @override
+  String get tabManagerBottomBarSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
+      '在标签管理器底部显示滚动到顶部/当前/底部和关闭按钮。新建标签/新建分组的悬浮按钮始终显示。';
+  @override
+  String get drawerBottomAlign => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? '主抽屉底部对齐';
+  @override
+  String get drawerBottomAlignSubtitle =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ?? '将侧抽屉的内容从底部向上堆叠（搜索、当前标签、标签操作、其他），便于单手拇指操作。';
+  @override
+  String get drawerLayoutTitle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? '抽屉布局';
+  @override
+  String get drawerLayoutSubtitle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ?? '选择侧抽屉中显示哪些项目及其顺序。';
+  @override
+  String get drawerLayoutPinned => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? '已固定 — 始终显示';
+  @override
+  String get drawerLayoutRestoreDefaults => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? '恢复默认';
+  @override
+  String get drawerLayoutBottomAlignHint =>
+      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ?? '底部对齐已开启 — 此列表中的第一项将显示在抽屉底部。';
+  @override
+  late final _Translations$settings$interface$drawerItems$zh_CN drawerItems = _Translations$settings$interface$drawerItems$zh_CN._(_root);
 }
 
 // Path: settings.theme
@@ -3353,6 +3478,35 @@ class _Translations$settings$interface$handSideValues$zh_CN extends Translations
   String get right => TranslationOverrides.string(_root.$meta, 'settings.interface.handSideValues.right', {}) ?? '右手';
 }
 
+// Path: settings.interface.drawerItems
+class _Translations$settings$interface$drawerItems$zh_CN extends Translations$settings$interface$drawerItems$en {
+  _Translations$settings$interface$drawerItems$zh_CN._(TranslationsZhCn root) : this._root = root, super.internal(root);
+
+  final TranslationsZhCn _root; // ignore: unused_field
+
+  // Translations
+  @override
+  String get search => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? '搜索栏';
+  @override
+  String get tabSelector => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? '当前标签卡片';
+  @override
+  String get tabButtons => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? '标签按钮';
+  @override
+  String get multibooruToggle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? '多 Booru 开关';
+  @override
+  String get lockApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? '锁定应用';
+  @override
+  String get settings => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? '设置';
+  @override
+  String get webview => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? '打开网页视图';
+  @override
+  String get updateAvailable => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? '有可用更新';
+  @override
+  String get closeApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? '关闭应用';
+  @override
+  String get mascot => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? '吉祥物图片';
+}
+
 // Path: settings.viewer.imageQualityValues
 class _Translations$settings$viewer$imageQualityValues$zh_CN extends Translations$settings$viewer$imageQualityValues$en {
   _Translations$settings$viewer$imageQualityValues$zh_CN._(TranslationsZhCn root) : this._root = root, super.internal(root);
@@ -3501,189 +3655,6 @@ class _Translations$media$loading$stopReasons$zh_CN extends Translations$media$l
   String get hiddenByFilters => TranslationOverrides.string(_root.$meta, 'media.loading.stopReasons.hiddenByFilters', {}) ?? '被过滤器隐藏：';
   @override
   String get videoError => TranslationOverrides.string(_root.$meta, 'media.loading.stopReasons.videoError', {}) ?? '视频错误';
-}
-
-// Path: tabs
-class _TranslationsTabsZhCn extends TranslationsTabsEn {
-  _TranslationsTabsZhCn._(TranslationsZhCn root) : this._root = root, super.internal(root);
-
-  final TranslationsZhCn _root; // ignore: unused_field
-
-  // Translations
-  @override
-  late final _TranslationsTabsGroupsZhCn groups = _TranslationsTabsGroupsZhCn._(_root);
-}
-
-// Path: settings
-class _TranslationsSettingsZhCn extends TranslationsSettingsEn {
-  _TranslationsSettingsZhCn._(TranslationsZhCn root) : this._root = root, super.internal(root);
-
-  final TranslationsZhCn _root; // ignore: unused_field
-
-  // Translations
-  @override
-  late final _TranslationsSettingsInterfaceZhCn interface = _TranslationsSettingsInterfaceZhCn._(_root);
-}
-
-// Path: tabs.groups
-class _TranslationsTabsGroupsZhCn extends TranslationsTabsGroupsEn {
-  _TranslationsTabsGroupsZhCn._(TranslationsZhCn root) : this._root = root, super.internal(root);
-
-  final TranslationsZhCn _root; // ignore: unused_field
-
-  // Translations
-  @override
-  String get title => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? '分组';
-  @override
-  String get newGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? '新建分组';
-  @override
-  String get renameGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? '重命名分组';
-  @override
-  String get renameRecolor => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? '重命名 / 更改颜色';
-  @override
-  String get editGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? '编辑分组';
-  @override
-  String get deleteGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? '删除分组';
-  @override
-  String get deleteWithTabs => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? '同时删除分组中的标签';
-  @override
-  String get ungrouped => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? '未分组';
-  @override
-  String get moveToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? '移动到分组';
-  @override
-  String get moveToGroupAction => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? '移动到分组…';
-  @override
-  String get removeFromGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? '从分组移除';
-  @override
-  String get addToGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? '添加到分组…';
-  @override
-  String get newGroupFromTab => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? '从此标签创建新分组';
-  @override
-  String get groupColor => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? '颜色';
-  @override
-  String get groupName => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? '分组名称';
-  @override
-  String get collapse => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? '折叠分组';
-  @override
-  String get expand => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? '展开分组';
-  @override
-  String get filterByGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? '分组';
-  @override
-  String get dropToUngroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? '放在此处取消分组';
-  @override
-  String get dragToAGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? '拖动到分组';
-  @override
-  String get groupActions => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? '分组操作';
-  @override
-  String get newerVersionBackup => TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ?? '此备份来自较新版本的 LoliSnatcher，无法加载。';
-  @override
-  String get malformedBackup => TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? '标签备份已损坏，无法加载。';
-  @override
-  String get newGroupTitle => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? '新建分组';
-  @override
-  String get create => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? '创建';
-  @override
-  String get save => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? '保存';
-  @override
-  String deleteGroupNamed({required String name}) =>
-      TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? '删除分组「${name}」？';
-  @override
-  String tabsInGroup({required num count}) =>
-      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
-      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('zh'))(
-        count,
-        other: '此分组中有 ${count} 个标签。',
-      );
-  @override
-  String get otherwiseBecomeUngrouped => TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? '否则标签将变为未分组。';
-  @override
-  String tabsMovedToUngrouped({required num count}) =>
-      TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
-      (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('zh'))(
-        count,
-        other: '${count} 个标签已移至未分组',
-      );
-  @override
-  String get chooseGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? '选择分组';
-  @override
-  String get unknownGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? '未知分组';
-  @override
-  String get ungroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? '取消分组';
-  @override
-  String get helpTapNewGroup => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ?? '点击列表底部的「新建分组」来创建分组。';
-  @override
-  String get helpDragTabHandle => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ?? '拖动标签左侧的把手可在分组之间移动标签。';
-  @override
-  String get helpDragGroupHandle => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ?? '拖动分组标题左侧的把手可调整分组顺序。';
-  @override
-  String get helpTapHeaderCollapse => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ?? '点击分组标题以折叠/展开。';
-  @override
-  String get helpTapMoreVert => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ?? '点击分组标题上的 ⋯ 可重命名、更改颜色或删除分组。';
-  @override
-  String get helpPrevNextInherits =>
-      TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ?? '通过「上一个」/「下一个」添加的新标签会继承当前标签的分组。添加到末尾的标签则不属于任何分组。';
-}
-
-// Path: settings.interface
-class _TranslationsSettingsInterfaceZhCn extends TranslationsSettingsInterfaceEn {
-  _TranslationsSettingsInterfaceZhCn._(TranslationsZhCn root) : this._root = root, super.internal(root);
-
-  final TranslationsZhCn _root; // ignore: unused_field
-
-  // Translations
-  @override
-  String get tabManagerBottomBar => TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? '标签管理器底部操作栏';
-  @override
-  String get tabManagerBottomBarSubtitle =>
-      TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
-      '在标签管理器底部显示滚动到顶部/当前/底部和关闭按钮。新建标签/新建分组的悬浮按钮始终显示。';
-  @override
-  String get drawerBottomAlign => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? '主抽屉底部对齐';
-  @override
-  String get drawerBottomAlignSubtitle =>
-      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ?? '将侧抽屉的内容从底部向上堆叠（搜索、当前标签、标签操作、其他），便于单手拇指操作。';
-  @override
-  String get drawerLayoutTitle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? '抽屉布局';
-  @override
-  String get drawerLayoutSubtitle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ?? '选择侧抽屉中显示哪些项目及其顺序。';
-  @override
-  String get drawerLayoutPinned => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? '已固定 — 始终显示';
-  @override
-  String get drawerLayoutRestoreDefaults => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? '恢复默认';
-  @override
-  String get drawerLayoutBottomAlignHint =>
-      TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ?? '底部对齐已开启 — 此列表中的第一项将显示在抽屉底部。';
-  @override
-  late final _TranslationsSettingsInterfaceDrawerItemsZhCn drawerItems = _TranslationsSettingsInterfaceDrawerItemsZhCn._(_root);
-}
-
-// Path: settings.interface.drawerItems
-class _TranslationsSettingsInterfaceDrawerItemsZhCn extends TranslationsSettingsInterfaceDrawerItemsEn {
-  _TranslationsSettingsInterfaceDrawerItemsZhCn._(TranslationsZhCn root) : this._root = root, super.internal(root);
-
-  final TranslationsZhCn _root; // ignore: unused_field
-
-  // Translations
-  @override
-  String get search => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? '搜索栏';
-  @override
-  String get tabSelector => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? '当前标签卡片';
-  @override
-  String get tabButtons => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? '标签按钮';
-  @override
-  String get multibooruToggle => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? '多 Booru 开关';
-  @override
-  String get lockApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? '锁定应用';
-  @override
-  String get settings => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? '设置';
-  @override
-  String get webview => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? '打开网页视图';
-  @override
-  String get updateAvailable => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? '有可用更新';
-  @override
-  String get closeApp => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? '关闭应用';
-  @override
-  String get mascot => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? '吉祥物图片';
 }
 
 /// The flat map containing all translations for locale <zh-CN>.
@@ -3968,6 +3939,63 @@ extension on TranslationsZhCn {
           'tabs.keepSecondaryBoorus' => TranslationOverrides.string(_root.$meta, 'tabs.keepSecondaryBoorus', {}) ?? '保留次要Booru',
           'tabs.startFromCustomPageNumber' => TranslationOverrides.string(_root.$meta, 'tabs.startFromCustomPageNumber', {}) ?? '从指定页数开始',
           'tabs.switchToNewTab' => TranslationOverrides.string(_root.$meta, 'tabs.switchToNewTab', {}) ?? '切换到新标签页',
+          'tabs.groups.title' => TranslationOverrides.string(_root.$meta, 'tabs.groups.title', {}) ?? '分组',
+          'tabs.groups.newGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroup', {}) ?? '新建分组',
+          'tabs.groups.renameGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameGroup', {}) ?? '重命名分组',
+          'tabs.groups.renameRecolor' => TranslationOverrides.string(_root.$meta, 'tabs.groups.renameRecolor', {}) ?? '重命名 / 更改颜色',
+          'tabs.groups.editGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.editGroup', {}) ?? '编辑分组',
+          'tabs.groups.deleteGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroup', {}) ?? '删除分组',
+          'tabs.groups.deleteWithTabs' => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteWithTabs', {}) ?? '同时删除分组中的标签',
+          'tabs.groups.ungrouped' => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungrouped', {}) ?? '未分组',
+          'tabs.groups.moveToGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroup', {}) ?? '移动到分组',
+          'tabs.groups.moveToGroupAction' => TranslationOverrides.string(_root.$meta, 'tabs.groups.moveToGroupAction', {}) ?? '移动到分组…',
+          'tabs.groups.removeFromGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.removeFromGroup', {}) ?? '从分组移除',
+          'tabs.groups.addToGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.addToGroup', {}) ?? '添加到分组…',
+          'tabs.groups.newGroupFromTab' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupFromTab', {}) ?? '从此标签创建新分组',
+          'tabs.groups.groupColor' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupColor', {}) ?? '颜色',
+          'tabs.groups.groupName' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupName', {}) ?? '分组名称',
+          'tabs.groups.collapse' => TranslationOverrides.string(_root.$meta, 'tabs.groups.collapse', {}) ?? '折叠分组',
+          'tabs.groups.expand' => TranslationOverrides.string(_root.$meta, 'tabs.groups.expand', {}) ?? '展开分组',
+          'tabs.groups.filterByGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.filterByGroup', {}) ?? '分组',
+          'tabs.groups.dropToUngroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.dropToUngroup', {}) ?? '放在此处取消分组',
+          'tabs.groups.dragToAGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.dragToAGroup', {}) ?? '拖动到分组',
+          'tabs.groups.groupActions' => TranslationOverrides.string(_root.$meta, 'tabs.groups.groupActions', {}) ?? '分组操作',
+          'tabs.groups.newerVersionBackup' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.newerVersionBackup', {}) ?? '此备份来自较新版本的 LoliSnatcher，无法加载。',
+          'tabs.groups.malformedBackup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.malformedBackup', {}) ?? '标签备份已损坏，无法加载。',
+          'tabs.groups.newGroupTitle' => TranslationOverrides.string(_root.$meta, 'tabs.groups.newGroupTitle', {}) ?? '新建分组',
+          'tabs.groups.create' => TranslationOverrides.string(_root.$meta, 'tabs.groups.create', {}) ?? '创建',
+          'tabs.groups.save' => TranslationOverrides.string(_root.$meta, 'tabs.groups.save', {}) ?? '保存',
+          'tabs.groups.deleteGroupNamed' =>
+            ({required String name}) => TranslationOverrides.string(_root.$meta, 'tabs.groups.deleteGroupNamed', {'name': name}) ?? '删除分组「${name}」？',
+          'tabs.groups.tabsInGroup' =>
+            ({required num count}) =>
+                TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsInGroup', {'count': count}) ??
+                (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('zh'))(
+                  count,
+                  other: '此分组中有 ${count} 个标签。',
+                ),
+          'tabs.groups.otherwiseBecomeUngrouped' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.otherwiseBecomeUngrouped', {}) ?? '否则标签将变为未分组。',
+          'tabs.groups.tabsMovedToUngrouped' =>
+            ({required num count}) =>
+                TranslationOverrides.plural(_root.$meta, 'tabs.groups.tabsMovedToUngrouped', {'count': count}) ??
+                (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('zh'))(
+                  count,
+                  other: '${count} 个标签已移至未分组',
+                ),
+          'tabs.groups.chooseGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.chooseGroup', {}) ?? '选择分组',
+          'tabs.groups.unknownGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.unknownGroup', {}) ?? '未知分组',
+          'tabs.groups.ungroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.ungroup', {}) ?? '取消分组',
+          'tabs.groups.helpTapNewGroup' => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapNewGroup', {}) ?? '点击列表底部的「新建分组」来创建分组。',
+          'tabs.groups.helpDragTabHandle' => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragTabHandle', {}) ?? '拖动标签左侧的把手可在分组之间移动标签。',
+          'tabs.groups.helpDragGroupHandle' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpDragGroupHandle', {}) ?? '拖动分组标题左侧的把手可调整分组顺序。',
+          'tabs.groups.helpTapHeaderCollapse' => TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapHeaderCollapse', {}) ?? '点击分组标题以折叠/展开。',
+          'tabs.groups.helpTapMoreVert' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpTapMoreVert', {}) ?? '点击分组标题上的 ⋯ 可重命名、更改颜色或删除分组。',
+          'tabs.groups.helpPrevNextInherits' =>
+            TranslationOverrides.string(_root.$meta, 'tabs.groups.helpPrevNextInherits', {}) ?? '通过「上一个」/「下一个」添加的新标签会继承当前标签的分组。添加到末尾的标签则不属于任何分组。',
           'tabs.add' => TranslationOverrides.string(_root.$meta, 'tabs.add', {}) ?? '添加',
           'tabs.tabsManager' => TranslationOverrides.string(_root.$meta, 'tabs.tabsManager', {}) ?? '标签页管理',
           'tabs.selectMode' => TranslationOverrides.string(_root.$meta, 'tabs.selectMode', {}) ?? '选择模式',
@@ -4302,6 +4330,42 @@ extension on TranslationsZhCn {
           'settings.interface.handSideValues.left' => TranslationOverrides.string(_root.$meta, 'settings.interface.handSideValues.left', {}) ?? '左手',
           'settings.interface.handSideValues.right' =>
             TranslationOverrides.string(_root.$meta, 'settings.interface.handSideValues.right', {}) ?? '右手',
+          'settings.interface.tabManagerBottomBar' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBar', {}) ?? '标签管理器底部操作栏',
+          'settings.interface.tabManagerBottomBarSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.tabManagerBottomBarSubtitle', {}) ??
+                '在标签管理器底部显示滚动到顶部/当前/底部和关闭按钮。新建标签/新建分组的悬浮按钮始终显示。',
+          'settings.interface.drawerBottomAlign' => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlign', {}) ?? '主抽屉底部对齐',
+          'settings.interface.drawerBottomAlignSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerBottomAlignSubtitle', {}) ??
+                '将侧抽屉的内容从底部向上堆叠（搜索、当前标签、标签操作、其他），便于单手拇指操作。',
+          'settings.interface.drawerLayoutTitle' => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutTitle', {}) ?? '抽屉布局',
+          'settings.interface.drawerLayoutSubtitle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutSubtitle', {}) ?? '选择侧抽屉中显示哪些项目及其顺序。',
+          'settings.interface.drawerLayoutPinned' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutPinned', {}) ?? '已固定 — 始终显示',
+          'settings.interface.drawerLayoutRestoreDefaults' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutRestoreDefaults', {}) ?? '恢复默认',
+          'settings.interface.drawerLayoutBottomAlignHint' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ?? '底部对齐已开启 — 此列表中的第一项将显示在抽屉底部。',
+          'settings.interface.drawerItems.search' => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.search', {}) ?? '搜索栏',
+          'settings.interface.drawerItems.tabSelector' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabSelector', {}) ?? '当前标签卡片',
+          'settings.interface.drawerItems.tabButtons' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.tabButtons', {}) ?? '标签按钮',
+          'settings.interface.drawerItems.multibooruToggle' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.multibooruToggle', {}) ?? '多 Booru 开关',
+          'settings.interface.drawerItems.lockApp' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.lockApp', {}) ?? '锁定应用',
+          'settings.interface.drawerItems.settings' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.settings', {}) ?? '设置',
+          'settings.interface.drawerItems.webview' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.webview', {}) ?? '打开网页视图',
+          'settings.interface.drawerItems.updateAvailable' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.updateAvailable', {}) ?? '有可用更新',
+          'settings.interface.drawerItems.closeApp' =>
+            TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.closeApp', {}) ?? '关闭应用',
+          'settings.interface.drawerItems.mascot' => TranslationOverrides.string(_root.$meta, 'settings.interface.drawerItems.mascot', {}) ?? '吉祥物图片',
           'settings.theme.title' => TranslationOverrides.string(_root.$meta, 'settings.theme.title', {}) ?? '主题',
           'settings.theme.themeMode' => TranslationOverrides.string(_root.$meta, 'settings.theme.themeMode', {}) ?? '主题模式',
           'settings.theme.blackBg' => TranslationOverrides.string(_root.$meta, 'settings.theme.blackBg', {}) ?? '黑色背景',
@@ -4381,6 +4445,9 @@ extension on TranslationsZhCn {
           'settings.viewer.defaultShareAction' => TranslationOverrides.string(_root.$meta, 'settings.viewer.defaultShareAction', {}) ?? '默认分享行为',
           'settings.viewer.shareActions' => TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActions', {}) ?? '分享行为',
           'settings.viewer.shareActionsAsk' => TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsAsk', {}) ?? '- 询问 - 始终询问分享什么',
+          _ => null,
+        } ??
+        switch (path) {
           'settings.viewer.shareActionsPostURL' => TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsPostURL', {}) ?? '- 帖子链接',
           'settings.viewer.shareActionsFileURL' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsFileURL', {}) ?? '- 文件链接 - 分享原文件的直链（可能有一些网站不支持）',
@@ -4483,9 +4550,6 @@ extension on TranslationsZhCn {
           'settings.video.mpvUseHardwareAcceleration' =>
             TranslationOverrides.string(_root.$meta, 'settings.video.mpvUseHardwareAcceleration', {}) ?? 'MPV：使用硬件加速',
           'settings.video.mpvVO' => TranslationOverrides.string(_root.$meta, 'settings.video.mpvVO', {}) ?? 'MPV：视频输出',
-          _ => null,
-        } ??
-        switch (path) {
           'settings.video.mpvHWDEC' => TranslationOverrides.string(_root.$meta, 'settings.video.mpvHWDEC', {}) ?? 'MPV：硬解模式',
           'settings.video.videoCacheMode' => TranslationOverrides.string(_root.$meta, 'settings.video.videoCacheMode', {}) ?? '视频缓存模式',
           'settings.video.cacheModes.title' => TranslationOverrides.string(_root.$meta, 'settings.video.cacheModes.title', {}) ?? '视频缓存模式',
@@ -5183,6 +5247,9 @@ extension on TranslationsZhCn {
           'pinnedTags.labelsOptional' => TranslationOverrides.string(_root.$meta, 'pinnedTags.labelsOptional', {}) ?? '标注（可选）',
           'pinnedTags.typeAndPressAdd' => TranslationOverrides.string(_root.$meta, 'pinnedTags.typeAndPressAdd', {}) ?? '输入后点击加号添加',
           'pinnedTags.selectExistingLabel' => TranslationOverrides.string(_root.$meta, 'pinnedTags.selectExistingLabel', {}) ?? '搜索已有标注',
+          _ => null,
+        } ??
+        switch (path) {
           'pinnedTags.tagPinned' => TranslationOverrides.string(_root.$meta, 'pinnedTags.tagPinned', {}) ?? '已固定标签',
           'pinnedTags.pinnedForBooru' =>
             ({required String name, required String labels}) =>
@@ -5253,9 +5320,6 @@ extension on TranslationsZhCn {
           'mediaPreviews.addNewBooru' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.addNewBooru', {}) ?? '添加新Booru',
           'mediaPreviews.help' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.help', {}) ?? '帮助',
           'mediaPreviews.settings' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.settings', {}) ?? '设置',
-          _ => null,
-        } ??
-        switch (path) {
           'mediaPreviews.restoringPreviousSession' =>
             TranslationOverrides.string(_root.$meta, 'mediaPreviews.restoringPreviousSession', {}) ?? '正在恢复到之前的会话…',
           'mediaPreviews.copiedFileURL' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.copiedFileURL', {}) ?? '已复制文件链接到剪贴板！',

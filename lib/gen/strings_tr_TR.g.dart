@@ -763,6 +763,8 @@ class _Translations$tabs$tr_TR extends Translations$tabs$en {
   late final _Translations$tabs$filters$tr_TR filters = _Translations$tabs$filters$tr_TR._(_root);
   @override
   late final _Translations$tabs$move$tr_TR move = _Translations$tabs$move$tr_TR._(_root);
+  @override
+  late final _Translations$tabs$groups$tr_TR groups = _Translations$tabs$groups$tr_TR._(_root);
 }
 
 // Path: history
@@ -1658,8 +1660,8 @@ class _Translations$tabs$move$tr_TR extends Translations$tabs$move$en {
 }
 
 // Path: tabs.groups
-class _TranslationsTabsGroupsTrTr extends TranslationsTabsGroupsEn {
-  _TranslationsTabsGroupsTrTr._(TranslationsTrTr root) : this._root = root, super.internal(root);
+class _Translations$tabs$groups$tr_TR extends Translations$tabs$groups$en {
+  _Translations$tabs$groups$tr_TR._(TranslationsTrTr root) : this._root = root, super.internal(root);
 
   final TranslationsTrTr _root; // ignore: unused_field
 
@@ -2095,7 +2097,7 @@ class _Translations$settings$interface$tr_TR extends Translations$settings$inter
       TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ??
       'Alta hizalama açık — bu listedeki ilk öğe çekmecenin altında gösterilir.';
   @override
-  late final _TranslationsSettingsInterfaceDrawerItemsTrTr drawerItems = _TranslationsSettingsInterfaceDrawerItemsTrTr._(_root);
+  late final _Translations$settings$interface$drawerItems$tr_TR drawerItems = _Translations$settings$interface$drawerItems$tr_TR._(_root);
   @override
   String get usePredictiveBack => TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'Tahmini geri hareketi';
   @override
@@ -3789,8 +3791,8 @@ class _Translations$preview$error$tr_TR extends Translations$preview$error$en {
 }
 
 // Path: settings.interface.drawerItems
-class _TranslationsSettingsInterfaceDrawerItemsTrTr extends TranslationsSettingsInterfaceDrawerItemsEn {
-  _TranslationsSettingsInterfaceDrawerItemsTrTr._(TranslationsTrTr root) : this._root = root, super.internal(root);
+class _Translations$settings$interface$drawerItems$tr_TR extends Translations$settings$interface$drawerItems$en {
+  _Translations$settings$interface$drawerItems$tr_TR._(TranslationsTrTr root) : this._root = root, super.internal(root);
 
   final TranslationsTrTr _root; // ignore: unused_field
 
@@ -4963,6 +4965,9 @@ extension on TranslationsTrTr {
           'settings.viewer.shareActions' => TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActions', {}) ?? 'Paylaşım eylemleri',
           'settings.viewer.shareActionsAsk' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsAsk', {}) ?? '- Sor: Ne paylaşılacağını her zaman sor',
+          _ => null,
+        } ??
+        switch (path) {
           'settings.viewer.shareActionsPostURL' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.shareActionsPostURL', {}) ?? '- Gönderi URL\'si',
           'settings.viewer.shareActionsFileURL' =>
@@ -4987,9 +4992,6 @@ extension on TranslationsTrTr {
             TranslationOverrides.string(_root.$meta, 'settings.viewer.useVolumeButtonsForScrolling', {}) ?? 'Kaydırmak için ses butonlarını kullan',
           'settings.viewer.volumeButtonsScrolling' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.volumeButtonsScrolling', {}) ?? 'Ses butonlarıyla kaydırma',
-          _ => null,
-        } ??
-        switch (path) {
           'settings.viewer.volumeButtonsScrollingHelp' =>
             TranslationOverrides.string(_root.$meta, 'settings.viewer.volumeButtonsScrollingHelp', {}) ??
                 'Önizlemelerde ve görüntüleyicide kaydırmak için ses butonlarını kullan',
@@ -5089,9 +5091,6 @@ extension on TranslationsTrTr {
           'settings.video.mpvUseHardwareAcceleration' =>
             TranslationOverrides.string(_root.$meta, 'settings.video.mpvUseHardwareAcceleration', {}) ?? 'MPV: Donanım hızlandırmayı kullan',
           'settings.video.mpvVO' => TranslationOverrides.string(_root.$meta, 'settings.video.mpvVO', {}) ?? 'MPV: VO',
-          _ => null,
-        } ??
-        switch (path) {
           'settings.video.mpvHWDEC' => TranslationOverrides.string(_root.$meta, 'settings.video.mpvHWDEC', {}) ?? 'MPV: HWDEC',
           'settings.video.videoCacheMode' => TranslationOverrides.string(_root.$meta, 'settings.video.videoCacheMode', {}) ?? 'Video önbellek modu',
           'settings.video.cacheModes.title' =>
@@ -5964,6 +5963,9 @@ extension on TranslationsTrTr {
           'pinnedTags.typeAndPressAdd' =>
             TranslationOverrides.string(_root.$meta, 'pinnedTags.typeAndPressAdd', {}) ?? 'Bir etiket dahil etmek için yaz ve Ekle butonuna bas',
           'pinnedTags.selectExistingLabel' => TranslationOverrides.string(_root.$meta, 'pinnedTags.selectExistingLabel', {}) ?? 'Mevcut etiketi seç',
+          _ => null,
+        } ??
+        switch (path) {
           'pinnedTags.tagPinned' => TranslationOverrides.string(_root.$meta, 'pinnedTags.tagPinned', {}) ?? 'Etiket sabitlendi',
           'pinnedTags.pinnedForBooru' =>
             ({required String name, required String labels}) =>
@@ -5982,9 +5984,6 @@ extension on TranslationsTrTr {
           'pinnedTags.addTagManually' => TranslationOverrides.string(_root.$meta, 'pinnedTags.addTagManually', {}) ?? 'Etiketi manuel ekle',
           'pinnedTags.noTagsMatchSearch' =>
             TranslationOverrides.string(_root.$meta, 'pinnedTags.noTagsMatchSearch', {}) ?? 'Aramayla eşleşen etiket yok',
-          _ => null,
-        } ??
-        switch (path) {
           'pinnedTags.noPinnedTagsYet' =>
             TranslationOverrides.string(_root.$meta, 'pinnedTags.noPinnedTagsYet', {}) ?? 'Henüz sabitlenmiş etiket yok',
           'pinnedTags.editLabels' => TranslationOverrides.string(_root.$meta, 'pinnedTags.editLabels', {}) ?? 'Etiketleri düzenle',
@@ -6052,9 +6051,6 @@ extension on TranslationsTrTr {
           'mediaPreviews.addNewBooru' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.addNewBooru', {}) ?? 'Yeni Booru ekle',
           'mediaPreviews.help' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.help', {}) ?? 'Yardım',
           'mediaPreviews.settings' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.settings', {}) ?? 'Ayarlar',
-          _ => null,
-        } ??
-        switch (path) {
           'mediaPreviews.restoringPreviousSession' =>
             TranslationOverrides.string(_root.$meta, 'mediaPreviews.restoringPreviousSession', {}) ?? 'Önceki oturum geri yükleniyor…',
           'mediaPreviews.copiedFileURL' =>

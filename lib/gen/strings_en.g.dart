@@ -947,6 +947,7 @@ class Translations$tabs$en {
 
   late final Translations$tabs$filters$en filters = Translations$tabs$filters$en.internal(_root);
   late final Translations$tabs$move$en move = Translations$tabs$move$en.internal(_root);
+  late final Translations$tabs$groups$en groups = Translations$tabs$groups$en.internal(_root);
 }
 
 // Path: history
@@ -2051,8 +2052,8 @@ class Translations$tabs$move$en {
 }
 
 // Path: tabs.groups
-class TranslationsTabsGroupsEn {
-  TranslationsTabsGroupsEn.internal(this._root);
+class Translations$tabs$groups$en {
+  Translations$tabs$groups$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 
@@ -2618,7 +2619,7 @@ class Translations$settings$interface$en {
       TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ??
       'Bottom-align is on — the first item in this list shows at the bottom of the drawer.';
 
-  late final TranslationsSettingsInterfaceDrawerItemsEn drawerItems = TranslationsSettingsInterfaceDrawerItemsEn.internal(_root);
+  late final Translations$settings$interface$drawerItems$en drawerItems = Translations$settings$interface$drawerItems$en.internal(_root);
 
   /// en: 'Predictive back gesture'
   String get usePredictiveBack => TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'Predictive back gesture';
@@ -4789,8 +4790,8 @@ class Translations$preview$error$en {
 }
 
 // Path: settings.interface.drawerItems
-class TranslationsSettingsInterfaceDrawerItemsEn {
-  TranslationsSettingsInterfaceDrawerItemsEn.internal(this._root);
+class Translations$settings$interface$drawerItems$en {
+  Translations$settings$interface$drawerItems$en.internal(this._root);
 
   final Translations _root; // ignore: unused_field
 

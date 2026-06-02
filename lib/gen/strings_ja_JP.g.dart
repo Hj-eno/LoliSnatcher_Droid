@@ -738,6 +738,8 @@ class _Translations$tabs$ja_JP extends Translations$tabs$en {
   late final _Translations$tabs$filters$ja_JP filters = _Translations$tabs$filters$ja_JP._(_root);
   @override
   late final _Translations$tabs$move$ja_JP move = _Translations$tabs$move$ja_JP._(_root);
+  @override
+  late final _Translations$tabs$groups$ja_JP groups = _Translations$tabs$groups$ja_JP._(_root);
 }
 
 // Path: history
@@ -1604,8 +1606,8 @@ class _Translations$tabs$move$ja_JP extends Translations$tabs$move$en {
 }
 
 // Path: tabs.groups
-class _TranslationsTabsGroupsJaJp extends TranslationsTabsGroupsEn {
-  _TranslationsTabsGroupsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+class _Translations$tabs$groups$ja_JP extends Translations$tabs$groups$en {
+  _Translations$tabs$groups$ja_JP._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
   final TranslationsJaJp _root; // ignore: unused_field
 
@@ -2001,7 +2003,7 @@ class _Translations$settings$interface$ja_JP extends Translations$settings$inter
   String get drawerLayoutBottomAlignHint =>
       TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ?? '下揃えが有効です — このリストの最初の項目がドロワーの下部に表示されます。';
   @override
-  late final _TranslationsSettingsInterfaceDrawerItemsJaJp drawerItems = _TranslationsSettingsInterfaceDrawerItemsJaJp._(_root);
+  late final _Translations$settings$interface$drawerItems$ja_JP drawerItems = _Translations$settings$interface$drawerItems$ja_JP._(_root);
   @override
   String get usePredictiveBack => TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'スワイプキャンセルアニメーション';
   @override
@@ -3547,8 +3549,8 @@ class _Translations$preview$error$ja_JP extends Translations$preview$error$en {
 }
 
 // Path: settings.interface.drawerItems
-class _TranslationsSettingsInterfaceDrawerItemsJaJp extends TranslationsSettingsInterfaceDrawerItemsEn {
-  _TranslationsSettingsInterfaceDrawerItemsJaJp._(TranslationsJaJp root) : this._root = root, super.internal(root);
+class _Translations$settings$interface$drawerItems$ja_JP extends Translations$settings$interface$drawerItems$en {
+  _Translations$settings$interface$drawerItems$ja_JP._(TranslationsJaJp root) : this._root = root, super.internal(root);
 
   final TranslationsJaJp _root; // ignore: unused_field
 

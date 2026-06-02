@@ -772,6 +772,8 @@ class _Translations$tabs$ru_RU extends Translations$tabs$en {
   late final _Translations$tabs$filters$ru_RU filters = _Translations$tabs$filters$ru_RU._(_root);
   @override
   late final _Translations$tabs$move$ru_RU move = _Translations$tabs$move$ru_RU._(_root);
+  @override
+  late final _Translations$tabs$groups$ru_RU groups = _Translations$tabs$groups$ru_RU._(_root);
 }
 
 // Path: history
@@ -1666,8 +1668,8 @@ class _Translations$tabs$move$ru_RU extends Translations$tabs$move$en {
 }
 
 // Path: tabs.groups
-class _TranslationsTabsGroupsRuRu extends TranslationsTabsGroupsEn {
-  _TranslationsTabsGroupsRuRu._(TranslationsRuRu root) : this._root = root, super.internal(root);
+class _Translations$tabs$groups$ru_RU extends Translations$tabs$groups$en {
+  _Translations$tabs$groups$ru_RU._(TranslationsRuRu root) : this._root = root, super.internal(root);
 
   final TranslationsRuRu _root; // ignore: unused_field
 
@@ -2108,7 +2110,7 @@ class _Translations$settings$interface$ru_RU extends Translations$settings$inter
       TranslationOverrides.string(_root.$meta, 'settings.interface.drawerLayoutBottomAlignHint', {}) ??
       'Включено выравнивание по низу — первый элемент в этом списке окажется внизу меню.';
   @override
-  late final _TranslationsSettingsInterfaceDrawerItemsRuRu drawerItems = _TranslationsSettingsInterfaceDrawerItemsRuRu._(_root);
+  late final _Translations$settings$interface$drawerItems$ru_RU drawerItems = _Translations$settings$interface$drawerItems$ru_RU._(_root);
   @override
   String get usePredictiveBack => TranslationOverrides.string(_root.$meta, 'settings.interface.usePredictiveBack', {}) ?? 'Анимация смахивания';
   @override
@@ -3813,8 +3815,8 @@ class _Translations$preview$error$ru_RU extends Translations$preview$error$en {
 }
 
 // Path: settings.interface.drawerItems
-class _TranslationsSettingsInterfaceDrawerItemsRuRu extends TranslationsSettingsInterfaceDrawerItemsEn {
-  _TranslationsSettingsInterfaceDrawerItemsRuRu._(TranslationsRuRu root) : this._root = root, super.internal(root);
+class _Translations$settings$interface$drawerItems$ru_RU extends Translations$settings$interface$drawerItems$en {
+  _Translations$settings$interface$drawerItems$ru_RU._(TranslationsRuRu root) : this._root = root, super.internal(root);
 
   final TranslationsRuRu _root; // ignore: unused_field
 
