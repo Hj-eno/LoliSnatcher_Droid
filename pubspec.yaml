@@ -94,8 +94,8 @@ dependencies:
   share_plus: ^13.1.0 # not used directly, but is part of some deps (i.e. alice) # TODO move to this instead of our native share code?
   slang_flutter: ^4.15.0
   slang: ^4.15.0
-  sqflite_common_ffi: ^2.4.0+3
-  sqflite: ^2.4.2+1
+  sqflite_common_ffi: ^2.4.1
+  sqflite: ^2.4.3
   sqlite3: ^3.3.2
   talker_dio_logger: ^5.1.17
   talker_flutter: ^5.1.17
