@@ -74,12 +74,13 @@
 
 </details>
 
-## Installation
+## Install
 
 ### Android
 
-[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" width="240">](https://play.google.com/store/apps/details?id=com.noaisu.play.loliSnatcher)
-[<img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/refs/heads/main/get-it-on-github.png" alt="Get it on Github" width="240">](https://github.com/NO-ob/LoliSnatcher_Droid/releases)
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="90">](https://play.google.com/store/apps/details?id=com.noaisu.play.loliSnatcher)
+[<img src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/refs/heads/main/get-it-on-github.png" alt="Get it on Github" height="90">](https://github.com/NO-ob/LoliSnatcher_Droid/releases)
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroidButtonGreyBorder_nofont.png" alt="Get it at IzzyOnDroid" height="60" style="padding: 15px;">](https://apt.izzysoft.de/packages/com.noaisu.loliSnatcher)
 
 ## Building from Source
 
