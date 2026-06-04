@@ -205,6 +205,7 @@ class SettingsHandler {
   final RxBool blurOnLeave = false.obs;
   final RxBool tabManagerBottomBar = true.obs;
   final RxBool drawerBottomAlign = false.obs;
+  final RxBool eagleShowSubfolderItems = false.obs;
   final RxList<MainDrawerItem> mainDrawerItems = RxList<MainDrawerItem>.of(MainDrawerItem.defaultOrder);
   final RxList<Booru> booruList = RxList<Booru>([]);
   ////////////////////////////////////////////////////
@@ -291,6 +292,7 @@ class SettingsHandler {
     'blurOnLeave',
     'tabManagerBottomBar',
     'drawerBottomAlign',
+    'eagleShowSubfolderItems',
     'mainDrawerItems',
   ];
 
@@ -715,6 +717,10 @@ class SettingsHandler {
       'default': true,
     },
     'drawerBottomAlign': {
+      'type': 'bool',
+      'default': false,
+    },
+    'eagleShowSubfolderItems': {
       'type': 'bool',
       'default': false,
     },
@@ -1192,6 +1198,8 @@ class SettingsHandler {
         return tabManagerBottomBar;
       case 'drawerBottomAlign':
         return drawerBottomAlign;
+      case 'eagleShowSubfolderItems':
+        return eagleShowSubfolderItems;
       case 'mainDrawerItems':
         return mainDrawerItems;
 
@@ -1548,6 +1556,9 @@ class SettingsHandler {
         break;
       case 'drawerBottomAlign':
         drawerBottomAlign.value = validatedValue;
+        break;
+      case 'eagleShowSubfolderItems':
+        eagleShowSubfolderItems.value = validatedValue;
         break;
       case 'mainDrawerItems':
         if (validatedValue is List<MainDrawerItem>) {

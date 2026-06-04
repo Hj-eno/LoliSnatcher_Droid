@@ -9,6 +9,7 @@ enum BooruType {
   BooruOnRails,
   Danbooru,
   e621,
+  Eagle,
   //FurAffinity,
   Gelbooru,
   GelbooruV1,
@@ -56,6 +57,7 @@ enum BooruType {
       ..remove(BooruType.Downloads)
       ..remove(BooruType.Favourites)
       ..remove(BooruType.Hydrus)
+      ..remove(BooruType.Eagle)
       ..remove(BooruType.Merge);
   }
 
@@ -87,6 +89,7 @@ enum BooruType {
   bool get isBooruOnRails => this == BooruType.BooruOnRails;
   bool get isDanbooru => this == BooruType.Danbooru;
   bool get isE621 => this == BooruType.e621;
+  bool get isEagle => this == BooruType.Eagle;
   //bool get isFurAffinity => this == BooruType.FurAffinity;
   bool get isGelbooru => this == BooruType.Gelbooru;
   bool get isGelbooruV1 => this == BooruType.GelbooruV1;

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import 'package:lolisnatcher/src/data/main_drawer_item.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
-import 'package:lolisnatcher/src/widgets/common/settings_widgets.dart';
 
 /// Lets the user reorder and toggle the items shown in the main side drawer.
 ///
@@ -56,6 +55,7 @@ class _DrawerLayoutPageState extends State<DrawerLayoutPage> {
       MainDrawerItem.search => t.search,
       MainDrawerItem.tabSelector => t.tabSelector,
       MainDrawerItem.tabButtons => t.tabButtons,
+      MainDrawerItem.eagleFolders => 'Eagle folders',
       MainDrawerItem.multibooruToggle => t.multibooruToggle,
       MainDrawerItem.lockApp => t.lockApp,
       MainDrawerItem.settings => t.settings,

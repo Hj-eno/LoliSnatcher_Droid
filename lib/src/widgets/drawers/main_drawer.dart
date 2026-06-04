@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide FirstWhereOrNullExt;
 
 import 'package:lolisnatcher/src/boorus/booru_type.dart';
+import 'package:lolisnatcher/src/boorus/eagle_handler.dart';
 import 'package:lolisnatcher/src/data/booru.dart';
 import 'package:lolisnatcher/src/data/constants.dart';
 import 'package:lolisnatcher/src/data/main_drawer_item.dart';
@@ -17,6 +18,7 @@ import 'package:lolisnatcher/src/widgets/common/cancel_button.dart';
 import 'package:lolisnatcher/src/widgets/common/mascot_image.dart';
 import 'package:lolisnatcher/src/widgets/common/multibooru_toggle.dart';
 import 'package:lolisnatcher/src/widgets/common/settings_widgets.dart';
+import 'package:lolisnatcher/src/widgets/drawers/eagle_folder_drawer.dart';
 import 'package:lolisnatcher/src/widgets/preview/main_search_bar.dart';
 import 'package:lolisnatcher/src/widgets/tabs/tab_buttons.dart';
 import 'package:lolisnatcher/src/widgets/tabs/tab_selector.dart';
@@ -88,6 +90,16 @@ class MainDrawer extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 12),
           child: TabButtons(true, WrapAlignment.spaceEvenly),
         );
+
+      case MainDrawerItem.eagleFolders:
+        return Obx(() {
+          searchHandler.index.value; // react to tab switches
+          if (searchHandler.tabs.isEmpty) return const SizedBox.shrink();
+          if (searchHandler.currentBooru.type?.isEagle != true) return const SizedBox.shrink();
+          final handler = searchHandler.currentBooruHandler;
+          if (handler is! EagleHandler) return const SizedBox.shrink();
+          return EagleFolderDrawer(handler: handler);
+        });
 
       case MainDrawerItem.multibooruToggle:
         return const MergeBooruToggleAndSelector();
