@@ -3089,6 +3089,8 @@ class _Translations$settings$cache$ru_RU extends Translations$settings$cache$en 
   @override
   String get deleteCacheAfter => TranslationOverrides.string(_root.$meta, 'settings.cache.deleteCacheAfter', {}) ?? 'Удалять кэш после:';
   @override
+  String get neverDeleteDuration => TranslationOverrides.string(_root.$meta, 'settings.cache.neverDeleteDuration', {}) ?? 'Никогда';
+  @override
   String get cacheSizeLimit => TranslationOverrides.string(_root.$meta, 'settings.cache.cacheSizeLimit', {}) ?? 'Лимит размера кэша (в ГБ)';
   @override
   String get maximumTotalCacheSize =>
@@ -5561,6 +5563,7 @@ extension on TranslationsRuRu {
                 '[Предупреждение]: На компьютерах потоковый режим может работать некорректно для некоторых сайтов.',
           'settings.cache.deleteCacheAfter' =>
             TranslationOverrides.string(_root.$meta, 'settings.cache.deleteCacheAfter', {}) ?? 'Удалять кэш после:',
+          'settings.cache.neverDeleteDuration' => TranslationOverrides.string(_root.$meta, 'settings.cache.neverDeleteDuration', {}) ?? 'Никогда',
           'settings.cache.cacheSizeLimit' =>
             TranslationOverrides.string(_root.$meta, 'settings.cache.cacheSizeLimit', {}) ?? 'Лимит размера кэша (в ГБ)',
           'settings.cache.maximumTotalCacheSize' =>
@@ -6085,6 +6088,9 @@ extension on TranslationsRuRu {
             TranslationOverrides.string(_root.$meta, 'mediaPreviews.noBooruConfigsFound', {}) ?? 'Конфигурации сайтов не найдены',
           'mediaPreviews.addNewBooru' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.addNewBooru', {}) ?? 'Добавить новый сайт',
           'mediaPreviews.help' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.help', {}) ?? 'Помощь',
+          _ => null,
+        } ??
+        switch (path) {
           'mediaPreviews.settings' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.settings', {}) ?? 'Настройки',
           'mediaPreviews.restoringPreviousSession' =>
             TranslationOverrides.string(_root.$meta, 'mediaPreviews.restoringPreviousSession', {}) ?? 'Восстановление предыдущей сессии…',
@@ -6288,3 +6294,4 @@ extension on TranslationsRuRu {
         };
   }
 }
+

@@ -3857,6 +3857,9 @@ class Translations$settings$cache$en {
   /// en: 'Delete cache after:'
   String get deleteCacheAfter => TranslationOverrides.string(_root.$meta, 'settings.cache.deleteCacheAfter', {}) ?? 'Delete cache after:';
 
+  /// en: 'Never'
+  String get neverDeleteDuration => TranslationOverrides.string(_root.$meta, 'settings.cache.neverDeleteDuration', {}) ?? 'Never';
+
   /// en: 'Cache size Limit (in GB)'
   String get cacheSizeLimit => TranslationOverrides.string(_root.$meta, 'settings.cache.cacheSizeLimit', {}) ?? 'Cache size Limit (in GB)';
 
@@ -6517,6 +6520,7 @@ extension on Translations {
                 '[Warning]: On desktop Stream mode can work incorrectly for some Boorus.',
           'settings.cache.deleteCacheAfter' =>
             TranslationOverrides.string(_root.$meta, 'settings.cache.deleteCacheAfter', {}) ?? 'Delete cache after:',
+          'settings.cache.neverDeleteDuration' => TranslationOverrides.string(_root.$meta, 'settings.cache.neverDeleteDuration', {}) ?? 'Never',
           'settings.cache.cacheSizeLimit' =>
             TranslationOverrides.string(_root.$meta, 'settings.cache.cacheSizeLimit', {}) ?? 'Cache size Limit (in GB)',
           'settings.cache.maximumTotalCacheSize' =>
@@ -7027,6 +7031,9 @@ extension on Translations {
             TranslationOverrides.string(_root.$meta, 'mediaPreviews.noBooruConfigsFound', {}) ?? 'No booru configs found',
           'mediaPreviews.addNewBooru' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.addNewBooru', {}) ?? 'Add new Booru',
           'mediaPreviews.help' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.help', {}) ?? 'Help',
+          _ => null,
+        } ??
+        switch (path) {
           'mediaPreviews.settings' => TranslationOverrides.string(_root.$meta, 'mediaPreviews.settings', {}) ?? 'Settings',
           'mediaPreviews.restoringPreviousSession' =>
             TranslationOverrides.string(_root.$meta, 'mediaPreviews.restoringPreviousSession', {}) ?? 'Restoring previous session…',
@@ -7218,3 +7225,4 @@ extension on Translations {
         };
   }
 }
+
