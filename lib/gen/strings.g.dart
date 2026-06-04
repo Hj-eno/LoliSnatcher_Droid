@@ -4,7 +4,7 @@
 /// To regenerate, run: `dart run slang`
 ///
 /// Locales: 13
-/// Strings: 8331 (640 per locale)
+/// Strings: 8691 (668 per locale)
 
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
@@ -437,4 +437,3 @@ class AppLocaleUtils extends BaseAppLocaleUtils<AppLocale, Translations> {
     ordinalResolver: ordinalResolver,
   );
 }
-
