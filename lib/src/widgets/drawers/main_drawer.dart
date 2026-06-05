@@ -12,7 +12,9 @@ import 'package:lolisnatcher/src/data/main_drawer_item.dart';
 import 'package:lolisnatcher/src/handlers/local_auth_handler.dart';
 import 'package:lolisnatcher/src/handlers/search_handler.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
+import 'package:lolisnatcher/src/handlers/upload_handler.dart';
 import 'package:lolisnatcher/src/pages/settings_page.dart';
+import 'package:lolisnatcher/src/pages/upload_manager_page.dart';
 import 'package:lolisnatcher/src/utils/tools.dart';
 import 'package:lolisnatcher/src/widgets/common/cancel_button.dart';
 import 'package:lolisnatcher/src/widgets/common/mascot_image.dart';
@@ -99,6 +101,32 @@ class MainDrawer extends StatelessWidget {
           final handler = searchHandler.currentBooruHandler;
           if (handler is! EagleHandler) return const SizedBox.shrink();
           return EagleFolderDrawer(handler: handler);
+        });
+
+      case MainDrawerItem.uploadManager:
+        return Obx(() {
+          settingsHandler.booruList.length; // react to booru add/remove
+          final hasTarget = settingsHandler.booruList.any((b) => b.type?.supportsItemAdd == true);
+          if (!hasTarget) return const SizedBox.shrink();
+          final uploadHandler = UploadHandler.instance;
+          return Obx(() {
+            uploadHandler.queue.length; // react to queue changes
+            final int pending = uploadHandler.activeCount;
+            return SettingsButton(
+              name: 'Upload Manager',
+              icon: pending > 0
+                  ? Badge(
+                      label: Text('$pending'),
+                      child: const Icon(Icons.cloud_upload_outlined),
+                    )
+                  : const Icon(Icons.cloud_upload_outlined),
+              action: () async {
+                await Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const UploadManagerPage()),
+                );
+              },
+            );
+          });
         });
 
       case MainDrawerItem.multibooruToggle:

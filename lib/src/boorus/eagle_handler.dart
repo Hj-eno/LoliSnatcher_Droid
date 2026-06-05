@@ -103,6 +103,7 @@ class EagleHandler extends BooruHandler {
   final Map<String, String> _folderNameToId = {}; // lowercased name -> id
   final Map<String, String> _folderPathToId = {}; // lowercased a/b/c  -> id
   final Map<String, EagleFolder> _folderById = {}; // id -> node (for descendants)
+  final Map<String, String> _folderIdToPath = {}; // id -> "A/B/C" (display path)
   final Set<String> _folderIds = {};
   List<EagleFolder> _folderTree = const [];
   bool _foldersLoaded = false;
@@ -137,8 +138,9 @@ class EagleHandler extends BooruHandler {
         _folderNameToId.clear();
         _folderPathToId.clear();
         _folderById.clear();
+        _folderIdToPath.clear();
         _folderIds.clear();
-        _indexFolders(_folderTree, const []);
+        _indexFolders(_folderTree, const [], const []);
         _foldersLoaded = true;
       }
     } catch (e, s) {
@@ -147,7 +149,7 @@ class EagleHandler extends BooruHandler {
     return _folderTree;
   }
 
-  void _indexFolders(List<EagleFolder> folders, List<String> parents) {
+  void _indexFolders(List<EagleFolder> folders, List<String> parents, List<String> realParents) {
     for (final f in folders) {
       _folderIds.add(f.id);
       _folderById[f.id] = f;
@@ -155,7 +157,8 @@ class EagleHandler extends BooruHandler {
       _folderNameToId.putIfAbsent(lower, () => f.id);
       final String path = [...parents, lower].join('/');
       _folderPathToId.putIfAbsent(path, () => f.id);
-      _indexFolders(f.children, [...parents, lower]);
+      _folderIdToPath[f.id] = [...realParents, f.name].join('/');
+      _indexFolders(f.children, [...parents, lower], [...realParents, f.name]);
     }
   }
 
@@ -427,6 +430,16 @@ class EagleHandler extends BooruHandler {
     final List rawTags = item['tags'] is List ? item['tags'] as List : const [];
     final List<Tag> tags = rawTags.map((t) => Tag(t.toString())).toList();
 
+    // surface the folder(s) this item lives in as tappable `folder:` tags
+    // (underscores keep them single search-bar chips; resolver maps them back)
+    final List rawFolders = item['folders'] is List ? item['folders'] as List : const [];
+    for (final fid in rawFolders) {
+      final String? path = _folderIdToPath[fid.toString()];
+      if (path != null && path.isNotEmpty) {
+        tags.add(Tag('folder:${path.replaceAll(' ', '_')}'));
+      }
+    }
+
     final ({String thumb, String full}) urls = _buildImageUrls(id, name, ext);
 
     final double? width = (item['width'] as num?)?.toDouble();
@@ -448,14 +461,55 @@ class EagleHandler extends BooruHandler {
       md5String: id,
       sources: source != null ? [source] : null,
       description: annotation,
-      score: (item['star'] is num) ? (item['star'] as num).toString() : null,
+      rating: (item['star'] is num) ? (item['star'] as num).toStringAsFixed(0) : null,
+      postDate: (item['modificationTime'] is num)
+          ? ((item['modificationTime'] as num).toInt() ~/ 1000).toString()
+          : null,
+      postDateFormat: (item['modificationTime'] is num) ? 'unix' : null,
       fileNameExtras: 'Eagle_',
     );
   }
 
-  /// Phase 3 (full scope): push an item into Eagle via /api/item/addFromURL.
-  /// Not yet wired into the UI "send to booru" flow.
-  Future<bool> addItemFromUrl(BooruItem item, {String? folderId}) async {
+  // ---- "send to library" (Phase 3: add/upload) -----------------------------
+
+  @override
+  bool get hasItemAddSupport => true;
+
+  @override
+  bool get hasItemAddFolders => true;
+
+  /// Destination folders for the send UI: the full library tree flattened into
+  /// indented `Parent / Child` labels (loading it first if needed).
+  @override
+  Future<List<({String id, String label})>> addTargetFolders() async {
+    await loadFolders();
+    final List<({String id, String label})> out = [];
+    void walk(List<EagleFolder> folders, int depth) {
+      for (final f in folders) {
+        out.add((id: f.id, label: '${'    ' * depth}${f.name}'));
+        if (f.children.isNotEmpty) {
+          walk(f.children, depth + 1);
+        }
+      }
+    }
+
+    walk(_folderTree, 0);
+    return out;
+  }
+
+  /// Push an item into Eagle via `/api/item/addFromURL`. The booru this item
+  /// came from must expose a publicly fetchable [BooruItem.fileURL] (Eagle's
+  /// desktop downloads it itself). [folderId] files it into a library folder.
+  @override
+  Future<bool> addItem(
+    BooruItem item, {
+    bool usePostUrl = false,
+    String? folderId,
+  }) async {
+    final String downloadUrl = usePostUrl && item.postURL.isNotEmpty ? item.postURL : item.fileURL;
+    if (downloadUrl.isEmpty) {
+      return false;
+    }
     try {
       final response = await DioNetwork.post(
         _withToken('${booru.baseURL}/api/item/addFromURL'),
@@ -464,18 +518,38 @@ class EagleHandler extends BooruHandler {
           HttpHeaders.contentTypeHeader: 'application/json',
         },
         data: {
-          'url': item.fileURL,
-          'name': item.serverId ?? Uri.parse(item.fileURL).pathSegments.last,
+          'url': downloadUrl,
+          'name': _addItemName(item, downloadUrl),
           if (item.postURL.isNotEmpty) 'website': item.postURL,
           'tags': item.tagsList.map((t) => t.fullString).toList(),
           if (item.description?.isNotEmpty == true) 'annotation': item.description,
           'folderId': ?folderId,
         },
       );
-      return response.statusCode == 200;
+      if (response.statusCode != 200) {
+        return false;
+      }
+      final Map<String, dynamic> data = response.data is String ? jsonDecode(response.data) : response.data;
+      return data['status'] == 'success';
     } catch (e, s) {
-      Logger.Inst().log(e.toString(), 'EagleHandler', 'addItemFromUrl', LogTypes.exception, s: s);
+      Logger.Inst().log(e.toString(), 'EagleHandler', 'addItem', LogTypes.exception, s: s);
       return false;
+    }
+  }
+
+  /// Pick a human-friendly name for an added item: the source booru's id, else
+  /// the URL's last path segment (without extension — Eagle infers that).
+  String _addItemName(BooruItem item, String url) {
+    final String? sid = item.serverId;
+    if (sid != null && sid.isNotEmpty) {
+      return sid;
+    }
+    try {
+      final String last = Uri.parse(url).pathSegments.lastWhere((s) => s.isNotEmpty, orElse: () => '');
+      final int dot = last.lastIndexOf('.');
+      return dot > 0 ? last.substring(0, dot) : (last.isNotEmpty ? last : 'item');
+    } catch (_) {
+      return 'item';
     }
   }
 

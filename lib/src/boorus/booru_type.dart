@@ -63,6 +63,17 @@ enum BooruType {
 
   bool get isDetectable => detectable.contains(this);
 
+  /// Booru types that can receive items pushed from another booru (the modular
+  /// "send to library" / upload targets). The viewer's share menu lists every
+  /// configured booru of these types. Handlers implement the actual transfer via
+  /// `BooruHandler.addItem`.
+  static List<BooruType> get itemAddTargets => [
+    BooruType.Eagle,
+    BooruType.Hydrus,
+  ];
+
+  bool get supportsItemAdd => itemAddTargets.contains(this);
+
   static List<BooruType> get saveable {
     return [...values]
       ..remove(BooruType.Autodetect)

@@ -56,6 +56,7 @@ class _DrawerLayoutPageState extends State<DrawerLayoutPage> {
       MainDrawerItem.tabSelector => t.tabSelector,
       MainDrawerItem.tabButtons => t.tabButtons,
       MainDrawerItem.eagleFolders => 'Eagle folders',
+      MainDrawerItem.uploadManager => 'Upload Manager',
       MainDrawerItem.multibooruToggle => t.multibooruToggle,
       MainDrawerItem.lockApp => t.lockApp,
       MainDrawerItem.settings => t.settings,
