@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:lolisnatcher/src/boorus/booru_type.dart';
 import 'package:lolisnatcher/src/data/booru.dart';
 import 'package:lolisnatcher/src/data/booru_item.dart';
+import 'package:lolisnatcher/src/data/upload_item.dart';
 import 'package:lolisnatcher/src/handlers/booru_handler.dart';
 import 'package:lolisnatcher/src/handlers/booru_handler_factory.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
+import 'package:lolisnatcher/src/handlers/upload_handler.dart';
 import 'package:lolisnatcher/src/widgets/common/flash_elements.dart';
 
 /// Modular "send to library" pipeline.
@@ -20,11 +22,14 @@ import 'package:lolisnatcher/src/widgets/common/flash_elements.dart';
 ///
 /// [excludeBooru] omits the booru the item is currently being viewed from
 /// (no point sending an item back to where it came from).
+///
+/// The send is routed through the persistent [UploadHandler] queue (then
+/// uploaded immediately), so every send is visible/tracked in the Upload
+/// Manager alongside staged items — consistent history for both flows.
 Future<void> sendItemToLibrary(
   BuildContext context,
   BooruItem item, {
   Booru? excludeBooru,
-  bool usePostUrl = false,
 }) async {
   final settingsHandler = SettingsHandler.instance;
 
@@ -50,11 +55,9 @@ Future<void> sendItemToLibrary(
   }
 
   final BooruHandler handler = BooruHandlerFactory().getBooruHandler([target], null).booruHandler;
-  if (!handler.hasItemAddSupport) {
-    return;
-  }
 
   String? folderId;
+  String? folderLabel;
   if (handler.hasItemAddFolders) {
     if (!context.mounted) {
       return;
@@ -65,9 +68,16 @@ Future<void> sendItemToLibrary(
       return;
     }
     folderId = choice.id; // null => library root (no folder)
+    folderLabel = choice.label;
   }
 
-  final bool ok = await handler.addItem(item, usePostUrl: usePostUrl, folderId: folderId);
+  // Add to the queue (tracked) then upload right away.
+  final UploadItem entry = UploadItem.fromBooruItem(item)
+    ..targetBooruName = target.name
+    ..folderId = folderId
+    ..folderLabel = folderLabel;
+  await UploadHandler.instance.add(entry);
+  final bool ok = await UploadHandler.instance.uploadOne(entry);
 
   if (!context.mounted) {
     return;
@@ -77,6 +87,7 @@ Future<void> sendItemToLibrary(
     FlashElements.showSnackbar(
       context: context,
       title: Text('Sent to $targetName', style: const TextStyle(fontSize: 20)),
+      content: const Text('Tracked in the Upload Manager.'),
       leadingIcon: Icons.check_circle_outline,
       leadingIconColor: Colors.green,
       sideColor: Colors.green,
@@ -86,7 +97,7 @@ Future<void> sendItemToLibrary(
     FlashElements.showSnackbar(
       context: context,
       title: Text('Failed to send to $targetName', style: const TextStyle(fontSize: 20)),
-      content: const Text('The library rejected the item or is unreachable.'),
+      content: Text(entry.error ?? 'The library rejected the item or is unreachable.'),
       leadingIcon: Icons.error_outline,
       leadingIconColor: Colors.red,
       sideColor: Colors.red,
@@ -125,8 +136,9 @@ Future<Booru?> _pickTarget(BuildContext context, List<Booru> targets) {
 
 /// A chosen destination folder. [id] of null means "library root / no folder".
 class _FolderChoice {
-  const _FolderChoice(this.id);
+  const _FolderChoice(this.id, [this.label]);
   final String? id;
+  final String? label;
 }
 
 /// Pick a destination folder for targets that support it (e.g. Eagle).
@@ -221,7 +233,7 @@ class _FolderPickerDialogState extends State<_FolderPickerDialog> {
                             dense: true,
                             leading: const Icon(Icons.folder_outlined),
                             title: Text(f.label),
-                            onTap: () => Navigator.of(context).pop(_FolderChoice(f.id)),
+                            onTap: () => Navigator.of(context).pop(_FolderChoice(f.id, f.label)),
                           ),
                       ],
                     ),

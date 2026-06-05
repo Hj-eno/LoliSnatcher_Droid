@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:lolisnatcher/src/data/booru.dart';
 import 'package:lolisnatcher/src/data/booru_item.dart';
@@ -114,19 +115,82 @@ class UploadHandler extends GetxController {
     return entry;
   }
 
+  /// Directory where picked local files are copied so the queue can reference
+  /// them across restarts (the OS may clear the picker's own cache).
+  Future<Directory> _stagingDir() async {
+    if (SettingsHandler.instance.path.isEmpty) {
+      await SettingsHandler.instance.setConfigDir();
+    }
+    final dir = Directory('${SettingsHandler.instance.path}upload_staging');
+    await dir.create(recursive: true);
+    return dir;
+  }
+
+  /// Copy a picked local file into the staging dir and queue it. Returns the
+  /// created entry (or null if the source couldn't be read).
+  Future<UploadItem?> stageLocalFile(String sourcePath, {String? displayName}) async {
+    try {
+      final src = File(sourcePath);
+      if (!await src.exists()) {
+        return null;
+      }
+      final dir = await _stagingDir();
+      final String fname = sourcePath.split(RegExp(r'[\\/]')).last;
+      final int dot = fname.lastIndexOf('.');
+      final String ext = dot > 0 ? fname.substring(dot) : '';
+      final String baseName = displayName ?? (dot > 0 ? fname.substring(0, dot) : fname);
+      final String id = const Uuid().v4();
+      final File dest = File('${dir.path}${Platform.pathSeparator}$id$ext');
+      await src.copy(dest.path);
+
+      final entry = UploadItem(
+        name: baseName.isNotEmpty ? baseName : 'file',
+        source: UploadSource.localFile,
+        localPath: dest.path,
+        thumbnailUrl: dest.path,
+      );
+      await add(entry);
+      return entry;
+    } catch (e, s) {
+      Logger.Inst().log(e.toString(), 'UploadHandler', 'stageLocalFile', LogTypes.exception, s: s);
+      return null;
+    }
+  }
+
+  /// Delete a staged local file once it's no longer needed.
+  Future<void> _deleteStaged(UploadItem item) async {
+    final String? p = item.localPath;
+    if (item.source != UploadSource.localFile || p == null) {
+      return;
+    }
+    try {
+      final f = File(p);
+      if (p.contains('upload_staging') && await f.exists()) {
+        await f.delete();
+      }
+    } catch (_) {}
+  }
+
   Future<void> remove(UploadItem item) async {
     queue.remove(item);
     queue.refresh();
+    await _deleteStaged(item);
     await persist();
   }
 
   Future<void> clearCompleted() async {
+    for (final e in queue.where((e) => e.status.isDone)) {
+      await _deleteStaged(e);
+    }
     queue.removeWhere((e) => e.status.isDone);
     queue.refresh();
     await persist();
   }
 
   Future<void> clearAll() async {
+    for (final e in queue) {
+      await _deleteStaged(e);
+    }
     queue.clear();
     await persist();
   }
@@ -165,9 +229,11 @@ class UploadHandler extends GetxController {
     if (item.status.isUploading) {
       return false;
     }
-    if (item.source == UploadSource.localFile && (item.fileUrl == null || item.fileUrl!.isEmpty)) {
+
+    final bool isLocal = item.source == UploadSource.localFile;
+    if (isLocal && (item.localPath == null || !File(item.localPath!).existsSync())) {
       item.status = UploadStatus.failed;
-      item.error = 'Local file upload needs the eagle-serve upload endpoint (not yet available).';
+      item.error = 'The local file is missing (it may have been cleared).';
       await saveItem(item);
       return false;
     }
@@ -187,20 +253,40 @@ class UploadHandler extends GetxController {
 
     try {
       final BooruHandler handler = BooruHandlerFactory().getBooruHandler([target], null).booruHandler;
-      if (!handler.hasItemAddSupport) {
-        item.status = UploadStatus.failed;
-        item.error = 'Target booru does not support uploads.';
-        await saveItem(item);
-        return false;
-      }
 
-      final BooruItem booruItem = _toBooruItem(item);
-      final bool ok = await handler.addItem(booruItem, folderId: item.folderId);
+      final bool ok;
+      if (isLocal) {
+        if (!handler.hasLocalUploadSupport) {
+          item.status = UploadStatus.failed;
+          item.error = 'Target has no local-file upload. Point its image server at eagle-serve.';
+          await saveItem(item);
+          return false;
+        }
+        ok = await handler.addLocalFile(
+          item.localPath!,
+          name: item.name,
+          tags: item.tags,
+          folderId: item.folderId,
+          website: item.postUrl,
+          annotation: item.annotation,
+        );
+      } else {
+        if (!handler.hasItemAddSupport) {
+          item.status = UploadStatus.failed;
+          item.error = 'Target booru does not support uploads.';
+          await saveItem(item);
+          return false;
+        }
+        ok = await handler.addItem(_toBooruItem(item), folderId: item.folderId);
+      }
 
       item.status = ok ? UploadStatus.done : UploadStatus.failed;
       item.error = ok ? null : 'The library rejected the item or is unreachable.';
       item.completedAt = ok ? DateTime.now() : null;
       await saveItem(item);
+      if (ok && isLocal) {
+        await _deleteStaged(item); // Eagle copied it into the library; staging copy is disposable
+      }
       return ok;
     } catch (e, s) {
       Logger.Inst().log(e.toString(), 'UploadHandler', 'uploadOne', LogTypes.exception, s: s);

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+
 import 'package:lolisnatcher/src/data/booru_item.dart';
 import 'package:lolisnatcher/src/data/eagle_folder.dart';
 import 'package:lolisnatcher/src/data/tag.dart';
@@ -533,6 +535,68 @@ class EagleHandler extends BooruHandler {
       return data['status'] == 'success';
     } catch (e, s) {
       Logger.Inst().log(e.toString(), 'EagleHandler', 'addItem', LogTypes.exception, s: s);
+      return false;
+    }
+  }
+
+  /// The eagle-serve `/upload` endpoint, derived from the configured image
+  /// server URL (strip a trailing `/img` bridge suffix to get the server root).
+  /// Null when no image server is configured.
+  String? get _uploadUrl {
+    final String base = imageServer;
+    if (base.isEmpty) {
+      return null;
+    }
+    String root = base;
+    if (root.toLowerCase().endsWith('/img')) {
+      root = root.substring(0, root.length - 4);
+    }
+    return '$root/upload';
+  }
+
+  /// Local file upload is available when an image server (expected to be
+  /// eagle-serve, which exposes `/upload`) is configured.
+  @override
+  bool get hasLocalUploadSupport => _uploadUrl != null;
+
+  /// Upload a phone-local file into Eagle via eagle-serve's `/upload` endpoint
+  /// (Eagle itself can't read the device's disk). eagle-serve stages the bytes
+  /// on the Eagle machine and calls `addFromPath`.
+  @override
+  Future<bool> addLocalFile(
+    String filePath, {
+    String? name,
+    List<String> tags = const [],
+    String? folderId,
+    String? website,
+    String? annotation,
+  }) async {
+    final String? url = _uploadUrl;
+    if (url == null) {
+      return false;
+    }
+    try {
+      final String filename = filePath.split(RegExp(r'[\\/]')).last;
+      final FormData formData = FormData.fromMap({
+        'file': await MultipartFile.fromFile(filePath, filename: filename),
+        if (name != null && name.isNotEmpty) 'name': name,
+        if (tags.isNotEmpty) 'tags': tags.join(','),
+        if (folderId != null && folderId.isNotEmpty) 'folderId': folderId,
+        if (website != null && website.isNotEmpty) 'website': website,
+        if (annotation != null && annotation.isNotEmpty) 'annotation': annotation,
+      });
+      final response = await DioNetwork.post(
+        _withToken(url),
+        data: formData,
+        headers: getHeaders(),
+      );
+      if (response.statusCode != 200) {
+        return false;
+      }
+      final Map<String, dynamic> data = response.data is String ? jsonDecode(response.data) : response.data;
+      return data['status'] == 'success';
+    } catch (e, s) {
+      Logger.Inst().log(e.toString(), 'EagleHandler', 'addLocalFile', LogTypes.exception, s: s);
       return false;
     }
   }

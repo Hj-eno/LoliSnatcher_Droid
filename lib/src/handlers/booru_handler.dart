@@ -127,6 +127,24 @@ abstract class BooruHandler {
   }) async =>
       false;
 
+  /// Whether this target can receive a *raw local device file* (not just a URL
+  /// it fetches itself). Eagle supports this via the eagle-serve `/upload`
+  /// endpoint; targets without such a bridge return false.
+  bool get hasLocalUploadSupport => false;
+
+  /// Upload a local file (at [filePath]) into this library. Returns true on
+  /// success. Mirrors [addItem]'s metadata. Only meaningful when
+  /// [hasLocalUploadSupport] is true.
+  Future<bool> addLocalFile(
+    String filePath, {
+    String? name,
+    List<String> tags = const [],
+    String? folderId,
+    String? website,
+    String? annotation,
+  }) async =>
+      false;
+
   Future<bool> searchSetup() async {
     if (hasSignInSupport) {
       final bool canLogin = await canSignIn();

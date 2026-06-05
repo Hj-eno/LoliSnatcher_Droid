@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:lolisnatcher/src/data/booru.dart';
 import 'package:lolisnatcher/src/data/upload_item.dart';
@@ -22,6 +25,11 @@ class UploadManagerPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Upload Manager'),
         actions: [
+          IconButton(
+            tooltip: 'Add local files',
+            icon: const Icon(Icons.add_photo_alternate_outlined),
+            onPressed: () => _pickLocalFiles(context),
+          ),
           IconButton(
             tooltip: 'Add from URL',
             icon: const Icon(Icons.add_link),
@@ -97,6 +105,38 @@ class UploadManagerPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _pickLocalFiles(BuildContext context) async {
+    try {
+      final List<XFile> files = await ImagePicker().pickMultipleMedia();
+      if (files.isEmpty) {
+        return;
+      }
+      int staged = 0;
+      for (final f in files) {
+        final entry = await UploadHandler.instance.stageLocalFile(f.path, displayName: _stripExt(f.name));
+        if (entry != null) {
+          staged++;
+        }
+      }
+      if (context.mounted && staged > 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Added $staged file${staged == 1 ? '' : 's'} to the queue'), duration: const Duration(seconds: 2)),
+        );
+      }
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not pick files')),
+        );
+      }
+    }
+  }
+
+  static String _stripExt(String name) {
+    final int dot = name.lastIndexOf('.');
+    return dot > 0 ? name.substring(0, dot) : name;
   }
 
   Future<void> _addFromUrlDialog(BuildContext context) async {
@@ -246,19 +286,38 @@ class _UploadCard extends StatelessWidget {
   }
 
   Widget _thumb(BuildContext context) {
-    final url = item.thumbnailUrl;
     final fallback = Container(
       width: 52,
       height: 52,
       color: Theme.of(context).colorScheme.surfaceContainerHighest,
       child: Icon(Icons.image_outlined, color: Theme.of(context).hintColor),
     );
-    if (url == null || url.isEmpty) {
-      return ClipRRect(borderRadius: BorderRadius.circular(6), child: fallback);
+
+    Widget wrap(Widget child) => ClipRRect(borderRadius: BorderRadius.circular(6), child: child);
+
+    // Local files are on disk, not over HTTP.
+    if (item.source == UploadSource.localFile) {
+      final p = item.localPath;
+      if (p == null || !File(p).existsSync()) {
+        return wrap(fallback);
+      }
+      return wrap(
+        Image.file(
+          File(p),
+          width: 52,
+          height: 52,
+          fit: BoxFit.cover,
+          errorBuilder: (_, _, _) => fallback,
+        ),
+      );
     }
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(6),
-      child: Image.network(
+
+    final url = item.thumbnailUrl;
+    if (url == null || url.isEmpty) {
+      return wrap(fallback);
+    }
+    return wrap(
+      Image.network(
         url,
         width: 52,
         height: 52,
