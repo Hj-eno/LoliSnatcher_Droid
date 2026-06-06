@@ -111,7 +111,7 @@ class _DebugPageState extends State<DebugPage> {
                   },
                   title: context.loc.settings.debug.blurImagesAndMuteVideosDevOnly,
                 ),
-              if (SettingsHandler.isDesktopPlatform)
+              if (PlatformExt.isDesktop)
                 SettingsToggle(
                   value: settingsHandler.desktopListsDrag,
                   onChanged: (newValue) {

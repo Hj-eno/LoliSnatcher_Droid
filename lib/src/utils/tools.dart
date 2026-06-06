@@ -216,9 +216,6 @@ class Tools {
 
   static bool get isTestMode => Platform.environment.containsKey('FLUTTER_TEST');
 
-  static bool get isOnPlatformWithWebviewSupport =>
-      Platform.isAndroid || Platform.isIOS || Platform.isWindows || Platform.isMacOS;
-
   static const String captchaCheckHeader = 'LSCaptchaCheck';
 
   static bool hasCaptchaStrings(String host, String content) {
@@ -245,7 +242,7 @@ class Tools {
 
     final bool hasCaptchaContent = hasCaptchaStrings(host, response?.data.toString() ?? '');
 
-    if (isOnPlatformWithWebviewSupport &&
+    if (PlatformExt.hasWebviewSupport &&
         (response?.statusCode == HttpStatus.forbidden ||
             response?.statusCode == HttpStatus.serviceUnavailable ||
             hasCaptchaContent)) {
@@ -334,7 +331,7 @@ class Tools {
 
   static Future<String> getCookies(String uri) async {
     String cookieString = '';
-    if (isOnPlatformWithWebviewSupport) {
+    if (PlatformExt.hasWebviewSupport) {
       try {
         final CookieManager cookieManager = CookieManager.instance(webViewEnvironment: webViewEnvironment);
         List<Cookie> cookies = [];
@@ -363,7 +360,7 @@ class Tools {
   static Future<bool> saveCookies(String uri, List<String> cookies) async {
     if (cookies.isEmpty) return true;
 
-    if (isOnPlatformWithWebviewSupport) {
+    if (PlatformExt.hasWebviewSupport) {
       try {
         final CookieManager cookieManager = CookieManager.instance(webViewEnvironment: webViewEnvironment);
         final List<Cookie?> parsedCookies = [];

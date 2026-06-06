@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -11,6 +10,7 @@ import 'package:lolisnatcher/src/data/settings/hand_side.dart';
 import 'package:lolisnatcher/src/data/settings/preview_display_mode.dart';
 import 'package:lolisnatcher/src/data/settings/preview_quality.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
+import 'package:lolisnatcher/src/utils/extensions.dart';
 import 'package:lolisnatcher/src/widgets/common/cancel_button.dart';
 import 'package:lolisnatcher/src/widgets/common/confirm_button.dart';
 import 'package:lolisnatcher/src/widgets/common/settings_widgets.dart';
@@ -110,7 +110,7 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
                   items: AppMode.values,
                   onChanged: (AppMode? newValue) async {
                     bool confirmation = false;
-                    if ((Platform.isAndroid || Platform.isIOS) && newValue?.isDesktop == true) {
+                    if (PlatformExt.isMobile && newValue?.isDesktop == true) {
                       confirmation =
                           await showDialog<bool>(
                             context: context,
@@ -273,7 +273,7 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
                     return context.loc.validationErrors.required;
                   } else if (parse == null) {
                     return context.loc.validationErrors.invalidNumericValue;
-                  } else if (parse > 4 && (Platform.isAndroid || Platform.isIOS || kDebugMode)) {
+                  } else if (parse > 4 && (PlatformExt.isMobile || kDebugMode)) {
                     return context.loc.validationErrors.moreThan4ColumnsWarning;
                   } else {
                     return null;
@@ -296,7 +296,7 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
                     return context.loc.validationErrors.required;
                   } else if (parse == null) {
                     return context.loc.validationErrors.invalidNumericValue;
-                  } else if (parse > 8 && (Platform.isAndroid || Platform.isIOS || kDebugMode)) {
+                  } else if (parse > 8 && (PlatformExt.isMobile || kDebugMode)) {
                     return context.loc.validationErrors.moreThan8ColumnsWarning;
                   } else {
                     return null;
@@ -469,7 +469,7 @@ class _UserInterfacePageState extends State<UserInterfacePage> {
                 title: context.loc.settings.interface.scrollPreviewsButtonsPosition,
                 itemTitleBuilder: (e) => e?.locName ?? '',
               ),
-              if (SettingsHandler.isDesktopPlatform)
+              if (PlatformExt.isDesktop)
                 SettingsTextInput(
                   controller: mouseSpeedController,
                   title: context.loc.settings.interface.mouseWheelScrollModifier,

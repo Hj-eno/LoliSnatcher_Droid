@@ -147,7 +147,7 @@ class _ThumbnailState extends State<Thumbnail> {
           );
 
     // on desktop devicePixelRatio is not working?
-    final bool shouldResize = (thumbWidth != null || thumbHeight != null) && !SettingsHandler.isDesktopPlatform;
+    final bool shouldResize = (thumbWidth != null || thumbHeight != null) && !PlatformExt.isDesktop;
     final bool shouldPixelate = widget.item.isHidden && settingsHandler.shitDevice;
 
     if (shouldResize || shouldPixelate) {
