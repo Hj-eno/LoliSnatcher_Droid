@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: cd6add6f846f35fb79f3c315296703c1a24f3cfd7f4739d91a74961c1c7e9f1b
+      sha256: "563c6992eaeda8625f45b87f6a6a0c547df16565d1c93d8271c7c11057710ca7"
       url: "https://pub.dev"
     source: hosted
-    version: "100.0.0"
+    version: "101.0.0"
   alice_lightweight:
     dependency: "direct main"
     description:
@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: analyzer
-      sha256: "6ba98576948803398b69e3a444df24eacdbe12ed699c7014e120ea38552debbf"
+      sha256: aa6a9365901532864cae51208f2a6bb18dd01972ebead19c431efc848f60080b
       url: "https://pub.dev"
     source: hosted
-    version: "13.0.0"
+    version: "13.1.0"
   android_intent_plus:
     dependency: "direct overridden"
     description:
@@ -310,10 +310,10 @@ packages:
     dependency: transitive
     description:
       name: dbus
-      sha256: "792974a4007974fbc5c1b5433eb2330a9db3e368c3f906253af4c007d0f49a91"
+      sha256: "0ce9b0a839e6dee59a37a623d2fc26a35bbbe6404213e419b0d6411023d62645"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.13"
+    version: "0.7.14"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -828,10 +828,10 @@ packages:
     dependency: "direct main"
     description:
       name: fvp
-      sha256: f8b069a67e94ad53b975a9082e2272a11223ba8217fc82997428dceeb6f8b433
+      sha256: "0f147516a2520bb37efc9027bce1f20a0aa4487428e9f1437ad7dfa449aa93bd"
       url: "https://pub.dev"
     source: hosted
-    version: "0.37.1"
+    version: "0.37.2"
   get:
     dependency: "direct main"
     description:
@@ -1223,10 +1223,10 @@ packages:
     dependency: "direct overridden"
     description:
       name: meta
-      sha256: df0c643f44ad098eb37988027a8e2b2b5a031fd3977f06bbfd3a76637e8df739
+      sha256: c82594181e3312f3d0695fc95aaaf7758d75b8d4ae2bbecf223b9fd5109a059d
       url: "https://pub.dev"
     source: hosted
-    version: "1.18.2"
+    version: "1.18.3"
   mime:
     dependency: transitive
     description:
