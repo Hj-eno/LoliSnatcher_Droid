@@ -1596,6 +1596,9 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
   late final ScrollController scrollController;
   late final TextEditingController searchController;
   late final Map<String, Set<SearchTab>> keptTabs;
+  late final Map<SearchTab, int> tabIndexes;
+  late final Map<String, ValueNotifier<int>> keptCountNotifiers;
+  late final ValueNotifier<int> deleteCountNotifier;
 
   @override
   void initState() {
@@ -1604,7 +1607,14 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
     scrollController = ScrollController();
     searchController = TextEditingController();
     keptTabs = {};
+    tabIndexes = {
+      for (int index = 0; index < widget.searchHandler.tabs.length; index++) widget.searchHandler.tabs[index]: index,
+    };
+    keptCountNotifiers = {
+      for (final group in widget.previewGroups) group.key: ValueNotifier<int>(0),
+    };
     applyDeleteMode(_DuplicateTabDeleteMode.keepLast);
+    deleteCountNotifier = ValueNotifier<int>(calculateDeleteCount());
   }
 
   @override
@@ -1612,6 +1622,10 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
     tabController.dispose();
     scrollController.dispose();
     searchController.dispose();
+    for (final notifier in keptCountNotifiers.values) {
+      notifier.dispose();
+    }
+    deleteCountNotifier.dispose();
     super.dispose();
   }
 
@@ -1647,6 +1661,7 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
           _DuplicateTabDeleteMode.keepLast => group.tabs.last,
         },
       };
+      keptCountNotifiers[group.key]?.value = 1;
     }
   }
 
@@ -1667,6 +1682,24 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
     keptTabs[group.key] = isAllKept ? <SearchTab>{} : group.tabs.toSet();
   }
 
+  int calculateDeleteCount() {
+    int result = 0;
+
+    for (final group in widget.previewGroups) {
+      result += group.tabs.length - (keptTabs[group.key]?.length ?? 0);
+    }
+
+    return result;
+  }
+
+  void updateDeleteCount() {
+    deleteCountNotifier.value = calculateDeleteCount();
+  }
+
+  void updateKeptCount(_DuplicateTabPreviewGroup group) {
+    keptCountNotifiers[group.key]?.value = keptTabs[group.key]?.length ?? 0;
+  }
+
   List<SearchTab> get tabsToDelete {
     final List<SearchTab> result = [];
 
@@ -1675,15 +1708,13 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
       result.addAll(group.tabs.where((tab) => !keptGroupTabs.contains(tab)));
     }
 
-    result.sort((a, b) => widget.searchHandler.tabs.indexOf(a).compareTo(widget.searchHandler.tabs.indexOf(b)));
+    result.sort((a, b) => (tabIndexes[a] ?? -1).compareTo(tabIndexes[b] ?? -1));
 
     return result;
   }
 
   @override
   Widget build(BuildContext context) {
-    final deleteCount = tabsToDelete.length;
-
     return SettingsDialog(
       title: Text(context.loc.tabs.deleteDuplicateTabs),
       scrollable: false,
@@ -1705,6 +1736,7 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
                   applyDeleteMode(
                     index == 0 ? _DuplicateTabDeleteMode.keepFirst : _DuplicateTabDeleteMode.keepLast,
                   );
+                  updateDeleteCount();
                 });
               },
               tabs: [
@@ -1752,11 +1784,16 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
             Navigator.of(context).pop();
           },
         ),
-        DeleteButton(
-          text: '${context.loc.delete} (${deleteCount.toFormattedString()})',
-          withIcon: true,
-          enabled: deleteCount > 0,
-          action: () => Navigator.of(context).pop(tabsToDelete),
+        ValueListenableBuilder<int>(
+          valueListenable: deleteCountNotifier,
+          builder: (_, deleteCount, _) {
+            return DeleteButton(
+              text: '${context.loc.delete} (${deleteCount.toFormattedString()})',
+              withIcon: true,
+              enabled: deleteCount > 0,
+              action: () => Navigator.of(context).pop(tabsToDelete),
+            );
+          },
         ),
       ],
     );
@@ -1778,92 +1815,103 @@ class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> 
       itemCount: previewGroups.length,
       itemBuilder: (_, groupIndex) {
         final group = previewGroups[groupIndex];
-        final keptGroupTabs = keptTabs[group.key] ?? <SearchTab>{};
-        final bool isAllKept = keptGroupTabs.length == group.tabs.length;
         final int originalGroupIndex = widget.previewGroups.indexOf(group);
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 8, bottom: 4),
-              padding: const EdgeInsets.only(left: 12, right: 4),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AutoSizeText(
-                          group.title,
-                          maxLines: 1,
-                          minFontSize: 10,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        AutoSizeText(
-                          '#${(originalGroupIndex + 1).toFormattedString()} | ${keptGroupTabs.length.toFormattedString()}/${group.tabs.length.toFormattedString()}',
-                          maxLines: 1,
-                          minFontSize: 10,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: context.loc.tabs.selectDeselectAll,
-                    onPressed: () {
-                      setState(() {
-                        toggleKeptGroup(group);
-                      });
-                    },
-                    icon: Icon(isAllKept ? Icons.border_clear : Icons.select_all),
-                  ),
-                ],
-              ),
-            ),
-            for (int index = 0; index < group.tabs.length; index++)
-              Builder(
-                builder: (context) {
-                  final tab = group.tabs[index];
-                  final isKept = keptGroupTabs.contains(tab);
+        return StatefulBuilder(
+          builder: (context, setGroupState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ValueListenableBuilder<int>(
+                  valueListenable: keptCountNotifiers[group.key]!,
+                  builder: (context, keptCount, _) {
+                    final bool isAllKept = keptCount == group.tabs.length;
 
-                  return Opacity(
-                    opacity: isKept ? 1 : 0.5,
-                    child: TabManagerItem(
-                      tab: tab,
-                      index: index,
-                      isFiltered: true,
-                      originalIndex: widget.searchHandler.tabs.indexOf(tab),
-                      onTap: () {
-                        setState(() {
-                          toggleKeptTab(group, tab);
-                        });
-                      },
-                      optionsWidgetBuilder: (_, onTap) {
-                        return IconButton(
-                          onPressed: onTap,
-                          icon: Icon(
-                            isKept ? Icons.check_box : Icons.check_box_outline_blank,
+                    return Container(
+                      margin: const EdgeInsets.only(top: 8, bottom: 4),
+                      padding: const EdgeInsets.only(left: 12, right: 4),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                AutoSizeText(
+                                  group.title,
+                                  maxLines: 1,
+                                  minFontSize: 10,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.labelLarge,
+                                ),
+                                AutoSizeText(
+                                  '#${(originalGroupIndex + 1).toFormattedString()} | ${keptCount.toFormattedString()}/${group.tabs.length.toFormattedString()}',
+                                  maxLines: 1,
+                                  minFontSize: 10,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
                           ),
-                        );
-                      },
-                      onOptionsTap: () {
-                        setState(() {
+                          IconButton(
+                            tooltip: context.loc.tabs.selectDeselectAll,
+                            onPressed: () {
+                              setGroupState(() {
+                                toggleKeptGroup(group);
+                              });
+                              updateKeptCount(group);
+                              updateDeleteCount();
+                            },
+                            icon: Icon(isAllKept ? Icons.border_clear : Icons.select_all),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                for (int index = 0; index < group.tabs.length; index++)
+                  StatefulBuilder(
+                    builder: (context, setRowState) {
+                      final tab = group.tabs[index];
+                      final isKept = keptTabs[group.key]?.contains(tab) ?? false;
+
+                      void toggleTab() {
+                        setRowState(() {
                           toggleKeptTab(group, tab);
                         });
-                      },
-                    ),
-                  );
-                },
-              ),
-            if (groupIndex < previewGroups.length - 1) const Divider(height: 8),
-          ],
+                        updateKeptCount(group);
+                        updateDeleteCount();
+                      }
+
+                      return Opacity(
+                        opacity: isKept ? 1 : 0.5,
+                        child: TabManagerItem(
+                          tab: tab,
+                          index: index,
+                          isFiltered: true,
+                          originalIndex: tabIndexes[tab] ?? -1,
+                          onTap: toggleTab,
+                          optionsWidgetBuilder: (_, onTap) {
+                            return IconButton(
+                              onPressed: onTap,
+                              icon: Icon(
+                                isKept ? Icons.check_box : Icons.check_box_outline_blank,
+                              ),
+                            );
+                          },
+                          onOptionsTap: toggleTab,
+                        ),
+                      );
+                    },
+                  ),
+                if (groupIndex < previewGroups.length - 1) const Divider(height: 8),
+              ],
+            );
+          },
         );
       },
     );
