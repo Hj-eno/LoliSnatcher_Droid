@@ -62,7 +62,10 @@ A minor update aimed at adding new localization languages and fixing some issues
 -------------------
 
 Hotfix 1 - 2.5.1+5213 (xx.xx.2026):
-- Inkbunny parsing fix
+- Fix inkbunny parsing (Thanks to Split50)
+- Added a Retry button to currently downloading item to quickly restart it without moving it to the end of the queue, useful if item is stuck for some reason (also stuck download items will now auto retry after 10 seconds of inactivity)
+- Added a dialog to quickly delete tabs after enabling duplicates filter in tab managers
+- Fix some boorus not working in multibooru mode due to page number conflict
 - Attempt to fix app name change failing on some devices
 - Translate values of cache duration limit setting
 - Increase cache size max limit to 50GB
