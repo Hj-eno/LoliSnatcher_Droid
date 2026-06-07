@@ -45,6 +45,7 @@ class SnatchHandler {
   final RxList<({BooruItem item, Booru booru})> cancelledItems = RxList([]);
 
   CancelToken? cancelToken;
+  bool _retryCurrentRequested = false;
 
   double get currentProgress {
     if (total.value == 0) return 0;
@@ -164,6 +165,24 @@ class SnatchHandler {
     cancelToken?.cancel();
   }
 
+  void onRetryCurrent() {
+    final token = cancelToken;
+    if (token == null || token.isCancelled) {
+      return;
+    }
+
+    _retryCurrentRequested = true;
+    received.value = 0;
+    total.value = 0;
+    token.cancel();
+  }
+
+  bool _consumeRetryCurrent() {
+    final retryCurrent = _retryCurrentRequested;
+    _retryCurrentRequested = false;
+    return retryCurrent;
+  }
+
   void onCancelTokenCreate(CancelToken token) {
     cancelToken = token;
   }
@@ -183,6 +202,7 @@ class SnatchHandler {
           onProgress,
           item.ignoreExists,
           onCancelTokenCreate,
+          _consumeRetryCurrent,
         )
         .listen(
           (Map<String, dynamic> data) {
@@ -291,6 +311,7 @@ class SnatchHandler {
           },
           onDone: () {
             cancelToken = null;
+            _retryCurrentRequested = false;
             status.value = '';
             current.value = null;
             queueProgress.value = 0;
