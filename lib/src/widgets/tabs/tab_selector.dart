@@ -48,6 +48,23 @@ enum TabSortingMode {
   bool get isAnyReverse => isAlphabetReverse || isBooruReverse;
 }
 
+enum _DuplicateTabDeleteMode {
+  keepFirst,
+  keepLast,
+}
+
+class _DuplicateTabPreviewGroup {
+  const _DuplicateTabPreviewGroup({
+    required this.key,
+    required this.title,
+    required this.tabs,
+  });
+
+  final String key;
+  final String title;
+  final List<SearchTab> tabs;
+}
+
 class TabSelector extends StatelessWidget {
   const TabSelector({
     this.withBorder = true,
@@ -556,24 +573,9 @@ class _TabManagerPageState extends State<TabManagerPage> {
     }
 
     if (duplicateFilter) {
-      // tabs where booru and tags are the same
-      final Map<String, List<SearchTab>> freqMap = {};
-
-      for (final tab in filteredTabs) {
-        final tags = tab.tags.toLowerCase().trim();
-        final key = duplicateBooruFilter ? '${tab.selectedBooru.value.name}+$tags' : tags;
-
-        if (freqMap.containsKey(key)) {
-          freqMap[key]!.add(tab);
-        } else {
-          freqMap[key] = [tab];
-        }
-      }
-
-      final List<SearchTab> duplicateTabs = freqMap.entries
-          .where((e) => e.value.length > 1)
-          .expand<SearchTab>((e) => e.value)
-          .toList();
+      final List<SearchTab> duplicateTabs = getDuplicateTabGroups(
+        filteredTabs,
+      ).values.expand<SearchTab>((tabs) => tabs).toList();
       filteredTabs = searchHandler.tabs.where(duplicateTabs.contains).toList();
     }
 
@@ -695,6 +697,9 @@ class _TabManagerPageState extends State<TabManagerPage> {
 
     if (result != null) {
       getTabs();
+      if (duplicateFilter) {
+        await showDuplicateTabsDialog();
+      }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (filteredTabs.contains(searchHandler.currentTab) && !duplicateFilter) {
           jumpToCurrent();
@@ -703,6 +708,69 @@ class _TabManagerPageState extends State<TabManagerPage> {
         }
       });
     }
+  }
+
+  Map<String, List<SearchTab>> getDuplicateTabGroups(Iterable<SearchTab> tabsToCheck) {
+    final Map<String, List<SearchTab>> duplicateGroups = {};
+
+    for (final tab in tabsToCheck) {
+      final String tags = tab.tags.toLowerCase().trim();
+      final String key = duplicateBooruFilter ? '${tab.selectedBooru.value.name}+$tags' : tags;
+      final List<SearchTab> group = duplicateGroups.putIfAbsent(key, () => []);
+      group.add(tab);
+    }
+
+    duplicateGroups.removeWhere((_, tabs) => tabs.length < 2);
+
+    return duplicateGroups;
+  }
+
+  List<_DuplicateTabPreviewGroup> getDuplicateTabPreviewGroups() {
+    final duplicateGroups = getDuplicateTabGroups(filteredTabs);
+    final List<_DuplicateTabPreviewGroup> previewGroups = [];
+
+    for (final entry in duplicateGroups.entries) {
+      final firstTab = entry.value.first;
+      final String tags = firstTab.tags.trim().isEmpty ? context.loc.tabs.empty : firstTab.tags.trim();
+      final String title = duplicateBooruFilter ? '${firstTab.selectedBooru.value.name ?? ''} | $tags' : tags;
+
+      previewGroups.add(
+        _DuplicateTabPreviewGroup(
+          key: entry.key,
+          title: title,
+          tabs: searchHandler.tabs.where(entry.value.contains).toList(),
+        ),
+      );
+    }
+
+    return previewGroups;
+  }
+
+  Future<void> showDuplicateTabsDialog() async {
+    final List<_DuplicateTabPreviewGroup> previewGroups = getDuplicateTabPreviewGroups();
+    final int deleteCount = previewGroups.fold<int>(0, (count, group) => count + group.tabs.length - 1);
+
+    if (deleteCount == 0) {
+      return;
+    }
+
+    final List<SearchTab>? tabsToDelete = await showDialog<List<SearchTab>>(
+      context: context,
+      builder: (context) {
+        return _DuplicateTabsDeleteDialog(
+          previewGroups: previewGroups,
+          searchHandler: searchHandler,
+        );
+      },
+    );
+
+    if (tabsToDelete == null || tabsToDelete.isEmpty) {
+      return;
+    }
+
+    searchHandler.removeTabs(tabsToDelete);
+    selectedTabs.removeWhere(tabsToDelete.contains);
+    getTabs();
   }
 
   Widget filterBuild() {
@@ -1506,6 +1574,298 @@ class _TabManagerPageState extends State<TabManagerPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _DuplicateTabsDeleteDialog extends StatefulWidget {
+  const _DuplicateTabsDeleteDialog({
+    required this.previewGroups,
+    required this.searchHandler,
+  });
+
+  final List<_DuplicateTabPreviewGroup> previewGroups;
+  final SearchHandler searchHandler;
+
+  @override
+  State<_DuplicateTabsDeleteDialog> createState() => _DuplicateTabsDeleteDialogState();
+}
+
+class _DuplicateTabsDeleteDialogState extends State<_DuplicateTabsDeleteDialog> with SingleTickerProviderStateMixin {
+  late final TabController tabController;
+  late final ScrollController scrollController;
+  late final TextEditingController searchController;
+  late final Map<String, Set<SearchTab>> keptTabs;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(initialIndex: 1, length: 2, vsync: this);
+    scrollController = ScrollController();
+    searchController = TextEditingController();
+    keptTabs = {};
+    applyDeleteMode(_DuplicateTabDeleteMode.keepLast);
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    scrollController.dispose();
+    searchController.dispose();
+    super.dispose();
+  }
+
+  List<_DuplicateTabPreviewGroup> get visiblePreviewGroups {
+    final filterText = searchController.text.toLowerCase().trim();
+
+    if (filterText.isEmpty) {
+      return widget.previewGroups;
+    }
+
+    return widget.previewGroups.where((group) {
+      if (group.key.toLowerCase().contains(filterText)) {
+        return true;
+      }
+
+      return group.tabs.any((tab) {
+        final List<String> searchableText = [
+          tab.tags,
+          tab.selectedBooru.value.name ?? '',
+          for (final booru in (tab.secondaryBoorus.value ?? [])) booru.name ?? '',
+        ];
+
+        return searchableText.any((text) => text.toLowerCase().contains(filterText));
+      });
+    }).toList();
+  }
+
+  void applyDeleteMode(_DuplicateTabDeleteMode mode) {
+    for (final group in widget.previewGroups) {
+      keptTabs[group.key] = {
+        switch (mode) {
+          _DuplicateTabDeleteMode.keepFirst => group.tabs.first,
+          _DuplicateTabDeleteMode.keepLast => group.tabs.last,
+        },
+      };
+    }
+  }
+
+  void toggleKeptTab(_DuplicateTabPreviewGroup group, SearchTab tab) {
+    final keptGroupTabs = keptTabs[group.key] ?? <SearchTab>{};
+
+    if (keptGroupTabs.contains(tab)) {
+      keptGroupTabs.remove(tab);
+    } else {
+      keptGroupTabs.add(tab);
+    }
+  }
+
+  void toggleKeptGroup(_DuplicateTabPreviewGroup group) {
+    final keptGroupTabs = keptTabs[group.key] ?? <SearchTab>{};
+    final bool isAllKept = keptGroupTabs.length == group.tabs.length;
+
+    keptTabs[group.key] = isAllKept ? <SearchTab>{} : group.tabs.toSet();
+  }
+
+  List<SearchTab> get tabsToDelete {
+    final List<SearchTab> result = [];
+
+    for (final group in widget.previewGroups) {
+      final keptGroupTabs = keptTabs[group.key] ?? <SearchTab>{};
+      result.addAll(group.tabs.where((tab) => !keptGroupTabs.contains(tab)));
+    }
+
+    result.sort((a, b) => widget.searchHandler.tabs.indexOf(a).compareTo(widget.searchHandler.tabs.indexOf(b)));
+
+    return result;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final deleteCount = tabsToDelete.length;
+
+    return SettingsDialog(
+      title: Text(context.loc.tabs.deleteDuplicateTabs),
+      scrollable: false,
+      content: SizedBox(
+        width: double.maxFinite,
+        height: MediaQuery.sizeOf(context).height * 0.6,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(context.loc.tabs.deleteDuplicateTabsQuestion),
+            ),
+            const SizedBox(height: 8),
+            TabBar(
+              controller: tabController,
+              onTap: (index) {
+                setState(() {
+                  applyDeleteMode(
+                    index == 0 ? _DuplicateTabDeleteMode.keepFirst : _DuplicateTabDeleteMode.keepLast,
+                  );
+                });
+              },
+              tabs: [
+                Tab(
+                  child: AutoSizeText(
+                    context.loc.tabs.keepFirstDuplicateTabs,
+                    maxLines: 1,
+                    minFontSize: 10,
+                  ),
+                ),
+                Tab(
+                  child: AutoSizeText(
+                    context.loc.tabs.keepLastDuplicateTabs,
+                    maxLines: 1,
+                    minFontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            SettingsTextInput(
+              title: context.loc.search,
+              titleAsLabel: true,
+              controller: searchController,
+              inputType: TextInputType.text,
+              clearable: true,
+              pasteable: true,
+              onlyInput: true,
+              drawBottomBorder: false,
+              margin: EdgeInsets.zero,
+              onChanged: (_) => setState(() {}),
+              enableIMEPersonalizedLearning: !SettingsHandler.instance.incognitoKeyboard,
+            ),
+            Expanded(
+              child: duplicateDeletePreviewList(),
+            ),
+          ],
+        ),
+      ),
+      actionButtons: [
+        ElevatedButton.icon(
+          icon: const Icon(Icons.skip_next),
+          label: Text(context.loc.tabs.skipDuplicateTabDelete),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        DeleteButton(
+          text: '${context.loc.delete} (${deleteCount.toFormattedString()})',
+          withIcon: true,
+          enabled: deleteCount > 0,
+          action: () => Navigator.of(context).pop(tabsToDelete),
+        ),
+      ],
+    );
+  }
+
+  Widget duplicateDeletePreviewList() {
+    final previewGroups = visiblePreviewGroups;
+
+    if (previewGroups.isEmpty) {
+      return Center(
+        child: Text(context.loc.tabs.noTabsFound),
+      );
+    }
+
+    return ListView.builder(
+      controller: scrollController,
+      clipBehavior: Clip.hardEdge,
+      padding: const EdgeInsets.only(top: 8),
+      itemCount: previewGroups.length,
+      itemBuilder: (_, groupIndex) {
+        final group = previewGroups[groupIndex];
+        final keptGroupTabs = keptTabs[group.key] ?? <SearchTab>{};
+        final bool isAllKept = keptGroupTabs.length == group.tabs.length;
+        final int originalGroupIndex = widget.previewGroups.indexOf(group);
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 8, bottom: 4),
+              padding: const EdgeInsets.only(left: 12, right: 4),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AutoSizeText(
+                          group.title,
+                          maxLines: 1,
+                          minFontSize: 10,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        AutoSizeText(
+                          '#${(originalGroupIndex + 1).toFormattedString()} | ${keptGroupTabs.length.toFormattedString()}/${group.tabs.length.toFormattedString()}',
+                          maxLines: 1,
+                          minFontSize: 10,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: context.loc.tabs.selectDeselectAll,
+                    onPressed: () {
+                      setState(() {
+                        toggleKeptGroup(group);
+                      });
+                    },
+                    icon: Icon(isAllKept ? Icons.border_clear : Icons.select_all),
+                  ),
+                ],
+              ),
+            ),
+            for (int index = 0; index < group.tabs.length; index++)
+              Builder(
+                builder: (context) {
+                  final tab = group.tabs[index];
+                  final isKept = keptGroupTabs.contains(tab);
+
+                  return Opacity(
+                    opacity: isKept ? 1 : 0.5,
+                    child: TabManagerItem(
+                      tab: tab,
+                      index: index,
+                      isFiltered: true,
+                      originalIndex: widget.searchHandler.tabs.indexOf(tab),
+                      onTap: () {
+                        setState(() {
+                          toggleKeptTab(group, tab);
+                        });
+                      },
+                      optionsWidgetBuilder: (_, onTap) {
+                        return IconButton(
+                          onPressed: onTap,
+                          icon: Icon(
+                            isKept ? Icons.check_box : Icons.check_box_outline_blank,
+                          ),
+                        );
+                      },
+                      onOptionsTap: () {
+                        setState(() {
+                          toggleKeptTab(group, tab);
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
+            if (groupIndex < previewGroups.length - 1) const Divider(height: 8),
+          ],
+        );
+      },
     );
   }
 }
