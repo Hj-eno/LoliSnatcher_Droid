@@ -6,6 +6,7 @@ import 'package:lolisnatcher/src/handlers/settings_handler.dart';
 import 'package:lolisnatcher/src/handlers/tag_handler.dart';
 import 'package:lolisnatcher/src/widgets/common/settings_widgets.dart';
 import 'package:lolisnatcher/src/widgets/tags_manager/tm_add_dialog.dart';
+import 'package:lolisnatcher/src/widgets/tags_manager/tm_filter.dart';
 import 'package:lolisnatcher/src/widgets/tags_manager/tm_list.dart';
 import 'package:lolisnatcher/src/widgets/tags_manager/tm_list_bottom.dart';
 import 'package:lolisnatcher/src/widgets/tags_manager/tm_list_filter.dart';
@@ -62,17 +63,7 @@ class _TagsManagerDialogState extends State<TagsManagerDialog> {
   }
 
   void filterTags() {
-    // logic of this IF repeats, because we don't need to call array filtering every time when there are no filters enabled
-    if (filterSearchController.text != '') {
-      filteredTags = tags.where((t) {
-        final String filter = filterSearchController.text.toLowerCase();
-        final bool textFilter = t.fullString.toLowerCase().contains(filter);
-        final bool typeFilter = t.tagType.toString().toLowerCase().contains(filter);
-        return textFilter || typeFilter;
-      }).toList();
-    } else {
-      filteredTags = [...tags];
-    }
+    filteredTags = filterTagsByQuery(tags, filterSearchController.text);
     filteredTags.sort(compareTags);
     setState(() {});
   }
@@ -194,6 +185,7 @@ class _TagsManagerDialogState extends State<TagsManagerDialog> {
               key: Key('tags-list-#${filteredTags.length}'),
               tags: filteredTags,
               selected: selected,
+              debug: true,
               onRefresh: () async {
                 getTags();
               },

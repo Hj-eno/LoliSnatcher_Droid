@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:lolisnatcher/src/data/booru.dart';
-import 'package:lolisnatcher/src/data/constants.dart';
 import 'package:lolisnatcher/src/data/tag.dart';
 import 'package:lolisnatcher/src/data/tag_type.dart';
 import 'package:lolisnatcher/src/handlers/booru_handler.dart';
@@ -62,10 +61,9 @@ class TagHandler {
   }
 
   /// Check if tag is in the tag map and if it is - check if it is not outdated/stale
-  bool hasTagAndNotStale(String tagString, {int staleTime = Constants.tagStaleTime}) {
+  bool hasTagAndNotStale(String tagString) {
     if (hasTag(tagString)) {
-      final bool isNotStale = getTag(tagString).updatedAt >= (DateTime.now().millisecondsSinceEpoch - staleTime);
-      return isNotStale;
+      return !getTag(tagString).isStale();
     } else {
       return false;
     }
