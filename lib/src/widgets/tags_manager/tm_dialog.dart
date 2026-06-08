@@ -102,23 +102,39 @@ class _TagsManagerDialogState extends State<TagsManagerDialog> {
           onChangedType: (TagType? newValue) {
             if (newValue != null && item.tagType != newValue) {
               item.tagType = newValue;
-              tagHandler.putTag(item, dbEnabled: dbEnabled);
+              tagHandler.putTag(
+                item,
+                dbEnabled: dbEnabled,
+                preferTypeIfNone: false,
+              );
               filterTags();
             }
           },
           onSetStale: () {
             item.updatedAt = 100;
-            tagHandler.putTag(item, dbEnabled: dbEnabled);
+            tagHandler.putTag(
+              item,
+              dbEnabled: dbEnabled,
+              preferTypeIfNone: true,
+            );
             filterTags();
           },
           onResetStale: () {
             item.updatedAt = DateTime.now().millisecondsSinceEpoch;
-            tagHandler.putTag(item, dbEnabled: dbEnabled);
+            tagHandler.putTag(
+              item,
+              dbEnabled: dbEnabled,
+              preferTypeIfNone: true,
+            );
             filterTags();
           },
           onSetUnstaleable: () {
             item.updatedAt = DateTime.now().millisecondsSinceEpoch * 10;
-            tagHandler.putTag(item, dbEnabled: dbEnabled);
+            tagHandler.putTag(
+              item,
+              dbEnabled: dbEnabled,
+              preferTypeIfNone: true,
+            );
             filterTags();
           },
         );
@@ -129,13 +145,15 @@ class _TagsManagerDialogState extends State<TagsManagerDialog> {
   Future<void> showAddDialog() async {
     final Tag? tag = await showDialog(
       context: context,
-      builder: (context) {
-        return const TagsManagerAddDialog();
-      },
+      builder: (_) => const TagsManagerAddDialog(),
     );
 
     if (tag != null && !tagHandler.hasTag(tag.fullString)) {
-      await tagHandler.putTag(tag, dbEnabled: settingsHandler.dbEnabled);
+      await tagHandler.putTag(
+        tag,
+        dbEnabled: settingsHandler.dbEnabled,
+        preferTypeIfNone: false,
+      );
       tags.add(tag);
       filterTags();
     }

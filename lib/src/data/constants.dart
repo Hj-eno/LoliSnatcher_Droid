@@ -5,7 +5,7 @@ import 'package:lolisnatcher/src/data/update_info.dart';
 class Constants {
   static const int defaultItemLimit = 20;
 
-  static const int tagStaleTime = 3 * 24 * 60 * 60 * 1000; // 3 days
+  static const int tagStaleTime = 14 * 24 * 60 * 60 * 1000; // 14 days
 
   static const int historyLimit = 10000;
 

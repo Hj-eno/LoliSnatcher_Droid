@@ -1530,7 +1530,11 @@ Future<void> showTagDialog({
                   onChangedType: (TagType? newValue) {
                     if (newValue != null && item.tagType != newValue) {
                       item.tagType = newValue;
-                      tagHandler.putTag(item, dbEnabled: settingsHandler.dbEnabled);
+                      tagHandler.putTag(
+                        item,
+                        dbEnabled: settingsHandler.dbEnabled,
+                        preferTypeIfNone: false,
+                      );
                       onUpdate();
                     }
                   },
