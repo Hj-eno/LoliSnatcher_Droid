@@ -1194,8 +1194,7 @@ class _TagText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color? color = tag.getColour();
-    color = color == Colors.transparent ? null : color;
+    final Color color = tag.getColour() ?? Theme.of(context).colorScheme.onSurface;
     final basicStyle = TextStyle(
       fontSize: 14,
       fontWeight: filterText?.isNotEmpty == true ? FontWeight.w400 : FontWeight.w600,
@@ -1220,7 +1219,7 @@ class _TagText extends StatelessWidget {
             TextSpan(
               text: filterText,
               style: fullStyle.copyWith(
-                backgroundColor: color?.withValues(alpha: 0.1),
+                backgroundColor: color.withValues(alpha: 0.1),
                 fontWeight: FontWeight.w600,
               ),
             ),
