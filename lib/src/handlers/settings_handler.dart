@@ -134,6 +134,7 @@ class SettingsHandler {
 
   Set<String> hiddenTags = {};
   Set<String> markedTags = {};
+  int tagsFiltersMetadataVersion = 0;
 
   int itemLimit = Constants.defaultItemLimit;
   int portraitColumns = 2;
@@ -203,6 +204,7 @@ class SettingsHandler {
   final RxBool useLockscreen = false.obs;
   final RxBool blurOnLeave = false.obs;
   final RxList<Booru> booruList = RxList<Booru>([]);
+  int booruListVersion = 0;
   ////////////////////////////////////////////////////
 
   // themes wip
@@ -1849,6 +1851,7 @@ class SettingsHandler {
     booruList.value = tempList
         .where((element) => !booruList.contains(element))
         .toList(); // filter due to possibility of duplicates
+    booruListVersion++;
 
     if (tempList.isNotEmpty) {
       unawaited(sortBooruList());
@@ -1899,6 +1902,7 @@ class SettingsHandler {
     }
 
     booruList.value = sorted;
+    booruListVersion++;
   }
 
   Future saveBooru(Booru booru, {bool onlySave = false}) async {
@@ -1916,6 +1920,7 @@ class SettingsHandler {
       // used only to avoid duplication after migration to json format
       // TODO remove condition when migration logic is removed
       booruList.add(booru);
+      booruListVersion++;
       unawaited(sortBooruList());
     }
     return true;
@@ -1929,6 +1934,7 @@ class SettingsHandler {
       await saveSettings(restate: true);
     }
     booruList.remove(booru);
+    booruListVersion++;
     unawaited(sortBooruList());
     return true;
   }
@@ -1989,33 +1995,41 @@ class SettingsHandler {
   }
 
   void addTagToList(String type, String tag) {
+    bool changed = false;
     switch (type) {
       case 'hated':
       case 'hidden':
-        hiddenTags.add(tag);
+        changed = hiddenTags.add(tag);
         break;
       case 'loved':
       case 'marked':
-        markedTags.add(tag);
+        changed = markedTags.add(tag);
         break;
       default:
         break;
+    }
+    if (changed) {
+      tagsFiltersMetadataVersion++;
     }
     saveSettings(restate: false);
   }
 
   void removeTagFromList(String type, String tag) {
+    bool changed = false;
     switch (type) {
       case 'hated':
       case 'hidden':
-        hiddenTags.remove(tag);
+        changed = hiddenTags.remove(tag);
         break;
       case 'loved':
       case 'marked':
-        markedTags.remove(tag);
+        changed = markedTags.remove(tag);
         break;
       default:
         break;
+    }
+    if (changed) {
+      tagsFiltersMetadataVersion++;
     }
     saveSettings(restate: false);
   }
