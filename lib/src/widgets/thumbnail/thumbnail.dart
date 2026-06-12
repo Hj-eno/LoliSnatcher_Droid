@@ -247,22 +247,13 @@ class _ThumbnailState extends State<Thumbnail> {
   }) {
     startedAt.value = DateTime.now().millisecondsSinceEpoch;
 
-    // if scaling is disabled - allow gifs as thumbnails, but only if they are not hidden (resize image doesnt work with gifs)
-    final bool isSampleGif = widget.item.sampleURL.contains('.gif');
-    final bool isGifSampleNotAllowed =
-        widget.item.mediaType.value.isAnimation &&
-        ((settingsHandler.disableImageScaling && settingsHandler.gifsAsThumbnails) ? widget.item.isHidden : true);
-
     isThumbQuality =
         settingsHandler.previewMode.isThumbnail ||
-        (isGifSampleNotAllowed ||
-            widget.item.mediaType.value.isVideo ||
+        (widget.item.mediaType.value.isVideo ||
             widget.item.mediaType.value.isNeedToGuess ||
             widget.item.mediaType.value.isNeedToLoadItem) ||
         (!widget.isStandalone && widget.item.fileURL == widget.item.sampleURL);
-    thumbURL = isThumbQuality == true
-        ? widget.item.thumbnailURL
-        : (!isSampleGif || isGifSampleNotAllowed ? widget.item.sampleURL : widget.item.thumbnailURL);
+    thumbURL = isThumbQuality == true ? widget.item.thumbnailURL : widget.item.sampleURL;
     thumbFolder = (isThumbQuality == true || thumbURL == widget.item.thumbnailURL) ? 'thumbnails' : 'samples';
     useExtra.value = isThumbQuality == false && !widget.item.isHidden && !settingsHandler.shitDevice;
 
@@ -561,24 +552,27 @@ class _ThumbnailState extends State<Thumbnail> {
                       Widget child = const SizedBox.shrink();
 
                       if (mainProvider != null) {
-                        child = Image(
-                          image: mainProvider,
-                          fit: widget.isStandalone ? BoxFit.cover : BoxFit.contain,
-                          isAntiAlias: true,
-                          filterQuality: FilterQuality.medium,
-                          width: double.infinity,
-                          height: double.infinity,
-                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                            if (widget.isStandalone) {
-                              return Icon(
-                                Icons.broken_image,
-                                size: 30,
-                                color: Colors.white.withValues(alpha: 0.5),
-                              );
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
+                        child = TickerMode(
+                          enabled: settingsHandler.gifsAsThumbnails,
+                          child: Image(
+                            image: mainProvider,
+                            fit: widget.isStandalone ? BoxFit.cover : BoxFit.contain,
+                            isAntiAlias: true,
+                            filterQuality: FilterQuality.medium,
+                            width: double.infinity,
+                            height: double.infinity,
+                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                              if (widget.isStandalone) {
+                                return Icon(
+                                  Icons.broken_image,
+                                  size: 30,
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          ),
                         );
                       }
 
