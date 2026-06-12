@@ -52,6 +52,9 @@ class Win32Window {
   // If true, closing this window will quit the application.
   void SetQuitOnClose(bool quit_on_close);
 
+  // Calculates default bounds from the primary monitor.
+  static void GetDefaultWindowState(Point* origin, Size* size);
+
   // Restores saved window bounds, falling back to the supplied values.
   static void LoadSavedWindowState(Point* origin, Size* size,
                                    bool* maximized);

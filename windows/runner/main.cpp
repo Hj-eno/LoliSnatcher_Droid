@@ -28,6 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   Win32Window::Point origin(100, 100);
   Win32Window::Size size(960, 540);
   bool maximized = false;
+  Win32Window::GetDefaultWindowState(&origin, &size);
   Win32Window::LoadSavedWindowState(&origin, &size, &maximized);
   if (!window.Create(L"lolisnatcher", origin, size)) {
     return EXIT_FAILURE;
