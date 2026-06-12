@@ -56,6 +56,9 @@ class Win32Window {
   static void LoadSavedWindowState(Point* origin, Size* size,
                                    bool* maximized);
 
+  // Restores the default window bounds and persists them.
+  void ResetWindowState();
+
   // Return a RECT representing the bounds of the current client area.
   RECT GetClientArea();
 

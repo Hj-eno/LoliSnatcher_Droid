@@ -260,6 +260,25 @@ void Win32Window::SaveWindowState() {
   RegCloseKey(key);
 }
 
+void Win32Window::ResetWindowState() {
+  constexpr int kDefaultX = 100;
+  constexpr int kDefaultY = 100;
+  constexpr int kDefaultWidth = 960;
+  constexpr int kDefaultHeight = 540;
+
+  const POINT target_point = {kDefaultX, kDefaultY};
+  HMONITOR monitor = MonitorFromPoint(target_point, MONITOR_DEFAULTTOPRIMARY);
+  const double scale_factor = FlutterDesktopGetDpiForMonitor(monitor) / 96.0;
+
+  ShowWindow(window_handle_, SW_RESTORE);
+  SetWindowPos(window_handle_, nullptr, Scale(kDefaultX, scale_factor),
+               Scale(kDefaultY, scale_factor),
+               Scale(kDefaultWidth, scale_factor),
+               Scale(kDefaultHeight, scale_factor),
+               SWP_NOZORDER | SWP_NOACTIVATE);
+  SaveWindowState();
+}
+
 // static
 LRESULT CALLBACK Win32Window::WndProc(HWND const window,
                                       UINT const message,

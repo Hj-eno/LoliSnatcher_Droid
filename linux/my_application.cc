@@ -20,6 +20,11 @@ struct _MyApplication {
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
 
+constexpr gint kDefaultWindowX = 100;
+constexpr gint kDefaultWindowY = 100;
+constexpr gint kDefaultWindowWidth = 960;
+constexpr gint kDefaultWindowHeight = 540;
+
 static gchar* get_window_state_path() {
   return g_build_filename(g_get_user_config_dir(), "loliSnatcher",
                           "window.ini", nullptr);
@@ -123,6 +128,30 @@ static gboolean window_delete_cb(GtkWidget*, GdkEvent*,
   return FALSE;
 }
 
+static void window_method_call_cb(FlMethodChannel*,
+                                  FlMethodCall* method_call,
+                                  gpointer user_data) {
+  MyApplication* self = MY_APPLICATION(user_data);
+  g_autoptr(FlMethodResponse) response = nullptr;
+
+  if (g_strcmp0(fl_method_call_get_name(method_call), "reset") == 0) {
+    gtk_window_unmaximize(self->window);
+    gtk_window_resize(self->window, kDefaultWindowWidth, kDefaultWindowHeight);
+    gtk_window_move(self->window, kDefaultWindowX, kDefaultWindowY);
+    self->window_x = kDefaultWindowX;
+    self->window_y = kDefaultWindowY;
+    self->window_width = kDefaultWindowWidth;
+    self->window_height = kDefaultWindowHeight;
+    self->window_maximized = FALSE;
+    save_window_state(self);
+    response = FL_METHOD_RESPONSE(fl_method_success_response_new(nullptr));
+  } else {
+    response = FL_METHOD_RESPONSE(fl_method_not_implemented_response_new());
+  }
+
+  fl_method_call_respond(method_call, response, nullptr);
+}
+
 // Implements GApplication::activate.
 static void my_application_activate(GApplication* application) {
   MyApplication* self = MY_APPLICATION(application);
@@ -179,6 +208,12 @@ static void my_application_activate(GApplication* application) {
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
 
+  g_autoptr(FlMethodChannel) window_channel = fl_method_channel_new(
+      fl_engine_get_binary_messenger(fl_view_get_engine(view)),
+      "lolisnatcher/window", FL_METHOD_CODEC(fl_standard_method_codec_new()));
+  fl_method_channel_set_method_call_handler(
+      window_channel, window_method_call_cb, self, nullptr);
+
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }
 
@@ -216,10 +251,10 @@ static void my_application_class_init(MyApplicationClass* klass) {
 
 static void my_application_init(MyApplication* self) {
   self->window = nullptr;
-  self->window_x = 10;
-  self->window_y = 10;
-  self->window_width = 1280;
-  self->window_height = 720;
+  self->window_x = kDefaultWindowX;
+  self->window_y = kDefaultWindowY;
+  self->window_width = kDefaultWindowWidth;
+  self->window_height = kDefaultWindowHeight;
   self->window_maximized = FALSE;
 }
 
