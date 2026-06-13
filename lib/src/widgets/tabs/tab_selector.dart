@@ -689,10 +689,7 @@ class _TabManagerPageState extends State<TabManagerPage> {
       duplicateBooruFilter = true;
       isMultiBooruMode = null;
       emptyFilter = false;
-
-      if (!sortingMode.isNone) {
-        sortingMode = TabSortingMode.none;
-      }
+      sortingMode = TabSortingMode.none;
     }
 
     if (result != null) {
@@ -775,6 +772,7 @@ class _TabManagerPageState extends State<TabManagerPage> {
     if (filteredTabs.isEmpty) {
       duplicateFilter = false;
       duplicateBooruFilter = true;
+      sortingMode = TabSortingMode.none;
       getTabs();
     }
   }
