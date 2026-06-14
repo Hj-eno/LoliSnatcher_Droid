@@ -63,7 +63,7 @@ A minor update to fix some issues.
 
 Known issues:
 - on Gelbooru images may blink/flicker and return error 503, which will be fixed after retrying to load the image. This could be caused by their rate limiting becoming too aggressive or some problems from their provider, as a temporary workaround - set [Interface - Preview quality] to [Thumbnail] to reduce flicker and [Boorus and Search - Items fetched per page] to 20 to reduce the chance of being rate limited
-- German translations are incorrect, will be fixed in the future release once contributor will be able to update them
+- German translations are incorrect, will be fixed in the future release after new contributor will be able to update them
 
 -------------------
 
