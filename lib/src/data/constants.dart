@@ -44,7 +44,7 @@ class Constants {
   // TODO don't forget to update on every new release
   static const UpdateInfo updateInfo = UpdateInfo(
     versionName: '2.5.1',
-    buildNumber: 5212,
+    buildNumber: 5214,
     title: '2.5.1 - Chinese and German localization, fixes',
     isInStore: true,
     isImportant: false,
@@ -67,7 +67,7 @@ Known issues:
 
 -------------------
 
-Hotfix 1 - 2.5.1+5213 (14.06.2026):
+Hotfix 1 - 2.5.1+5214 (14.06.2026):
 
 - Fixed inkbunny parsing (Thanks to Split50)
 - Added a Retry button to currently downloading item to quickly restart it without moving it to the end of the queue, useful if item is stuck for some reason (also stuck download items will now auto retry after 10 seconds of inactivity)
