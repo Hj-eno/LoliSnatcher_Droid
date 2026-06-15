@@ -1206,6 +1206,7 @@ class DBHandler {
     String newVidServer,
     ValueChanged<String>? onStatusUpdate,
   ) async {
+    // TODO 15.06.2026 they have both images and videos on img4 now, probably will have to update logic to differentiate between them through file extension if they divide them again in the future
     final List<String> conditions = [];
     for (final server in [
       {'img': newImgServer},
