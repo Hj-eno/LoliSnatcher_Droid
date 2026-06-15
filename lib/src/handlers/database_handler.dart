@@ -1185,8 +1185,8 @@ class DBHandler {
   Future<void> fixBooruItems(ValueChanged<String>? onStatusUpdate) async {
     try {
       await convertGelbooruServers(
-        'img2',
-        'video-cdn4',
+        'img4',
+        'img4',
         onStatusUpdate,
       ); // latest change i4->2, v3->4, ~early-mid December 25
       await fixR34XXXPostUrls(onStatusUpdate);
