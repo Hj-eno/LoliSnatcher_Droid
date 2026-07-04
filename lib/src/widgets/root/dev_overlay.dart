@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -69,6 +71,15 @@ class __DevOverlayContentState extends State<DevOverlayContent> {
         top = MediaQuery.sizeOf(context).height / 2;
       });
     });
+  }
+
+  void handleBackAction() {
+    final navigator = NavigationHandler.instance.navigatorKey.currentState;
+    if (navigator == null) {
+      return;
+    }
+
+    unawaited(navigator.maybePop());
   }
 
   Widget buildButton(
@@ -230,7 +241,7 @@ class __DevOverlayContentState extends State<DevOverlayContent> {
                           buildButton(
                             Icons.arrow_back,
                             'Back',
-                            () => Navigator.of(NavigationHandler.instance.navContext).pop(),
+                            handleBackAction,
                           ),
                       ],
                     ],
