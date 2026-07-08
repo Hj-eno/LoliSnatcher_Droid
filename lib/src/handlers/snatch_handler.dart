@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
@@ -37,6 +39,8 @@ class SnatchHandler {
   final RxString status = ''.obs;
   final RxInt queueProgress = 0.obs;
   final Rx<SnatchItem?> current = Rx<SnatchItem?>(null);
+  final RxSet<Key> currentItemKeys = <Key>{}.obs;
+  final Rxn<BooruItem> activeItem = Rxn<BooruItem>();
   final RxInt received = 0.obs;
   final RxInt total = 0.obs;
 
@@ -45,6 +49,8 @@ class SnatchHandler {
   final RxList<({BooruItem item, Booru booru})> cancelledItems = RxList([]);
 
   CancelToken? cancelToken;
+  Timer? _progressStuckTimer;
+  bool _retryCurrentRequested = false;
 
   double get currentProgress {
     if (total.value == 0) return 0;
@@ -72,8 +78,17 @@ class SnatchHandler {
   }
 
   void onProgress(int newReceived, int newTotal) {
+    final progressChanged = received.value != newReceived || total.value != newTotal;
     received.value = newReceived;
     total.value = newTotal;
+    final currentValue = current.value;
+    final progress = queueProgress.value;
+    activeItem.value = newTotal > 0 && currentValue != null && progress < currentValue.booruItems.length
+        ? currentValue.booruItems[progress]
+        : null;
+    if (progressChanged && cancelToken != null && !cancelToken!.isCancelled) {
+      _restartProgressStuckTimer();
+    }
   }
 
   void onRemoveRetryItem(
@@ -161,11 +176,49 @@ class SnatchHandler {
   }
 
   void onCancel() {
+    _stopProgressStuckTimer();
+    _retryCurrentRequested = false;
     cancelToken?.cancel();
+  }
+
+  void onRetryCurrent() {
+    final token = cancelToken;
+    if (token == null || token.isCancelled) {
+      return;
+    }
+
+    _stopProgressStuckTimer();
+    _retryCurrentRequested = true;
+    received.value = 0;
+    total.value = 0;
+    token.cancel();
+  }
+
+  bool _consumeRetryCurrent() {
+    final retryCurrent = _retryCurrentRequested;
+    _retryCurrentRequested = false;
+    return retryCurrent;
   }
 
   void onCancelTokenCreate(CancelToken token) {
     cancelToken = token;
+    _restartProgressStuckTimer();
+  }
+
+  void _restartProgressStuckTimer() {
+    _progressStuckTimer?.cancel();
+    _progressStuckTimer = Timer(
+      const Duration(seconds: 10),
+      () {
+        _progressStuckTimer = null;
+        onRetryCurrent();
+      },
+    );
+  }
+
+  void _stopProgressStuckTimer() {
+    _progressStuckTimer?.cancel();
+    _progressStuckTimer = null;
   }
 
   Future snatch(SnatchItem item) async {
@@ -173,6 +226,7 @@ class SnatchHandler {
         ? '0/${item.booruItems.length}/${queuedList.length}'
         : '0/${item.booruItems.length}';
     current.value = item;
+    currentItemKeys.assignAll(item.booruItems.map((booruItem) => booruItem.key));
 
     // writeMultipleFake(item.booruItems, item.booru, item.cooldown).listen(
     ImageWriter()
@@ -183,6 +237,7 @@ class SnatchHandler {
           onProgress,
           item.ignoreExists,
           onCancelTokenCreate,
+          _consumeRetryCurrent,
         )
         .listen(
           (Map<String, dynamic> data) {
@@ -281,18 +336,25 @@ class SnatchHandler {
               cancelledItems.addAll(cancelled.map((e) => (booru: item.booru, item: e)));
             }
 
+            _stopProgressStuckTimer();
             cancelToken = null;
+            _retryCurrentRequested = false;
             status.value = queuedList.isNotEmpty
                 ? '$snatched/${item.booruItems.length}/${queuedList.length}'
                 : '$snatched/${item.booruItems.length}';
             queueProgress.value = queueProgress.value + 1;
+            activeItem.value = null;
             received.value = 0;
             total.value = 0;
           },
           onDone: () {
+            _stopProgressStuckTimer();
             cancelToken = null;
+            _retryCurrentRequested = false;
             status.value = '';
             current.value = null;
+            currentItemKeys.clear();
+            activeItem.value = null;
             queueProgress.value = 0;
             received.value = 0;
             total.value = 0;
@@ -421,6 +483,7 @@ class SnatchHandler {
   }
 
   void dispose() {
+    _stopProgressStuckTimer();
     queuedList.removeListener(queuedListListener);
   }
 }

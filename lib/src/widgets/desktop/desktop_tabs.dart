@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:lolisnatcher/src/utils/extensions.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import 'package:lolisnatcher/src/data/tab_group.dart';
@@ -402,7 +403,7 @@ class _DesktopTabsState extends State<DesktopTabs> {
             Expanded(
               child: Listener(
                 onPointerSignal: (pointerSignal) {
-                  if (SettingsHandler.isDesktopPlatform && pointerSignal is PointerScrollEvent) {
+                  if (PlatformExt.isDesktop && pointerSignal is PointerScrollEvent) {
                     onMouseScroll(pointerSignal.scrollDelta.dy);
                   }
                 },

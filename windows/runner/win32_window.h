@@ -13,9 +13,9 @@
 class Win32Window {
  public:
   struct Point {
-    unsigned int x;
-    unsigned int y;
-    Point(unsigned int x, unsigned int y) : x(x), y(y) {}
+    int x;
+    int y;
+    Point(int x, int y) : x(x), y(y) {}
   };
 
   struct Size {
@@ -51,6 +51,16 @@ class Win32Window {
 
   // If true, closing this window will quit the application.
   void SetQuitOnClose(bool quit_on_close);
+
+  // Calculates default bounds from the primary monitor.
+  static void GetDefaultWindowState(Point* origin, Size* size);
+
+  // Restores saved window bounds, falling back to the supplied values.
+  static void LoadSavedWindowState(Point* origin, Size* size,
+                                   bool* maximized);
+
+  // Restores the default window bounds and persists them.
+  void ResetWindowState();
 
   // Return a RECT representing the bounds of the current client area.
   RECT GetClientArea();
@@ -89,6 +99,8 @@ class Win32Window {
 
   // Update the window frame's theme to match the system theme.
   static void UpdateTheme(HWND const window);
+
+  void SaveWindowState();
 
   bool quit_on_close_ = false;
 

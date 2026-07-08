@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
 import 'package:lolisnatcher/src/services/saf_file_cache.dart';
+import 'package:lolisnatcher/src/utils/extensions.dart';
 import 'package:lolisnatcher/src/utils/logger.dart';
 
 //The ServiceHandler class calls kotlin functions in MainActivity.kt
@@ -454,15 +455,6 @@ class ServiceHandler {
       visible ? SystemUiMode.edgeToEdge : SystemUiMode.immersiveSticky,
       overlays: visible ? SystemUiOverlay.values : [],
     );
-
-    if (visible) {
-      // TODO this is a temp fix while edgeToEdge is broken after f3.44 (details: https://github.com/flutter/flutter/issues/186723)
-      await SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: SystemUiOverlay.values,
-      );
-      await SystemChrome.restoreSystemUIOverlays();
-    }
   }
 
   static Future<String> getIP() async {
@@ -540,7 +532,7 @@ class ServiceHandler {
     }
 
     try {
-      if (Platform.isAndroid || Platform.isIOS) {
+      if (PlatformExt.isMobile) {
         await HapticFeedback.lightImpact();
       }
     } catch (e, s) {

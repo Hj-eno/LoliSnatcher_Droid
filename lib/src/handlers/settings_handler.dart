@@ -70,8 +70,6 @@ class SettingsHandler {
 
   static void unregister() => GetIt.instance.unregister<SettingsHandler>();
 
-  static bool get isDesktopPlatform => Platform.isWindows || Platform.isLinux || Platform.isMacOS;
-
   DBHandler dbHandler = DBHandler();
 
   late Alice alice;
@@ -97,6 +95,7 @@ class SettingsHandler {
   final RxBool showPerf = false.obs;
   final RxBool showImageStats = false.obs;
   final RxBool showVideoStats = false.obs;
+  final RxBool useImageLogging = false.obs;
   bool blurImages = kDebugMode ? Constants.blurImagesDefaultDev : false;
 
   ////////////////////////////////////////////////////
@@ -130,12 +129,13 @@ class SettingsHandler {
   String proxyAddress = '';
   String proxyUsername = '';
   String proxyPassword = '';
-  VideoBackendMode videoBackendMode = isDesktopPlatform ? VideoBackendMode.mpv : VideoBackendMode.normal;
+  VideoBackendMode videoBackendMode = VideoBackendMode.defaultValue;
   MpvVideoOutput altVideoPlayerVO = MpvVideoOutput.defaultValue;
   MpvHardwareDecoding altVideoPlayerHWDEC = MpvHardwareDecoding.defaultValue;
 
   Set<String> hiddenTags = {};
   Set<String> markedTags = {};
+  int tagsFiltersMetadataVersion = 0;
 
   int itemLimit = Constants.defaultItemLimit;
   int portraitColumns = 2;
@@ -195,6 +195,7 @@ class SettingsHandler {
   bool disableImageScaling = false;
   bool gifsAsThumbnails = false;
   bool desktopListsDrag = false;
+  bool captureLogcat = false;
   bool showBottomSearchbar = true;
   bool useTopSearchbarInput = false;
   bool showSearchbarQuickActions = false;
@@ -208,6 +209,7 @@ class SettingsHandler {
   final RxBool eagleShowSubfolderItems = false.obs;
   final RxList<MainDrawerItem> mainDrawerItems = RxList<MainDrawerItem>.of(MainDrawerItem.defaultOrder);
   final RxList<Booru> booruList = RxList<Booru>([]);
+  int booruListVersion = 0;
   ////////////////////////////////////////////////////
 
   // themes wip
@@ -280,6 +282,7 @@ class SettingsHandler {
     'showVideoStats',
     'isDebug',
     'desktopListsDrag',
+    'captureLogcat',
     'incognitoKeyboard',
     'appAlias',
     'showBottomSearchbar',
@@ -363,8 +366,8 @@ class SettingsHandler {
     },
     'videoBackendMode': {
       'type': 'videoBackendMode',
-      'default': isDesktopPlatform ? VideoBackendMode.mpv : VideoBackendMode.defaultValue,
-      'options': VideoBackendMode.values,
+      'default': VideoBackendMode.defaultValue,
+      'options': VideoBackendMode.allowedValues,
     },
     'altVideoPlayerVO': {
       'type': 'mpvVideoOutput',
@@ -620,6 +623,10 @@ class SettingsHandler {
       'default': false,
     },
     'desktopListsDrag': {
+      'type': 'bool',
+      'default': false,
+    },
+    'captureLogcat': {
       'type': 'bool',
       'default': false,
     },
@@ -1170,6 +1177,8 @@ class SettingsHandler {
         return gifsAsThumbnails;
       case 'desktopListsDrag':
         return desktopListsDrag;
+      case 'captureLogcat':
+        return captureLogcat;
       case 'cacheDuration':
         return cacheDuration;
       case 'cacheSize':
@@ -1432,6 +1441,9 @@ class SettingsHandler {
         break;
       case 'desktopListsDrag':
         desktopListsDrag = validatedValue;
+        break;
+      case 'captureLogcat':
+        captureLogcat = validatedValue;
         break;
       case 'cacheDuration':
         cacheDuration = validatedValue;
@@ -1904,6 +1916,7 @@ class SettingsHandler {
     booruList.value = tempList
         .where((element) => !booruList.contains(element))
         .toList(); // filter due to possibility of duplicates
+    booruListVersion++;
 
     if (tempList.isNotEmpty) {
       unawaited(sortBooruList());
@@ -1954,6 +1967,7 @@ class SettingsHandler {
     }
 
     booruList.value = sorted;
+    booruListVersion++;
   }
 
   Future saveBooru(Booru booru, {bool onlySave = false}) async {
@@ -1971,6 +1985,7 @@ class SettingsHandler {
       // used only to avoid duplication after migration to json format
       // TODO remove condition when migration logic is removed
       booruList.add(booru);
+      booruListVersion++;
       unawaited(sortBooruList());
     }
     return true;
@@ -1984,6 +1999,7 @@ class SettingsHandler {
       await saveSettings(restate: true);
     }
     booruList.remove(booru);
+    booruListVersion++;
     unawaited(sortBooruList());
     return true;
   }
@@ -2044,33 +2060,41 @@ class SettingsHandler {
   }
 
   void addTagToList(String type, String tag) {
+    bool changed = false;
     switch (type) {
       case 'hated':
       case 'hidden':
-        hiddenTags.add(tag);
+        changed = hiddenTags.add(tag);
         break;
       case 'loved':
       case 'marked':
-        markedTags.add(tag);
+        changed = markedTags.add(tag);
         break;
       default:
         break;
+    }
+    if (changed) {
+      tagsFiltersMetadataVersion++;
     }
     saveSettings(restate: false);
   }
 
   void removeTagFromList(String type, String tag) {
+    bool changed = false;
     switch (type) {
       case 'hated':
       case 'hidden':
-        hiddenTags.remove(tag);
+        changed = hiddenTags.remove(tag);
         break;
       case 'loved':
       case 'marked':
-        markedTags.remove(tag);
+        changed = markedTags.remove(tag);
         break;
       default:
         break;
+    }
+    if (changed) {
+      tagsFiltersMetadataVersion++;
     }
     saveSettings(restate: false);
   }
@@ -2361,6 +2385,7 @@ class SettingsHandler {
     try {
       await getStoragePermission();
       await loadSettings();
+      await Logger.setLogcatCaptureEnabled(captureLogcat);
       await setLocale(locale.value);
     } catch (e, s) {
       Logger.Inst().log(
@@ -2416,20 +2441,16 @@ class SettingsHandler {
       postInitMessage.value = loc.init.settingUpProxy;
       await initProxy();
 
-      if (isDesktopPlatform) {
-        fvp.registerWith();
-      } else {
-        switch (videoBackendMode) {
-          case VideoBackendMode.normal:
-            MediaKitVideoPlayer.registerNative();
-            break;
-          case VideoBackendMode.mpv:
-            MediaKitVideoPlayer.registerWith();
-            break;
-          case VideoBackendMode.mdk:
-            fvp.registerWith();
-            break;
-        }
+      switch (videoBackendMode) {
+        case VideoBackendMode.normal:
+          MediaKitVideoPlayer.registerNative();
+          break;
+        case VideoBackendMode.mpv:
+          MediaKitVideoPlayer.registerWith();
+          break;
+        case VideoBackendMode.mdk:
+          fvp.registerWith();
+          break;
       }
 
       postInitMessage.value = loc.init.loadingDatabase;

@@ -37,6 +37,7 @@ import 'package:lolisnatcher/src/pages/lockscreen_page.dart';
 import 'package:lolisnatcher/src/pages/mobile_home_page.dart';
 import 'package:lolisnatcher/src/pages/settings/booru_edit_page.dart';
 import 'package:lolisnatcher/src/services/image_writer.dart';
+import 'package:lolisnatcher/src/utils/extensions.dart';
 import 'package:lolisnatcher/src/utils/logger.dart';
 import 'package:lolisnatcher/src/widgets/common/settings_widgets.dart';
 import 'package:lolisnatcher/src/widgets/root/dev_overlay.dart';
@@ -105,6 +106,7 @@ class _MainAppState extends State<MainApp> {
   void initState() {
     super.initState();
 
+    HardwareKeyboard.instance.addHandler(handleGlobalKeyEvent);
     initHandlers();
   }
 
@@ -154,6 +156,7 @@ class _MainAppState extends State<MainApp> {
 
   @override
   void dispose() {
+    HardwareKeyboard.instance.removeHandler(handleGlobalKeyEvent);
     settingsHandler.isDebug.removeListener(devOverlayListener);
     NotifyHandler.unregister();
     NavigationHandler.unregister();
@@ -169,6 +172,25 @@ class _MainAppState extends State<MainApp> {
 
   void updateState() {
     setState(() {});
+  }
+
+  void resetDesktopWindow() {
+    if (Platform.isWindows || Platform.isLinux) {
+      unawaited(
+        const MethodChannel('lolisnatcher/window').invokeMethod<void>('reset'),
+      );
+    }
+  }
+
+  bool handleGlobalKeyEvent(KeyEvent event) {
+    final bool isZeroKey =
+        event.physicalKey == PhysicalKeyboardKey.digit0 || event.physicalKey == PhysicalKeyboardKey.numpad0;
+    if (event is! KeyDownEvent || !isZeroKey || !HardwareKeyboard.instance.isControlPressed) {
+      return false;
+    }
+
+    resetDesktopWindow();
+    return true;
   }
 
   @override
@@ -437,7 +459,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     backupTimer = Timer.periodic(const Duration(seconds: kDebugMode ? 10 : 30), (timer) {
       // TODO rework so it happens on every tab change/addition, NOT on timer
       searchHandler.backupTabs();
-      if (!tagHandler.tagSaveActive) {
+      if (searchHandler.canBackup.value && !tagHandler.tagSaveActive) {
         tagHandler.saveTags();
       }
     });
@@ -450,7 +472,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     dbCleanupTimer = Timer(
       const Duration(minutes: kDebugMode ? 1 : 20),
       // happens only once N minutes after start, to avoid long db lockup during early work
-      () => settingsHandler.dbHandler.tagsCleanup(),
+      () {
+        if (searchHandler.canBackup.value) {
+          settingsHandler.dbHandler.tagsCleanup();
+        }
+      },
     );
 
     // consider app launch as return to the app
@@ -468,7 +494,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     }
     initedDeepLinks = true;
 
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (PlatformExt.isMobile) {
       appLinks = AppLinks();
 
       final Uri? initialLink = await appLinks!.getInitialLink();
@@ -531,7 +557,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (PlatformExt.isMobile) {
       ServiceHandler.setSystemUiVisibility(true);
 
       // force landscape orientation if enabled desktop mode on mobile device

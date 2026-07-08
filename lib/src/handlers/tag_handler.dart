@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:lolisnatcher/src/data/booru.dart';
-import 'package:lolisnatcher/src/data/constants.dart';
 import 'package:lolisnatcher/src/data/tag.dart';
 import 'package:lolisnatcher/src/data/tag_type.dart';
 import 'package:lolisnatcher/src/handlers/booru_handler.dart';
 import 'package:lolisnatcher/src/handlers/booru_handler_factory.dart';
+import 'package:lolisnatcher/src/handlers/search_handler.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
 import 'package:lolisnatcher/src/services/get_perms.dart';
 import 'package:lolisnatcher/src/utils/logger.dart';
@@ -62,10 +62,9 @@ class TagHandler {
   }
 
   /// Check if tag is in the tag map and if it is - check if it is not outdated/stale
-  bool hasTagAndNotStale(String tagString, {int staleTime = Constants.tagStaleTime}) {
+  bool hasTagAndNotStale(String tagString) {
     if (hasTag(tagString)) {
-      final bool isNotStale = getTag(tagString).updatedAt >= (DateTime.now().millisecondsSinceEpoch - staleTime);
-      return isNotStale;
+      return !getTag(tagString).isStale();
     } else {
       return false;
     }
@@ -83,8 +82,8 @@ class TagHandler {
   Future<void> putTag(
     Tag tag, {
     required bool dbEnabled,
+    required bool preferTypeIfNone,
     bool useDB = true,
-    bool preferTypeIfNone = false,
   }) async {
     // TODO sanitize tagString?
     if (tag.fullString.isEmpty) {
@@ -93,18 +92,12 @@ class TagHandler {
     tag.fullString = tag.fullString.toLowerCase();
     if (preferTypeIfNone && hasTag(tag.fullString)) {
       if (getTag(tag.fullString).tagType != TagType.none && tag.tagType == TagType.none) {
-        Logger.Inst().log(
-          'Skipped tag ${tag.fullString}',
-          'TagHandler',
-          'putTag',
-          LogTypes.tagHandlerInfo,
-        );
         return;
       }
     }
     _tagMap[tag.fullString] = tag;
 
-    if (dbEnabled && useDB) {
+    if (dbEnabled && useDB && SearchHandler.instance.canBackup.value) {
       await SettingsHandler.instance.dbHandler.updateTagsFromObjects([tag]);
     }
     return;
@@ -155,7 +148,11 @@ class TagHandler {
         if (workingTags.isNotEmpty) {
           final List<Tag> newTags = await booruHandler.genTagObjects(workingTags);
           for (final Tag tag in newTags) {
-            await putTag(tag, dbEnabled: dbEnabled);
+            await putTag(
+              tag,
+              dbEnabled: dbEnabled,
+              preferTypeIfNone: false,
+            );
 
             //TODO write tag to database
             tagCounter++;
@@ -180,10 +177,18 @@ class TagHandler {
 
     for (final String tag in tags) {
       if (!hasTagAndNotStale(tag)) {
-        await putTag(Tag(tag, tagType: type), dbEnabled: dbEnabled);
+        await putTag(
+          Tag(tag, tagType: type),
+          dbEnabled: dbEnabled,
+          preferTypeIfNone: false,
+        );
       } else if (type != TagType.none) {
         if (getTag(tag).tagType == TagType.none) {
-          await putTag(Tag(tag, tagType: type), dbEnabled: dbEnabled);
+          await putTag(
+            Tag(tag, tagType: type),
+            dbEnabled: dbEnabled,
+            preferTypeIfNone: true,
+          );
         }
       }
     }
@@ -213,7 +218,12 @@ class TagHandler {
       if (dbEnabled) {
         final List<Tag> tags = await SettingsHandler.instance.dbHandler.getAllTags();
         for (final Tag tag in tags) {
-          await putTag(tag, useDB: false, dbEnabled: dbEnabled);
+          await putTag(
+            tag,
+            useDB: false,
+            dbEnabled: dbEnabled,
+            preferTypeIfNone: true,
+          );
         }
       } else {
         if (await checkForTagsFile()) {

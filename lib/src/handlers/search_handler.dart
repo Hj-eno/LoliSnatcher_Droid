@@ -23,6 +23,7 @@ import 'package:lolisnatcher/src/handlers/service_handler.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
 import 'package:lolisnatcher/src/handlers/snatch_handler.dart';
 import 'package:lolisnatcher/src/utils/logger.dart';
+import 'package:lolisnatcher/src/utils/ordered_selection_index.dart';
 import 'package:lolisnatcher/src/utils/tools.dart';
 import 'package:lolisnatcher/src/widgets/common/flash_elements.dart';
 
@@ -1789,6 +1790,7 @@ class SearchTab {
     final temp = BooruHandlerFactory().getBooruHandler(tempBooruList, null);
     booruHandler = temp.booruHandler;
     booruHandler.pageNum = temp.startingPage;
+    selected.addListener(_updateSelectedIndices);
   }
   // unique id to use for booru controller
   final String id = uuid.v4();
@@ -1804,6 +1806,15 @@ class SearchTab {
 
   double scrollPosition = 0;
   RxList<BooruItem> selected = RxList<BooruItem>.from([]);
+  final OrderedSelectionIndex<BooruItem> _selectedIndices = OrderedSelectionIndex();
+
+  int? selectedIndexOf(BooruItem item) => _selectedIndices.indexOf(item);
+
+  bool get hasSelectedItems => _selectedIndices.isNotEmpty;
+
+  void _updateSelectedIndices() {
+    _selectedIndices.update(selected);
+  }
 
   BooruItem? itemWithKey(Key? key) {
     return booruHandler.filteredFetched.firstWhereOrNull((item) => item.key == key);

@@ -237,6 +237,11 @@
         "sortMode": "Sort tabs",
         "help": "Help",
         "deleteTabs": "Delete tabs",
+        "deleteDuplicateTabs": "Delete duplicate tabs",
+        "deleteDuplicateTabsQuestion": "Duplicate tabs found. Select tabs which you want to keep in every group:",
+        "keepFirstDuplicateTabs": "Keep first",
+        "keepLastDuplicateTabs": "Keep last",
+        "skipDuplicateTabDelete": "Skip",
         "shuffleTabs": "Shuffle tabs",
         "tabRandomlyShuffled": "Tab randomly shuffled",
         "tabOrderSaved": "Tab order saved",
@@ -1061,7 +1066,9 @@
             "restoredSessionFromString": "Restored session from string"
         },
         "logging": {
-            "logger": "Logger"
+            "logger": "Logger",
+            "captureLogcat": "Capture Android logcat",
+            "captureLogcatDescription": "Record warning and error messages from this app's Android process"
         },
         "webview": {
             "openWebview": "Open webview",
