@@ -70,6 +70,9 @@ class SearchHandler {
   RxList<SearchTab> tabs = RxList<SearchTab>([]);
   // tab groups
   RxList<TabGroup> tabGroups = RxList<TabGroup>([]);
+  // collapsed state of the "ungrouped" section in the tab manager (only
+  // relevant/visible when at least one group exists)
+  final RxBool ungroupedCollapsed = false.obs;
   // current tab index
   RxInt index = 0.obs;
   RxnString tabId = RxnString(null);
@@ -324,6 +327,11 @@ class SearchHandler {
     final g = groupById(id);
     if (g == null) return;
     g.collapsed.value = forcedValue ?? !g.collapsed.value;
+    unawaited(backupTabs());
+  }
+
+  void toggleUngroupedCollapsed({bool? forcedValue}) {
+    ungroupedCollapsed.value = forcedValue ?? !ungroupedCollapsed.value;
     unawaited(backupTabs());
   }
 
@@ -1344,6 +1352,7 @@ class SearchHandler {
     }
 
     final envelope = parsed.envelope!;
+    ungroupedCollapsed.value = (envelope['uc'] as bool?) ?? false;
     final List<dynamic> groupsJson = (envelope['groups'] as List<dynamic>?) ?? const [];
     final List<dynamic> tabsJson = (envelope['tabs'] as List<dynamic>?) ?? const [];
 
@@ -1537,6 +1546,7 @@ class SearchHandler {
       return;
     }
     final envelope = parsed.envelope!;
+    ungroupedCollapsed.value = (envelope['uc'] as bool?) ?? false;
     final List<dynamic> groupsJson = (envelope['groups'] as List<dynamic>?) ?? const [];
     final String tabsString = jsonEncode((envelope['tabs'] as List<dynamic>?) ?? const []);
 
@@ -1614,7 +1624,8 @@ class SearchHandler {
         final List<String> groupsDump =
             tabGroups.map((g) => jsonEncode(g.toJson())).toList();
         final String groupsBody = '[${groupsDump.join(',')}]';
-        return '{"v":2,"groups":$groupsBody,"tabs":$tabsBody}';
+        final String ungroupedCollapsedBody = ungroupedCollapsed.value ? ',"uc":true' : '';
+        return '{"v":2,"groups":$groupsBody,"tabs":$tabsBody$ungroupedCollapsedBody}';
       }
 
       return tabsBody;

@@ -189,31 +189,47 @@ class _GroupReorderHandle extends StatelessWidget {
   }
 }
 
-/// Sentinel for "ungrouped" header in the tab manager.
+/// Sentinel for "ungrouped" header in the tab manager. When [onToggleCollapse]
+/// is provided the whole header becomes a tappable collapse toggle, mirroring
+/// [TabGroupHeader].
 class TabGroupUngroupedHeader extends StatelessWidget {
   const TabGroupUngroupedHeader({
     required this.tabsInUngroupedCount,
+    this.collapsed = false,
+    this.onToggleCollapse,
     super.key,
   });
 
   final int tabsInUngroupedCount;
+  final bool collapsed;
+  final VoidCallback? onToggleCollapse;
 
   @override
   Widget build(BuildContext context) {
     if (tabsInUngroupedCount == 0) return const SizedBox.shrink();
     final scheme = Theme.of(context).colorScheme;
-    return Padding(
+    final muted = scheme.onSurface.withValues(alpha: 0.5);
+
+    final row = Padding(
       padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
       child: Row(
         children: [
-          Icon(Icons.folder_outlined, size: 16, color: scheme.onSurface.withValues(alpha: 0.5)),
+          if (onToggleCollapse != null) ...[
+            AnimatedRotation(
+              turns: collapsed ? -0.25 : 0,
+              duration: const Duration(milliseconds: 150),
+              child: Icon(Icons.expand_more, size: 18, color: muted),
+            ),
+            const SizedBox(width: 4),
+          ],
+          Icon(Icons.folder_outlined, size: 16, color: muted),
           const SizedBox(width: 6),
           Text(
             context.loc.tabs.groups.ungrouped,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: scheme.onSurface.withValues(alpha: 0.5),
+              color: muted,
             ),
           ),
           const SizedBox(width: 6),
@@ -221,10 +237,23 @@ class TabGroupUngroupedHeader extends StatelessWidget {
             '$tabsInUngroupedCount',
             style: TextStyle(
               fontSize: 13,
-              color: scheme.onSurface.withValues(alpha: 0.5),
+              color: muted,
             ),
           ),
         ],
+      ),
+    );
+
+    if (onToggleCollapse == null) {
+      return row;
+    }
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: onToggleCollapse,
+        child: row,
       ),
     );
   }

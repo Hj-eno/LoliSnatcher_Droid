@@ -13,6 +13,7 @@ import 'package:lolisnatcher/src/handlers/secure_storage_handler.dart';
 import 'package:lolisnatcher/src/handlers/settings_handler.dart';
 import 'package:lolisnatcher/src/handlers/viewer_handler.dart';
 import 'package:lolisnatcher/src/pages/settings/logger_page.dart';
+import 'package:lolisnatcher/src/pages/settings/testing_page.dart';
 import 'package:lolisnatcher/src/pages/settings/text_parser_test_page.dart';
 import 'package:lolisnatcher/src/utils/clipboard.dart';
 import 'package:lolisnatcher/src/utils/extensions.dart';
@@ -175,6 +176,12 @@ class _DebugPageState extends State<DebugPage> {
                   );
                 },
                 trailingIcon: const Icon(Icons.print),
+              ),
+
+              SettingsButton(
+                name: 'Testing',
+                icon: const Icon(Icons.science_outlined),
+                page: () => const TestingPage(),
               ),
 
               SettingsButton(

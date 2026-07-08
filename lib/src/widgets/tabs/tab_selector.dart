@@ -85,8 +85,7 @@ class TabGroupFilterSpecific extends TabGroupFilter {
   final String groupId;
 
   @override
-  bool operator ==(Object other) =>
-      other is TabGroupFilterSpecific && other.groupId == groupId;
+  bool operator ==(Object other) => other is TabGroupFilterSpecific && other.groupId == groupId;
 
   @override
   int get hashCode => Object.hash('TabGroupFilterSpecific', groupId);
@@ -213,236 +212,237 @@ class TabSelector extends StatelessWidget {
                   height: MainAppBar.height,
                   child: Stack(
                     clipBehavior: Clip.none,
-              alignment: Alignment.centerLeft,
-              children: [
-                Positioned.fill(
-                  child: Stack(
-                    clipBehavior: Clip.none,
                     alignment: Alignment.centerLeft,
                     children: [
-                      InputDecorator(
-                        decoration: InputDecoration(
-                          label: Obx(() {
-                            final totalCount = currentTab.booruHandler.totalCount.value;
+                      Positioned.fill(
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          alignment: Alignment.centerLeft,
+                          children: [
+                            InputDecorator(
+                              decoration: InputDecoration(
+                                label: Obx(() {
+                                  final totalCount = currentTab.booruHandler.totalCount.value;
 
-                            return RichText(
-                              text: TextSpan(
-                                style: inputDecoration.labelStyle?.copyWith(
+                                  return RichText(
+                                    text: TextSpan(
+                                      style: inputDecoration.labelStyle?.copyWith(
+                                        color: color ?? inputDecoration.labelStyle?.color,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              '${context.loc.tabs.tab} | ${(currentTabIndex + 1).toFormattedString()}/${totalTabs.toFormattedString()}',
+                                        ),
+                                        if (totalCount > 0 && countOnTop) ...[
+                                          const TextSpan(text: ' | '),
+                                          WidgetSpan(
+                                            alignment: PlaceholderAlignment.middle,
+                                            child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 2),
+                                              child: Icon(
+                                                Icons.image,
+                                                size: inputDecoration.labelStyle?.fontSize ?? 12,
+                                                color: color ?? inputDecoration.labelStyle?.color,
+                                              ),
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: totalCount.toFormattedString(),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  );
+                                }),
+                                labelStyle: inputDecoration.labelStyle?.copyWith(
                                   color: color ?? inputDecoration.labelStyle?.color,
                                 ),
-                                children: [
-                                  TextSpan(
-                                    text:
-                                        '${context.loc.tabs.tab} | ${(currentTabIndex + 1).toFormattedString()}/${totalTabs.toFormattedString()}',
+                                contentPadding: contentPadding,
+                                border: inputDecoration.border?.copyWith(
+                                  borderSide: BorderSide(
+                                    color: withBorder
+                                        ? (inputDecoration.border?.borderSide.color ?? Colors.transparent)
+                                        : Colors.transparent,
+                                    width: 1,
                                   ),
-                                  if (totalCount > 0 && countOnTop) ...[
-                                    const TextSpan(text: ' | '),
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.middle,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                                        child: Icon(
-                                          Icons.image,
-                                          size: inputDecoration.labelStyle?.fontSize ?? 12,
-                                          color: color ?? inputDecoration.labelStyle?.color,
-                                        ),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: totalCount.toFormattedString(),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            );
-                          }),
-                          labelStyle: inputDecoration.labelStyle?.copyWith(
-                            color: color ?? inputDecoration.labelStyle?.color,
-                          ),
-                          contentPadding: contentPadding,
-                          border: inputDecoration.border?.copyWith(
-                            borderSide: BorderSide(
-                              color: withBorder
-                                  ? (inputDecoration.border?.borderSide.color ?? Colors.transparent)
-                                  : Colors.transparent,
-                              width: 1,
-                            ),
-                          ),
-                          enabledBorder: inputDecoration.enabledBorder?.copyWith(
-                            borderSide: BorderSide(
-                              color: withBorder
-                                  ? (inputDecoration.enabledBorder?.borderSide.color ?? Colors.transparent)
-                                  : Colors.transparent,
-                              width: 1,
-                            ),
-                          ),
-                          focusedBorder: inputDecoration.focusedBorder?.copyWith(
-                            borderSide: BorderSide(
-                              color: withBorder
-                                  ? (inputDecoration.focusedBorder?.borderSide.color ?? Colors.transparent)
-                                  : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
-                        ),
-                        child: const SizedBox.expand(),
-                      ),
-                      //
-                      if (!countOnTop)
-                        Positioned(
-                          bottom: -8,
-                          left: 16,
-                          child: Obx(() {
-                            final totalCount = currentTab.booruHandler.totalCount.value;
-                            if (totalCount > 0) {
-                              final usedColor = (color ?? inputDecoration.labelStyle?.color)?.darken(0.2);
-                              return IgnorePointer(
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                                      child: Icon(
-                                        Icons.image,
-                                        size: 14,
-                                        color: usedColor,
-                                      ),
-                                    ),
-                                    //
-                                    Text(
-                                      totalCount.toFormattedString(),
-                                      style: inputDecoration.labelStyle?.copyWith(
-                                        fontSize: 12,
-                                        color: usedColor,
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              );
-                            }
-
-                            return const SizedBox.shrink();
-                          }),
-                        ),
-                    ],
-                  ),
-                ),
-                //
-                Positioned.fill(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: withBorder
-                              ? const BorderRadius.only(
-                                  topLeft: Radius.circular(radius),
-                                  bottomLeft: Radius.circular(radius),
-                                )
-                              : null,
-                          onTap: () => dropdown.showDialog(context),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 12,
-                              left: 16,
-                              right: 16,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                BooruFavicon(searchHandler.currentBooru),
-                                Icon(
-                                  Icons.arrow_drop_down,
-                                  color: color ?? theme.iconTheme.color,
+                                enabledBorder: inputDecoration.enabledBorder?.copyWith(
+                                  borderSide: BorderSide(
+                                    color: withBorder
+                                        ? (inputDecoration.enabledBorder?.borderSide.color ?? Colors.transparent)
+                                        : Colors.transparent,
+                                    width: 1,
+                                  ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      //
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 12,
-                          bottom: 12,
-                        ),
-                        height: double.infinity,
-                        width: 2,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      //
-                      Expanded(
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: withBorder
-                                ? const BorderRadius.only(
-                                    topRight: Radius.circular(radius),
-                                    bottomRight: Radius.circular(radius),
-                                  )
-                                : null,
-                            onTap: () {
-                              SettingsPageOpen(
-                                context: context,
-                                page: (_) => const TabManagerPage(),
-                              ).open();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 10,
+                                focusedBorder: inputDecoration.focusedBorder?.copyWith(
+                                  borderSide: BorderSide(
+                                    color: withBorder
+                                        ? (inputDecoration.focusedBorder?.borderSide.color ?? Colors.transparent)
+                                        : Colors.transparent,
+                                    width: 2,
+                                  ),
+                                ),
                               ),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        TabRow(
-                                          tab: currentTab,
-                                          color: color,
-                                          withFavicon: false,
-                                        ),
-                                        MarqueeText(
-                                          text: [
-                                            if (currentTab.booruHandler is MergebooruHandler)
-                                              (currentTab.booruHandler as MergebooruHandler).booruList[0].name ?? ''
-                                            else
-                                              currentTab.booruHandler.booru.name ?? '',
-                                            //
-                                            for (final booru in (currentTab.secondaryBoorus.value ?? <Booru>[]))
-                                              booru.name ?? '',
-                                          ].join(', '),
-                                          style: inputDecoration.labelStyle?.copyWith(
-                                            fontSize: 14,
-                                            color: color?.withValues(alpha: 0.75),
+                              child: const SizedBox.expand(),
+                            ),
+                            //
+                            if (!countOnTop)
+                              Positioned(
+                                bottom: -8,
+                                left: 16,
+                                child: Obx(() {
+                                  final totalCount = currentTab.booruHandler.totalCount.value;
+                                  if (totalCount > 0) {
+                                    final usedColor = (color ?? inputDecoration.labelStyle?.color)?.darken(0.2);
+                                    return IgnorePointer(
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                                            child: Icon(
+                                              Icons.image,
+                                              size: 14,
+                                              color: usedColor,
+                                            ),
                                           ),
+                                          //
+                                          Text(
+                                            totalCount.toFormattedString(),
+                                            style: inputDecoration.labelStyle?.copyWith(
+                                              fontSize: 12,
+                                              color: usedColor,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }
+
+                                  return const SizedBox.shrink();
+                                }),
+                              ),
+                          ],
+                        ),
+                      ),
+                      //
+                      Positioned.fill(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                borderRadius: withBorder
+                                    ? const BorderRadius.only(
+                                        topLeft: Radius.circular(radius),
+                                        bottomLeft: Radius.circular(radius),
+                                      )
+                                    : null,
+                                onTap: () => dropdown.showDialog(context),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 12,
+                                    left: 16,
+                                    right: 16,
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      BooruFavicon(searchHandler.currentBooru),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        color: color ?? theme.iconTheme.color,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            //
+                            Container(
+                              margin: const EdgeInsets.only(
+                                top: 12,
+                                bottom: 12,
+                              ),
+                              height: double.infinity,
+                              width: 2,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            //
+                            Expanded(
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: withBorder
+                                      ? const BorderRadius.only(
+                                          topRight: Radius.circular(radius),
+                                          bottomRight: Radius.circular(radius),
+                                        )
+                                      : null,
+                                  onTap: () {
+                                    SettingsPageOpen(
+                                      context: context,
+                                      page: (_) => const TabManagerPage(),
+                                    ).open();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 10,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              TabRow(
+                                                tab: currentTab,
+                                                color: color,
+                                                withFavicon: false,
+                                              ),
+                                              MarqueeText(
+                                                text: [
+                                                  if (currentTab.booruHandler is MergebooruHandler)
+                                                    (currentTab.booruHandler as MergebooruHandler).booruList[0].name ??
+                                                        ''
+                                                  else
+                                                    currentTab.booruHandler.booru.name ?? '',
+                                                  //
+                                                  for (final booru in (currentTab.secondaryBoorus.value ?? <Booru>[]))
+                                                    booru.name ?? '',
+                                                ].join(', '),
+                                                style: inputDecoration.labelStyle?.copyWith(
+                                                  fontSize: 14,
+                                                  color: color?.withValues(alpha: 0.75),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Icon(
+                                          Icons.arrow_drop_down,
+                                          color: color ?? theme.iconTheme.color,
                                         ),
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 4),
-                                  Icon(
-                                    Icons.arrow_drop_down,
-                                    color: color ?? theme.iconTheme.color,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
                 ),
               ),
             ],
@@ -505,8 +505,7 @@ class _TabManagerPageState extends State<TabManagerPage> {
     return [
       (group: null, tabs: ungrouped),
       for (final g in searchHandler.tabGroups)
-        if (byId[g.id]!.isNotEmpty || !isFilterActive)
-          (group: g, tabs: byId[g.id]!),
+        if (byId[g.id]!.isNotEmpty || !isFilterActive) (group: g, tabs: byId[g.id]!),
     ];
   }
 
@@ -548,6 +547,9 @@ class _TabManagerPageState extends State<TabManagerPage> {
     if (currentGroup != null && currentGroup.collapsed.value) {
       currentGroup.collapsed.value = false;
       // no backupTabs() — auto-expand is a UI preference, not user intent.
+    } else if (currentGroup == null && searchHandler.ungroupedCollapsed.value) {
+      // current tab is ungrouped — auto-expand the ungrouped section too.
+      searchHandler.ungroupedCollapsed.value = false;
     }
 
     scrollController = ScrollController(
@@ -594,7 +596,9 @@ class _TabManagerPageState extends State<TabManagerPage> {
         offset += tabGroupHeaderHeight;
       }
 
-      final isCollapsed = section.group?.collapsed.value ?? false;
+      final isCollapsed = section.group != null
+          ? section.group!.collapsed.value
+          : (searchHandler.tabGroups.isNotEmpty && searchHandler.ungroupedCollapsed.value);
       if (isCollapsed) {
         continue;
       }
@@ -909,8 +913,7 @@ class _TabManagerPageState extends State<TabManagerPage> {
         widgets.add(
           SliverToBoxAdapter(
             child: DragTarget<SearchTab>(
-              onWillAcceptWithDetails: (details) =>
-                  details.data.groupId.value != group.id,
+              onWillAcceptWithDetails: (details) => details.data.groupId.value != group.id,
               onAcceptWithDetails: (details) {
                 searchHandler.assignTabToGroup(details.data, group.id);
                 getTabs();
@@ -918,13 +921,10 @@ class _TabManagerPageState extends State<TabManagerPage> {
               builder: (context, tabCandidates, tabRejects) {
                 final hoveringTab = tabCandidates.isNotEmpty;
                 return DragTarget<TabGroup>(
-                  onWillAcceptWithDetails: (details) =>
-                      details.data.id != group.id,
+                  onWillAcceptWithDetails: (details) => details.data.id != group.id,
                   onAcceptWithDetails: (details) {
-                    final fromIndex = searchHandler.tabGroups
-                        .indexWhere((g) => g.id == details.data.id);
-                    final toIndex = searchHandler.tabGroups
-                        .indexWhere((g) => g.id == group.id);
+                    final fromIndex = searchHandler.tabGroups.indexWhere((g) => g.id == details.data.id);
+                    final toIndex = searchHandler.tabGroups.indexWhere((g) => g.id == group.id);
                     if (fromIndex < 0 || toIndex < 0) return;
                     searchHandler.moveGroup(fromIndex, toIndex);
                     getTabs();
@@ -937,12 +937,10 @@ class _TabManagerPageState extends State<TabManagerPage> {
                         color: hoveringTab
                             ? group.color.value.withValues(alpha: 0.18)
                             : hoveringGroup
-                                ? group.color.value.withValues(alpha: 0.10)
-                                : Colors.transparent,
+                            ? group.color.value.withValues(alpha: 0.10)
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(10),
-                        border: hoveringGroup
-                            ? Border.all(color: group.color.value, width: 2)
-                            : null,
+                        border: hoveringGroup ? Border.all(color: group.color.value, width: 2) : null,
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: TabGroupHeader(
@@ -970,13 +968,11 @@ class _TabManagerPageState extends State<TabManagerPage> {
         // Only render the visible header when groups exist (otherwise the
         // ungrouped state is implicit). Always provide an invisible DragTarget
         // strip so dragging onto the ungrouped section's top works.
-        final showUngroupedHeader =
-            sectionTabs.isNotEmpty && searchHandler.tabGroups.isNotEmpty;
+        final showUngroupedHeader = sectionTabs.isNotEmpty && searchHandler.tabGroups.isNotEmpty;
         widgets.add(
           SliverToBoxAdapter(
             child: DragTarget<SearchTab>(
-              onWillAcceptWithDetails: (details) =>
-                  details.data.groupId.value != null,
+              onWillAcceptWithDetails: (details) => details.data.groupId.value != null,
               onAcceptWithDetails: (details) {
                 searchHandler.assignTabToGroup(details.data, null);
                 getTabs();
@@ -990,7 +986,14 @@ class _TabManagerPageState extends State<TabManagerPage> {
                     duration: const Duration(milliseconds: 150),
                     color: overlay,
                     child: showUngroupedHeader
-                        ? TabGroupUngroupedHeader(tabsInUngroupedCount: sectionTabs.length)
+                        ? TabGroupUngroupedHeader(
+                            tabsInUngroupedCount: sectionTabs.length,
+                            collapsed: searchHandler.ungroupedCollapsed.value,
+                            onToggleCollapse: () {
+                              searchHandler.toggleUngroupedCollapsed();
+                              setState(() {});
+                            },
+                          )
                         : SizedBox(
                             height: 24,
                             child: Center(
@@ -1012,8 +1015,11 @@ class _TabManagerPageState extends State<TabManagerPage> {
         );
       }
 
-      // Tabs sliver (skipped if collapsed)
-      final isCollapsed = group?.collapsed.value ?? false;
+      // Tabs sliver (skipped if collapsed). The ungrouped section is only
+      // collapsible when a group exists (its header is shown then).
+      final isCollapsed = group != null
+          ? group.collapsed.value
+          : (searchHandler.tabGroups.isNotEmpty && searchHandler.ungroupedCollapsed.value);
       if (!isCollapsed && sectionTabs.isNotEmpty) {
         widgets.add(
           SliverPadding(
@@ -1448,7 +1454,9 @@ class _TabManagerPageState extends State<TabManagerPage> {
             tab.groupId.value == null ? Icons.create_new_folder_outlined : Icons.drive_file_move_outlined,
             color: Theme.of(context).colorScheme.primary,
           ),
-          title: Text(tab.groupId.value == null ? context.loc.tabs.groups.addToGroup : context.loc.tabs.groups.moveToGroupAction),
+          title: Text(
+            tab.groupId.value == null ? context.loc.tabs.groups.addToGroup : context.loc.tabs.groups.moveToGroupAction,
+          ),
         ),
         if (tab.groupId.value != null) ...[
           const SizedBox(height: 10),
@@ -1762,169 +1770,225 @@ class _TabManagerPageState extends State<TabManagerPage> {
     );
   }
 
+  /// Contextual app bar shown while in select mode. Surfaces the batch
+  /// actions (add to group, delete) in the conventional top-bar location so
+  /// they are discoverable regardless of the optional bottom action bar.
+  PreferredSizeWidget _buildSelectionAppBar(BuildContext context) {
+    final filteredTabsMinusCurrent = [...filteredTabs]..remove(searchHandler.currentTab);
+    final bool selectedAll = selectedTabs.isNotEmpty && selectedTabs.length == filteredTabsMinusCurrent.length;
+    final bool hasSelected = selectedTabs.isNotEmpty;
+
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.close),
+        tooltip: context.loc.tabs.toggleSelectMode,
+        onPressed: () {
+          setState(() {
+            selectMode = false;
+            selectedTabs.clear();
+          });
+        },
+      ),
+      title: Text(
+        '${context.loc.tabs.select} ${selectedTabs.length.toFormattedString()}',
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(selectedAll ? Icons.border_clear : Icons.select_all),
+          tooltip: context.loc.tabs.selectDeselectAll,
+          onPressed: () {
+            setState(() {
+              if (selectedAll) {
+                selectedTabs.clear();
+              } else {
+                selectedTabs = [...filteredTabs]..remove(searchHandler.currentTab);
+              }
+            });
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.create_new_folder_outlined),
+          tooltip: context.loc.tabs.groups.addToGroup,
+          onPressed: hasSelected ? () => _showMoveTabsToGroupChooser(List<SearchTab>.from(selectedTabs)) : null,
+        ),
+        IconButton(
+          icon: const Icon(Icons.delete_forever),
+          tooltip: context.loc.tabs.deleteSelectedTabs,
+          onPressed: hasSelected ? showDeleteDialog : null,
+        ),
+        const SizedBox(width: 8),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.loc.tabs.tabsManager,
-              style: Theme.of(context).appBarTheme.titleTextStyle,
-            ),
-            RichText(
-              text: TextSpan(
-                style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.normal,
-                ),
+      appBar: selectMode
+          ? _buildSelectionAppBar(context)
+          : AppBar(
+              title: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (isFilterActive) ...[
-                    const WidgetSpan(
-                      alignment: PlaceholderAlignment.middle,
-                      child: Icon(Icons.filter_alt, size: 16),
+                  Text(
+                    context.loc.tabs.tabsManager,
+                    style: Theme.of(context).appBarTheme.titleTextStyle,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      children: [
+                        if (isFilterActive) ...[
+                          const WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: Icon(Icons.filter_alt, size: 16),
+                          ),
+                          TextSpan(text: '${totalFilteredTabs.toFormattedString()}/'),
+                        ],
+                        TextSpan(text: totalTabs.toFormattedString()),
+                      ],
                     ),
-                    TextSpan(text: '${totalFilteredTabs.toFormattedString()}/'),
-                  ],
-                  TextSpan(text: totalTabs.toFormattedString()),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.select_all),
-            tooltip: context.loc.tabs.selectMode,
-            onPressed: () {
-              setState(() {
-                selectMode = !selectMode;
-                selectedTabs.clear();
-              });
-            },
-          ),
-          const SizedBox(width: 8),
-          GestureDetector(
-            onLongPress: isFilterActive
-                ? null
-                : () async {
-                    final currentTab = searchHandler.currentTab;
-
-                    final res = await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return SettingsDialog(
-                          title: Text(sortingMode.isNone ? context.loc.tabs.shuffleTabs : context.loc.tabs.sortMode),
-                          contentItems: [
-                            Text(
-                              sortingMode.isNone
-                                  ? context.loc.tabs.shuffleTabsQuestion
-                                  : context.loc.tabs.saveTabsInCurrentOrder,
-                            ),
-                            if (!sortingMode.isNone)
-                              Text(
-                                '${sortingMode.isAnyBooru ? context.loc.tabs.byBooru : ''} ${context.loc.tabs.alphabetically} ${sortingMode.isAnyReverse ? context.loc.tabs.reversed : ''}'
-                                    .trim(),
-                              ),
-                          ],
-                          actionButtons: [
-                            const CancelButton(withIcon: true),
-                            ElevatedButton.icon(
-                              label: Text(sortingMode.isNone ? context.loc.tabs.shuffle : context.loc.tabs.sort),
-                              icon: TabSortingIcon(sortingMode),
-                              onPressed: () {
-                                Navigator.of(context).pop('allow');
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-
-                    if (res != 'allow') {
-                      return;
-                    }
-
-                    if (sortingMode.isNone) {
-                      // §0.7: shuffle within each group bucket, never across,
-                      // to preserve the contiguous-block invariant.
-                      final ungroupedBucket = filteredTabs.where((t) => t.groupId.value == null).toList()..shuffle();
-                      final byGroup = <String, List<SearchTab>>{
-                        for (final g in searchHandler.tabGroups) g.id: <SearchTab>[],
-                      };
-                      for (final t in filteredTabs) {
-                        final gid = t.groupId.value;
-                        if (gid != null && byGroup.containsKey(gid)) byGroup[gid]!.add(t);
-                      }
-                      for (final list in byGroup.values) {
-                        list.shuffle();
-                      }
-                      filteredTabs = [
-                        ...ungroupedBucket,
-                        for (final g in searchHandler.tabGroups) ...byGroup[g.id]!,
-                      ];
-
-                      FlashElements.showSnackbar(
-                        context: context,
-                        duration: const Duration(seconds: 2),
-                        title: Text(context.loc.tabs.tabRandomlyShuffled, style: const TextStyle(fontSize: 20)),
-                        leadingIcon: Icons.sort_by_alpha,
-                        sideColor: Colors.green,
-                      );
-                    } else {
-                      FlashElements.showSnackbar(
-                        context: context,
-                        duration: const Duration(seconds: 2),
-                        title: Text(context.loc.tabs.tabOrderSaved, style: const TextStyle(fontSize: 20)),
-                        leadingIcon: Icons.sort,
-                        sideColor: Colors.green,
-                      );
-                    }
-
-                    searchHandler.tabs.value = [...filteredTabs];
-
-                    final int newIndex = searchHandler.tabs.indexOf(currentTab);
-                    searchHandler.changeTabIndex(newIndex);
-
-                    getTabs();
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.select_all),
+                  tooltip: context.loc.tabs.selectMode,
+                  onPressed: () {
+                    setState(() {
+                      selectMode = !selectMode;
+                      selectedTabs.clear();
+                    });
                   },
-            child: IconButton(
-              icon: TabSortingIcon(sortingMode),
-              tooltip: context.loc.tabs.sortMode,
-              onPressed: () {
-                switch (sortingMode) {
-                  case TabSortingMode.none:
-                    sortingMode = TabSortingMode.alphabet;
-                    break;
-                  case TabSortingMode.alphabet:
-                    sortingMode = TabSortingMode.alphabetReverse;
-                    break;
-                  case TabSortingMode.alphabetReverse:
-                    sortingMode = TabSortingMode.booru;
-                    break;
-                  case TabSortingMode.booru:
-                    sortingMode = TabSortingMode.booruReverse;
-                    break;
-                  case TabSortingMode.booruReverse:
-                    sortingMode = TabSortingMode.none;
-                    break;
-                }
-                getTabs();
-              },
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onLongPress: isFilterActive
+                      ? null
+                      : () async {
+                          final currentTab = searchHandler.currentTab;
+
+                          final res = await showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SettingsDialog(
+                                title: Text(
+                                  sortingMode.isNone ? context.loc.tabs.shuffleTabs : context.loc.tabs.sortMode,
+                                ),
+                                contentItems: [
+                                  Text(
+                                    sortingMode.isNone
+                                        ? context.loc.tabs.shuffleTabsQuestion
+                                        : context.loc.tabs.saveTabsInCurrentOrder,
+                                  ),
+                                  if (!sortingMode.isNone)
+                                    Text(
+                                      '${sortingMode.isAnyBooru ? context.loc.tabs.byBooru : ''} ${context.loc.tabs.alphabetically} ${sortingMode.isAnyReverse ? context.loc.tabs.reversed : ''}'
+                                          .trim(),
+                                    ),
+                                ],
+                                actionButtons: [
+                                  const CancelButton(withIcon: true),
+                                  ElevatedButton.icon(
+                                    label: Text(sortingMode.isNone ? context.loc.tabs.shuffle : context.loc.tabs.sort),
+                                    icon: TabSortingIcon(sortingMode),
+                                    onPressed: () {
+                                      Navigator.of(context).pop('allow');
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          if (res != 'allow') {
+                            return;
+                          }
+
+                          if (sortingMode.isNone) {
+                            // §0.7: shuffle within each group bucket, never across,
+                            // to preserve the contiguous-block invariant.
+                            final ungroupedBucket = filteredTabs.where((t) => t.groupId.value == null).toList()
+                              ..shuffle();
+                            final byGroup = <String, List<SearchTab>>{
+                              for (final g in searchHandler.tabGroups) g.id: <SearchTab>[],
+                            };
+                            for (final t in filteredTabs) {
+                              final gid = t.groupId.value;
+                              if (gid != null && byGroup.containsKey(gid)) byGroup[gid]!.add(t);
+                            }
+                            for (final list in byGroup.values) {
+                              list.shuffle();
+                            }
+                            filteredTabs = [
+                              ...ungroupedBucket,
+                              for (final g in searchHandler.tabGroups) ...byGroup[g.id]!,
+                            ];
+
+                            FlashElements.showSnackbar(
+                              context: context,
+                              duration: const Duration(seconds: 2),
+                              title: Text(context.loc.tabs.tabRandomlyShuffled, style: const TextStyle(fontSize: 20)),
+                              leadingIcon: Icons.sort_by_alpha,
+                              sideColor: Colors.green,
+                            );
+                          } else {
+                            FlashElements.showSnackbar(
+                              context: context,
+                              duration: const Duration(seconds: 2),
+                              title: Text(context.loc.tabs.tabOrderSaved, style: const TextStyle(fontSize: 20)),
+                              leadingIcon: Icons.sort,
+                              sideColor: Colors.green,
+                            );
+                          }
+
+                          searchHandler.tabs.value = [...filteredTabs];
+
+                          final int newIndex = searchHandler.tabs.indexOf(currentTab);
+                          searchHandler.changeTabIndex(newIndex);
+
+                          getTabs();
+                        },
+                  child: IconButton(
+                    icon: TabSortingIcon(sortingMode),
+                    tooltip: context.loc.tabs.sortMode,
+                    onPressed: () {
+                      switch (sortingMode) {
+                        case TabSortingMode.none:
+                          sortingMode = TabSortingMode.alphabet;
+                          break;
+                        case TabSortingMode.alphabet:
+                          sortingMode = TabSortingMode.alphabetReverse;
+                          break;
+                        case TabSortingMode.alphabetReverse:
+                          sortingMode = TabSortingMode.booru;
+                          break;
+                        case TabSortingMode.booru:
+                          sortingMode = TabSortingMode.booruReverse;
+                          break;
+                        case TabSortingMode.booruReverse:
+                          sortingMode = TabSortingMode.none;
+                          break;
+                      }
+                      getTabs();
+                    },
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.help_center_outlined),
+                  tooltip: context.loc.tabs.help,
+                  onPressed: showHelpDialog,
+                ),
+                const SizedBox(width: 8),
+              ],
             ),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(Icons.help_center_outlined),
-            tooltip: context.loc.tabs.help,
-            onPressed: showHelpDialog,
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
       body: Column(
         children: [
           filterBuild(),
@@ -1968,9 +2032,7 @@ class _TabManagerPageState extends State<TabManagerPage> {
                           // Use the current booru's defTags if set, otherwise the
                           // global default from Boorus & Search settings.
                           final booru = searchHandler.currentBooru;
-                          final query = (booru.defTags?.isNotEmpty == true)
-                              ? booru.defTags!
-                              : settingsHandler.defTags;
+                          final query = (booru.defTags?.isNotEmpty == true) ? booru.defTags! : settingsHandler.defTags;
                           searchHandler.addTabByString(query, switchToNew: true);
                           getTabs();
                         },
@@ -1994,142 +2056,58 @@ class _TabManagerPageState extends State<TabManagerPage> {
               return const SizedBox.shrink();
             }
             return Builder(
-            builder: (context) {
-              const double iconSize = 28;
+              builder: (context) {
+                const double iconSize = 28;
 
-              final toTopBtn = ElevatedButton(
-                onPressed: scrollToTop,
-                child: const Icon(
-                  Icons.arrow_circle_up_rounded,
-                  size: iconSize,
-                ),
-              );
+                final toTopBtn = ElevatedButton(
+                  onPressed: scrollToTop,
+                  child: const Icon(
+                    Icons.arrow_circle_up_rounded,
+                    size: iconSize,
+                  ),
+                );
 
-              final filteredTabsMinusCurrent = [...filteredTabs]..remove(searchHandler.currentTab);
-              final selectedAll = selectedTabs.length == filteredTabsMinusCurrent.length;
-
-              final selectAllBtn = ElevatedButton(
-                onPressed: () {
-                  if (selectedAll) {
-                    selectedTabs.clear();
-                  } else {
-                    selectedTabs = [...filteredTabs];
-                    selectedTabs.remove(searchHandler.currentTab);
-                  }
-                  setState(() {});
-                },
-                child: Icon(
-                  selectedAll ? Icons.border_clear : Icons.select_all,
-                  size: iconSize,
-                ),
-              );
-
-              final toCurrentBtn = ElevatedButton(
-                onPressed: currentTabIndex != -1 ? scrollToCurrent : null,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.subdirectory_arrow_left_outlined,
-                      size: iconSize,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      (searchHandler.currentIndex + 1).toFormattedString(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: currentTabIndex == -1 ? Colors.transparent : null,
+                final toCurrentBtn = ElevatedButton(
+                  onPressed: currentTabIndex != -1 ? scrollToCurrent : null,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.subdirectory_arrow_left_outlined,
+                        size: iconSize,
                       ),
-                    ),
-                  ],
-                ),
-              );
-
-              final bool hasSelected = selectedTabs.isNotEmpty;
-              final deleteSelectedBtn = ElevatedButton(
-                onPressed: hasSelected ? showDeleteDialog : null,
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.delete_forever,
-                      size: iconSize,
-                    ),
-                    const SizedBox(width: 4),
-                    Stack(
-                      children: [
-                        Text(
-                          selectedTabs.length.toFormattedString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      const SizedBox(width: 4),
+                      Text(
+                        (searchHandler.currentIndex + 1).toFormattedString(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: currentTabIndex == -1 ? Colors.transparent : null,
                         ),
-                        const Text(
-                          '00',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.transparent),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
+                      ),
+                    ],
+                  ),
+                );
 
-              final toBottomBtn = ElevatedButton(
-                onPressed: scrollToBottom,
-                child: const Icon(
-                  Icons.arrow_circle_down_rounded,
-                  size: iconSize,
-                ),
-              );
+                final toBottomBtn = ElevatedButton(
+                  onPressed: scrollToBottom,
+                  child: const Icon(
+                    Icons.arrow_circle_down_rounded,
+                    size: iconSize,
+                  ),
+                );
 
-              // §4.9: select-mode "Move to group" batch action.
-              final moveSelectedToGroupBtn = ElevatedButton(
-                onPressed: hasSelected
-                    ? () => _showMoveTabsToGroupChooser(List<SearchTab>.from(selectedTabs))
-                    : null,
-                child: Row(
-                  children: [
-                    const Icon(Icons.drive_file_move_outlined, size: iconSize),
-                    const SizedBox(width: 4),
-                    Stack(
-                      children: [
-                        Text(
-                          selectedTabs.length.toFormattedString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const Text(
-                          '00',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.transparent),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-
-              return Container(
-                margin: EdgeInsets.fromLTRB(
-                  10,
-                  10,
-                  10,
-                  10 + MediaQuery.paddingOf(context).bottom,
-                ),
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    if (settingsHandler.handSide.value.isLeft) ...[
-                      if (selectMode) ...[
-                        selectAllBtn,
-                        const SizedBox(width: 6),
-                        moveSelectedToGroupBtn,
-                        const SizedBox(width: 6),
-                        deleteSelectedBtn,
-                        const SizedBox(width: 6),
-                      ] else ...[
+                return Container(
+                  margin: EdgeInsets.fromLTRB(
+                    10,
+                    10,
+                    10,
+                    10 + MediaQuery.paddingOf(context).bottom,
+                  ),
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      if (settingsHandler.handSide.value.isLeft) ...[
                         toBottomBtn,
                         const SizedBox(width: 6),
                         toCurrentBtn,
@@ -2137,32 +2115,23 @@ class _TabManagerPageState extends State<TabManagerPage> {
                         toTopBtn,
                         const SizedBox(width: 6),
                       ],
-                    ],
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          size: iconSize,
-                        ),
-                        label: AutoSizeText(
-                          context.loc.close,
-                          maxLines: 1,
-                          overflowReplacement: const SizedBox.shrink(),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                            size: iconSize,
+                          ),
+                          label: AutoSizeText(
+                            context.loc.close,
+                            maxLines: 1,
+                            overflowReplacement: const SizedBox.shrink(),
+                          ),
                         ),
                       ),
-                    ),
-                    if (settingsHandler.handSide.value.isRight) ...[
-                      if (selectMode) ...[
-                        const SizedBox(width: 6),
-                        deleteSelectedBtn,
-                        const SizedBox(width: 6),
-                        moveSelectedToGroupBtn,
-                        const SizedBox(width: 6),
-                        selectAllBtn,
-                      ] else ...[
+                      if (settingsHandler.handSide.value.isRight) ...[
                         const SizedBox(width: 6),
                         toTopBtn,
                         const SizedBox(width: 6),
@@ -2171,11 +2140,10 @@ class _TabManagerPageState extends State<TabManagerPage> {
                         toBottomBtn,
                       ],
                     ],
-                  ],
-                ),
-              );
-            },
-          );
+                  ),
+                );
+              },
+            );
           }),
         ],
       ),
@@ -2285,10 +2253,7 @@ class TabManagerItem extends StatelessWidget {
                               ),
                         ],
                         if (onCloseTap != null) ...[
-                          if (onOptionsTap == null)
-                            const SizedBox(width: 4)
-                          else
-                            const SizedBox(width: 8),
+                          if (onOptionsTap == null) const SizedBox(width: 4) else const SizedBox(width: 8),
                           IconButton(
                             onPressed: onCloseTap,
                             icon: const Icon(
