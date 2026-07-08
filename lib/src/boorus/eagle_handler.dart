@@ -55,7 +55,17 @@ class EagleHandler extends BooruHandler {
   }
 
   /// Build (thumbnail, full-res) URLs for an item depending on the server mode.
-  ({String thumb, String full}) _buildImageUrls(String id, String name, String ext) {
+  ///
+  /// [noThumbnail] mirrors Eagle's item flag: it skips generating a
+  /// `<name>_thumbnail.png` for images small enough to show as-is. In static
+  /// mode that file would 404, so we fall back to the original (cheap — the
+  /// item is small by definition). The bridge already does this fallback itself.
+  ({String thumb, String full}) _buildImageUrls(
+    String id,
+    String name,
+    String ext, {
+    bool noThumbnail = false,
+  }) {
     final String base = imageServer;
     if (_isBridgeMode) {
       return (thumb: _withToken('$base/$id'), full: _withToken('$base/$id?fq=true'));
@@ -65,7 +75,7 @@ class EagleHandler extends BooruHandler {
     final String dir = '$base/$id.info';
     final String encName = Uri.encodeComponent(name);
     final String full = '$dir/$encName${ext.isNotEmpty ? '.$ext' : ''}';
-    final String thumb = '$dir/${encName}_thumbnail.png';
+    final String thumb = noThumbnail ? full : '$dir/${encName}_thumbnail.png';
     return (thumb: _withToken(thumb), full: _withToken(full));
   }
 
@@ -98,6 +108,42 @@ class EagleHandler extends BooruHandler {
     return false;
   }
 
+  /// Ask Eagle to (re)generate an item's thumbnail via `/api/item/refreshThumbnail`.
+  /// Returns true if Eagle accepted the request. Eagle writes the file
+  /// asynchronously, so this waits briefly afterwards to give the new thumbnail
+  /// time to land before the caller re-fetches the image.
+  ///
+  /// Works regardless of the image-server mode: the static scheme never triggers
+  /// eagle-serve's auto-regen, so this app-side call is the reliable path for the
+  /// "tap to retry" action on a missing thumbnail.
+  Future<bool> regenerateThumbnail(String id) async {
+    if (id.isEmpty) {
+      return false;
+    }
+    try {
+      final response = await DioNetwork.post(
+        _withToken('${booru.baseURL}/api/item/refreshThumbnail'),
+        headers: {
+          ...getHeaders(),
+          HttpHeaders.contentTypeHeader: 'application/json',
+        },
+        data: {'id': id},
+      );
+      if (response.statusCode != 200) {
+        return false;
+      }
+      final Map<String, dynamic> data = response.data is String ? jsonDecode(response.data) : response.data;
+      final bool ok = data['status'] == 'success';
+      if (ok) {
+        await Future.delayed(const Duration(milliseconds: 1500));
+      }
+      return ok;
+    } catch (e, s) {
+      Logger.Inst().log(e.toString(), 'EagleHandler', 'regenerateThumbnail', LogTypes.exception, s: s);
+      return false;
+    }
+  }
+
   // ---- folders -------------------------------------------------------------
   // Eagle's item list filters folders by *id*, but users search by name
   // (`folder:References`), so we fetch the folder tree once and resolve names.
@@ -112,6 +158,11 @@ class EagleHandler extends BooruHandler {
 
   /// The cached folder tree (loaded on first search). Used by the drawer widget.
   List<EagleFolder> get folderTree => _folderTree;
+
+  /// The full display path ("Parent/Child") for a folder id, or null if unknown.
+  /// Used to build unambiguous `folder:` searches when several folders share a
+  /// leaf name (e.g. `folder1/2025` vs `folder2/2025`).
+  String? folderPath(String id) => _folderIdToPath[id];
 
   @override
   Future<bool> searchSetup() async {
@@ -442,7 +493,9 @@ class EagleHandler extends BooruHandler {
       }
     }
 
-    final ({String thumb, String full}) urls = _buildImageUrls(id, name, ext);
+    // Eagle flags items it skipped generating a thumbnail for (small images).
+    final bool noThumbnail = item['noThumbnail'] == true;
+    final ({String thumb, String full}) urls = _buildImageUrls(id, name, ext, noThumbnail: noThumbnail);
 
     final double? width = (item['width'] as num?)?.toDouble();
     final double? height = (item['height'] as num?)?.toDouble();

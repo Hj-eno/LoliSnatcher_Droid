@@ -56,10 +56,13 @@ class _EagleFolderDrawerState extends State<EagleFolderDrawer> {
   }
 
   void _searchFolder(EagleFolder folder) {
-    // use underscores for spaces so it stays a single search-bar chip
-    // (the handler resolves underscores back to spaces). Quotes would render
-    // as two broken chips.
-    final String query = 'folder:${folder.name.replaceAll(' ', '_')}';
+    // Search by the folder's full path, not its bare name: two folders can
+    // share a leaf name (folder1/2025 vs folder2/2025) and a name-only search
+    // is ambiguous. The full path resolves to a single folder id.
+    // Underscores stand in for spaces so it stays a single search-bar chip
+    // (the handler resolves them back). Quotes would render as two broken chips.
+    final String path = widget.handler.folderPath(folder.id) ?? folder.name;
+    final String query = 'folder:${path.replaceAll(' ', '_')}';
     SearchHandler.instance.searchAction(query, null);
 
     final ScaffoldState? scaffold = Scaffold.maybeOf(context);

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
 import 'package:lolisnatcher/src/boorus/booru_type.dart';
+import 'package:lolisnatcher/src/boorus/eagle_handler.dart';
 import 'package:lolisnatcher/src/boorus/idol_sankaku_handler.dart';
 import 'package:lolisnatcher/src/boorus/sankaku_handler.dart';
 import 'package:lolisnatcher/src/data/booru.dart';
@@ -634,6 +635,10 @@ class _ThumbnailState extends State<Thumbnail> {
                         widget.booru?.type?.isFavouritesOrDownloads == true ||
                         BooruHandlerFactory().getBooruHandler([widget.booru!], null).booruHandler.hasLoadItemSupport;
 
+                    // Eagle: a missing thumbnail can be (re)generated on demand
+                    // by asking Eagle's API, then reloading the image.
+                    final bool isEagle = widget.booru?.type?.isEagle == true;
+
                     return ThumbnailLoading(
                       item: widget.item,
                       hasProgress: true,
@@ -644,7 +649,9 @@ class _ThumbnailState extends State<Thumbnail> {
                       total: total,
                       received: received,
                       startedAt: startedAt,
-                      retryText: isFavOrDlsOrHasLoad ? 'Tap to update or retry' : null,
+                      retryText: isEagle
+                          ? 'Tap to regenerate thumbnail'
+                          : (isFavOrDlsOrHasLoad ? 'Tap to update or retry' : null),
                       retryIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -661,6 +668,13 @@ class _ThumbnailState extends State<Thumbnail> {
                       ),
                       restartAction: () async {
                         restartedCount = 0;
+
+                        if (isEagle && widget.booru != null) {
+                          final handler = BooruHandlerFactory().getBooruHandler([widget.booru!], null).booruHandler;
+                          if (handler is EagleHandler) {
+                            await handler.regenerateThumbnail(widget.item.serverId ?? widget.item.md5String ?? '');
+                          }
+                        }
 
                         await restartLoading(withItemLoad: isFavOrDlsOrHasLoad);
                       },
